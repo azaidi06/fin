@@ -138,6 +138,43 @@
   .tab-content { display: none; }
   .tab-content.active { display: block; }
 
+  /* Global Markets */
+  .global-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1rem; margin-top: 1.5rem; }
+  .global-card {
+    background: var(--bg); border: 1px solid var(--border); border-radius: 10px; padding: 1.25rem;
+  }
+  .global-card h3 { font-weight: 600; color: #E2E8F0; font-size: 0.9rem; margin-bottom: 0.5rem; display: flex; justify-content: space-between; align-items: flex-start; gap: 8px; }
+  .quality-badge {
+    font-size: 0.55rem; font-weight: 600; padding: 2px 8px; border-radius: 4px;
+    text-transform: uppercase; letter-spacing: 0.05em; flex-shrink: 0; white-space: nowrap;
+  }
+  .quality-high { color: #34D399; background: rgba(16,185,129,0.12); }
+  .quality-medium { color: #FBBF24; background: rgba(251,191,36,0.12); }
+  .quality-low { color: #FB923C; background: rgba(251,146,60,0.12); }
+  .quality-minimal { color: #94A3B8; background: rgba(148,163,184,0.12); }
+  .exchange-pills { display: flex; gap: 4px; flex-wrap: wrap; margin-bottom: 0.75rem; }
+  .exchange-pill {
+    font-size: 0.55rem; color: var(--text-muted); background: var(--surface);
+    padding: 1px 6px; border-radius: 3px; border: 1px solid var(--border);
+  }
+  .index-row { margin-bottom: 10px; }
+  .index-row .idx-header { display: flex; align-items: center; gap: 8px; margin-bottom: 4px; }
+  .index-row .idx-swatch { width: 10px; height: 10px; border-radius: 3px; flex-shrink: 0; }
+  .index-row .idx-name { font-size: 0.78rem; font-weight: 600; }
+  .index-row .bar-track { height: 14px; background: var(--bg); border-radius: 7px; overflow: hidden; flex: 1; }
+  .index-row .bar-fill { height: 100%; border-radius: 7px; transition: width 0.6s ease; }
+  .index-row .bar-val { font-size: 0.78rem; font-weight: 600; min-width: 56px; text-align: right; }
+  .index-row .idx-note { font-size: 0.68rem; color: var(--text-muted); font-style: italic; padding-left: 18px; }
+  .index-row .idx-meta { display: flex; gap: 1rem; font-size: 0.65rem; color: var(--text-muted); padding-left: 18px; margin-top: 2px; }
+  .caveat-pill {
+    font-size: 0.55rem; font-weight: 600; color: var(--amber-light); background: rgba(251,191,36,0.12);
+    padding: 1px 6px; border-radius: 4px; margin-left: auto;
+  }
+  .global-narrative {
+    font-size: 0.78rem; color: var(--text-muted); line-height: 1.5;
+    border-top: 1px solid var(--border); padding-top: 0.6rem; margin-top: 0.5rem;
+  }
+
   /* Footer */
   .footer {
     text-align: center; color: var(--text-muted); font-size: 0.75rem;
@@ -173,6 +210,7 @@
   <div class="tab-bar">
     <button class="tab-btn active" onclick="switchTab('reaction')">Post-Conflict Reaction</button>
     <button class="tab-btn" onclick="switchTab('buildup')">Pre-War Buildup</button>
+    <button class="tab-btn" onclick="switchTab('global')">Global Markets</button>
   </div>
 
   <!-- TAB 1: Post-Conflict Reaction -->
@@ -235,6 +273,33 @@
       <p class="buildup-note">Faded bars = surprise events (context only, not anticipatory). Positive values = market was rising before the conflict.</p>
 
       <div class="buildup-grid" id="buildup-cards"></div>
+    </div>
+  </div>
+
+  <!-- TAB 3: Global Markets -->
+  <div class="tab-content" id="tab-global">
+    <div class="chart-section">
+      <h2 class="section-title">Global Markets Reaction</h2>
+      <p class="section-desc">How major world indices reacted to each conflict — data availability improves dramatically from the Gulf War onward</p>
+
+      <!-- Comparison chart: Gulf War vs 9/11 -->
+      <div style="background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:1.25rem;margin-bottom:1.5rem">
+        <h3 style="font-size:0.95rem;font-weight:600;color:#E2E8F0;margin-bottom:0.25rem">Gulf War vs. 9/11 — Max Decline by Index</h3>
+        <p style="font-size:0.72rem;color:var(--text-muted);margin-bottom:1rem">The two conflicts with comprehensive global data</p>
+        <div class="legend" style="margin-bottom:0.75rem">
+          <div class="legend-item"><div class="legend-swatch" style="background:var(--indigo)"></div><span>Gulf War</span></div>
+          <div class="legend-item"><div class="legend-swatch" style="background:var(--amber)"></div><span>9/11</span></div>
+        </div>
+        <div id="global-comparison-chart"></div>
+        <p class="buildup-note" style="margin-top:0.5rem">Nikkei 225 Gulf War decline (35%) includes the Japanese bubble burst — war-specific impact was likely 5–8%.</p>
+      </div>
+
+      <!-- Per-conflict cards -->
+      <div class="global-grid" id="global-cards"></div>
+
+      <p class="buildup-note" style="margin-top:1rem">
+        Data quality varies by era. FTSE 100 began 1984, DAX 1988, Hang Seng 1969. Approximate values marked with ~.
+      </p>
     </div>
   </div>
 
@@ -600,6 +665,206 @@ const preWarData = [
         .style("font-size", "0.72rem").style("color", "#475569").style("font-style", "italic").style("margin-top", "4px")
         .text("NASDAQ not yet trading");
     }
+  });
+})();
+
+// ── GLOBAL MARKETS DATA ──────────────────────────────────────
+const globalIndexColors = {
+  "S&P 500": "#6366F1", "FTSE 100": "#F59E0B", "Nikkei 225": "#EF4444",
+  "DAX": "#F97316", "CAC 40": "#3B82F6", "Hang Seng": "#A855F7",
+  "DJIA": "#818CF8", "FT 30": "#FBBF24",
+};
+
+const globalMarketsData = [
+  { conflict: "WWII", label: "WWII (Pearl Harbor, 1941)", dataQuality: "low", marketCapRanking: ["NYSE"],
+    narrative: "Most modern global indices didn't exist yet. The FT 30 (predecessor to the FTSE 100) launched in 1935 and fell ~30% between 1939–1940 as Britain faced invasion fears, bottoming after Dunkirk. Recovery took until 1945.",
+    indices: [
+      { id: "DJIA", decline: 20.3, daysToBottom: 143, daysToRecover: 917, confidence: "exact", note: null, isPositive: false, caveat: null },
+      { id: "FT 30", decline: 30, daysToBottom: null, daysToRecover: null, confidence: "narrative", note: "Fell ~30% 1939–40; bottomed after Dunkirk. Full recovery by 1945.", isPositive: false, caveat: null },
+    ] },
+  { conflict: "Korea", label: "Korean War (1950)", dataQuality: "low", marketCapRanking: ["NYSE", "LSE"],
+    narrative: "The Nikkei 225 was re-established in 1949, just a year before the Korean War. Japanese stocks surged as the war created massive procurement demand — the so-called 'Korean War boom' that kickstarted Japan's postwar economic miracle.",
+    indices: [
+      { id: "S&P 500", decline: 12.0, daysToBottom: 18, daysToRecover: 60, confidence: "exact", note: null, isPositive: false, caveat: null },
+      { id: "Nikkei 225", decline: null, daysToBottom: null, daysToRecover: null, confidence: "approx", note: "Rose ~5.6x from 1950–53 (procurement boom)", isPositive: true, caveat: null },
+    ] },
+  { conflict: "Vietnam", label: "Vietnam (Gulf of Tonkin, 1964)", dataQuality: "minimal", marketCapRanking: ["NYSE"],
+    narrative: "Modern international indices like the FTSE 100, DAX, and Hang Seng didn't exist yet. Only the S&P 500 provides reliable data.",
+    indices: [
+      { id: "S&P 500", decline: 5.0, daysToBottom: 26, daysToRecover: 50, confidence: "exact", note: null, isPositive: false, caveat: null },
+    ] },
+  { conflict: "Gulf War", label: "Gulf War (Kuwait, 1990)", dataQuality: "high", marketCapRanking: ["NYSE", "TSE", "LSE", "Frankfurt", "Paris"],
+    narrative: "The first conflict with truly global market data. All major indices fell, but the Nikkei's 35% decline is misleading — Japan's asset bubble had already burst in January 1990, months before Iraq invaded Kuwait.",
+    indices: [
+      { id: "S&P 500", decline: 16.9, daysToBottom: 71, daysToRecover: 189, confidence: "exact", note: null, isPositive: false, caveat: null },
+      { id: "Nikkei 225", decline: 35.0, daysToBottom: 195, daysToRecover: null, confidence: "approx", note: null, isPositive: false, caveat: "Bubble burst Jan 1990" },
+      { id: "FTSE 100", decline: 17.5, daysToBottom: 75, daysToRecover: 180, confidence: "approx", note: null, isPositive: false, caveat: null },
+      { id: "DAX", decline: 22.0, daysToBottom: 82, daysToRecover: 200, confidence: "approx", note: null, isPositive: false, caveat: null },
+      { id: "CAC 40", decline: 24.0, daysToBottom: 80, daysToRecover: 210, confidence: "approx", note: null, isPositive: false, caveat: null },
+    ] },
+  { conflict: "9/11", label: "9/11 / Afghanistan (2001)", dataQuality: "high", marketCapRanking: ["NYSE", "TSE", "LSE", "Euronext", "Frankfurt", "HKEX"],
+    narrative: "The richest dataset — all six major indices reacted within hours. European markets fell 6–12% within a week. Most global markets bottomed within 7–15 trading days and recovered within 1–3 months.",
+    indices: [
+      { id: "S&P 500", decline: 11.6, daysToBottom: 10, daysToRecover: 31, confidence: "exact", note: null, isPositive: false, caveat: null },
+      { id: "FTSE 100", decline: 11.9, daysToBottom: 10, daysToRecover: 36, confidence: "exact", note: null, isPositive: false, caveat: null },
+      { id: "DAX", decline: 19.4, daysToBottom: 10, daysToRecover: 48, confidence: "exact", note: null, isPositive: false, caveat: null },
+      { id: "CAC 40", decline: 16.1, daysToBottom: 10, daysToRecover: 46, confidence: "exact", note: null, isPositive: false, caveat: null },
+      { id: "Nikkei 225", decline: 6.3, daysToBottom: 7, daysToRecover: 35, confidence: "exact", note: null, isPositive: false, caveat: null },
+      { id: "Hang Seng", decline: 8.9, daysToBottom: 7, daysToRecover: 30, confidence: "exact", note: null, isPositive: false, caveat: null },
+    ] },
+  { conflict: "Iraq", label: "Iraq War (2003)", dataQuality: "medium", marketCapRanking: ["NYSE", "TSE", "LSE", "Euronext", "Frankfurt"],
+    narrative: "Most indices barely reacted to the invasion itself — the selloff had already happened during the buildup. The Nikkei rose 55.4% from its March 2003 bottom by year-end.",
+    indices: [
+      { id: "S&P 500", decline: 5.3, daysToBottom: 10, daysToRecover: 16, confidence: "exact", note: null, isPositive: false, caveat: null },
+      { id: "FTSE 100", decline: 5.0, daysToBottom: 8, daysToRecover: 20, confidence: "approx", note: "Minimal reaction; most decline was pre-invasion", isPositive: false, caveat: null },
+      { id: "DAX", decline: 7.2, daysToBottom: 10, daysToRecover: 25, confidence: "approx", note: null, isPositive: false, caveat: null },
+      { id: "CAC 40", decline: 6.5, daysToBottom: 9, daysToRecover: 22, confidence: "approx", note: null, isPositive: false, caveat: null },
+      { id: "Nikkei 225", decline: null, daysToBottom: null, daysToRecover: null, confidence: "narrative", note: "Rose +55.4% from Mar 2003 low by year-end", isPositive: true, caveat: null },
+    ] },
+];
+
+// ── GLOBAL COMPARISON CHART ─────────────────────────────────
+(function() {
+  const highQuality = globalMarketsData.filter(d => d.dataQuality === "high");
+  const allIdx = [...new Set(highQuality.flatMap(c => c.indices.filter(i => i.decline != null && !i.isPositive).map(i => i.id)))];
+  const compData = allIdx.map(idx => {
+    const row = { index: idx };
+    highQuality.forEach(c => {
+      const e = c.indices.find(i => i.id === idx);
+      row[c.conflict] = e ? e.decline : null;
+    });
+    return row;
+  });
+
+  const container = d3.select("#global-comparison-chart");
+  const fullWidth = Math.min(container.node().getBoundingClientRect().width, 860);
+  const margin = { top: 10, right: 60, bottom: 30, left: 90 };
+  const width = fullWidth - margin.left - margin.right;
+  const height = compData.length * 60;
+
+  const svg = container.append("svg")
+    .attr("viewBox", `0 0 ${fullWidth} ${height + margin.top + margin.bottom}`)
+    .attr("preserveAspectRatio", "xMidYMid meet")
+    .style("width", "100%").style("max-width", fullWidth + "px");
+
+  const g = svg.append("g").attr("transform", `translate(${margin.left},${margin.top})`);
+
+  const y0 = d3.scaleBand().domain(compData.map(d => d.index)).range([0, height]).padding(0.3);
+  const maxVal = d3.max(compData.flatMap(d => [d["Gulf War"], d["9/11"]].filter(v => v != null)));
+  const x = d3.scaleLinear().domain([0, Math.ceil(maxVal / 5) * 5]).range([0, width]);
+
+  // Grid
+  const gridG = g.append("g");
+  gridG.call(d3.axisBottom(x).tickSize(height).tickFormat("").ticks(5));
+  gridG.select(".domain").remove();
+  gridG.selectAll("line").attr("stroke", "#475569").attr("stroke-opacity", 0.25);
+  gridG.selectAll("text").remove();
+
+  // Y axis
+  const yAxisG = g.append("g").call(d3.axisLeft(y0).tickSize(0));
+  yAxisG.select(".domain").remove();
+  yAxisG.selectAll("text").attr("fill", "#CBD5E1").attr("font-size", "0.78rem");
+
+  // X axis
+  const xAxisG = g.append("g").attr("transform", `translate(0,${height})`);
+  xAxisG.call(d3.axisBottom(x).ticks(5).tickFormat(d => d + "%"));
+  xAxisG.select(".domain").remove();
+  xAxisG.selectAll("text").attr("fill", "#94A3B8").attr("font-size", "0.72rem");
+  xAxisG.selectAll("line").attr("stroke", "#475569");
+
+  const conflictColors = { "Gulf War": "#6366F1", "9/11": "#F59E0B" };
+  const barH = y0.bandwidth() / 2 - 2;
+
+  compData.forEach(d => {
+    highQuality.forEach((c, ci) => {
+      const val = d[c.conflict];
+      if (val == null) return;
+      const yPos = y0(d.index) + ci * (barH + 4);
+      const color = conflictColors[c.conflict];
+
+      g.append("rect").attr("class", "bar")
+        .attr("x", 0).attr("y", yPos).attr("width", 0).attr("height", barH)
+        .attr("rx", 4).attr("fill", color)
+        .on("mouseenter", function(event) {
+          d3.selectAll(".bar").attr("opacity", 0.3);
+          d3.select(this).attr("opacity", 1);
+          showTooltip(event, `<div class="tt-title">${d.index} — ${c.conflict}</div>
+            <span class="tt-label">Max decline:</span> <span class="tt-value" style="color:#EF4444">-${val}%</span>`);
+        })
+        .on("mousemove", event => showTooltip(event, tooltip.html()))
+        .on("mouseleave", function() { d3.selectAll(".bar").attr("opacity", 1); hideTooltip(); })
+        .transition().duration(800).ease(d3.easeCubicOut).attr("width", x(val));
+
+      g.append("text")
+        .attr("x", x(val) + 6).attr("y", yPos + barH / 2).attr("dy", "0.35em")
+        .attr("fill", color).attr("font-size", "0.68rem").attr("font-weight", "600")
+        .attr("opacity", 0).text(`-${val}%`)
+        .transition().delay(600).duration(400).attr("opacity", 1);
+    });
+  });
+})();
+
+// ── GLOBAL CARDS ────────────────────────────────────────────
+(function() {
+  const grid = d3.select("#global-cards");
+
+  globalMarketsData.forEach(d => {
+    const card = grid.append("div").attr("class", "global-card");
+
+    // Header with quality badge
+    const h3 = card.append("h3");
+    h3.append("span").text(d.label);
+    h3.append("span").attr("class", `quality-badge quality-${d.dataQuality}`).text(`${d.dataQuality} data`);
+
+    // Exchange pills
+    const pills = card.append("div").attr("class", "exchange-pills");
+    d.marketCapRanking.forEach(ex => {
+      pills.append("span").attr("class", "exchange-pill").text(ex);
+    });
+
+    // Index rows
+    const numericIndices = d.indices.filter(i => i.decline != null && !i.isPositive);
+    const maxDecline = numericIndices.length > 0 ? Math.max(...numericIndices.map(i => i.decline)) : 25;
+
+    d.indices.forEach(idx => {
+      const color = globalIndexColors[idx.id] || "#94A3B8";
+      const row = card.append("div").attr("class", "index-row");
+
+      // Header line
+      const hdr = row.append("div").attr("class", "idx-header");
+      hdr.append("span").attr("class", "idx-swatch").style("background", color);
+      hdr.append("span").attr("class", "idx-name").style("color", color).text(idx.id);
+      if (idx.caveat) {
+        hdr.append("span").attr("class", "caveat-pill").text(idx.caveat);
+      }
+
+      if (idx.confidence === "narrative") {
+        row.append("div").attr("class", "idx-note").text(idx.note);
+      } else {
+        const barWrap = row.append("div").style("padding-left", "18px");
+        const barRow = barWrap.append("div").style("display", "flex").style("align-items", "center").style("gap", "8px");
+        const absVal = idx.decline != null ? idx.decline : 0;
+        const pct = Math.min(absVal / maxDecline, 1) * 100;
+        const barColor = idx.isPositive ? "#10B981" : color;
+        const prefix = idx.isPositive ? "+" : (idx.confidence === "approx" ? "~" : "-");
+
+        const track = barRow.append("div").attr("class", "bar-track");
+        track.append("div").attr("class", "bar-fill").style("width", pct + "%").style("background", barColor);
+        barRow.append("span").attr("class", "bar-val").style("color", barColor).text(prefix + absVal + "%");
+
+        if (idx.note) {
+          barWrap.append("div").style("font-size", "0.65rem").style("color", "#64748B").style("margin-top", "2px").text(idx.note);
+        }
+        if (idx.daysToBottom != null) {
+          const meta = barWrap.append("div").attr("class", "idx-meta");
+          meta.append("span").text("Bottom: " + idx.daysToBottom + "d");
+          if (idx.daysToRecover != null) meta.append("span").text("Recover: " + idx.daysToRecover + "d");
+        }
+      }
+    });
+
+    // Narrative
+    card.append("div").attr("class", "global-narrative").text(d.narrative);
   });
 })();
 
