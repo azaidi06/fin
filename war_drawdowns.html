@@ -419,7 +419,7 @@ const preWarData = [
     const isNeg = d.spChange < 0;
     const card = grid.append("div").attr("class", "buildup-card");
 
-    let h3 = `${d.label}`;
+    let h3 = `${d.label.replace(/, \d{4}\)/, ')').replace(/ \(\d{4}\)/, '')}`;
     if (d.surprise) h3 += `<span class="badge">Surprise</span>`;
     card.append("h3").html(h3);
 
@@ -608,14 +608,14 @@ const preWarData = [
   const sp500Body = d3.select("#sp500-table");
   sp500Data.forEach(d => {
     sp500Body.append("tr").html(
-      `<td>${d.label}</td><td>${d.date}</td><td class="decline">-${d.decline}%</td><td>${d.daysToBottom}</td><td>${d.daysToRecover}</td>`
+      `<td>${d.label.replace(/, \d{4}\)/, ')').replace(/ \(\d{4}\)/, '')}</td><td>${d.date}</td><td class="decline">-${d.decline}%</td><td>${d.daysToBottom}</td><td>${d.daysToRecover}</td>`
     );
   });
 
   const nasdaqBody = d3.select("#nasdaq-table");
   nasdaqData.forEach(d => {
     nasdaqBody.append("tr").html(
-      `<td>${d.label}</td><td>${d.date}</td><td class="decline">-${d.decline}%</td><td>${d.daysToBottom}</td><td>${d.daysToRecover}</td>`
+      `<td>${d.label.replace(/, \d{4}\)/, ')').replace(/ \(\d{4}\)/, '')}</td><td>${d.date}</td><td class="decline">-${d.decline}%</td><td>${d.daysToBottom}</td><td>${d.daysToRecover}</td>`
     );
   });
 })();

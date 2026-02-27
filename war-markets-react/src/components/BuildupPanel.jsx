@@ -5,6 +5,7 @@ import {
 import { preWarData } from "../data/warData";
 
 const card = { background: "#1E293B", border: "1px solid #334155", borderRadius: 12, padding: 24, marginBottom: 32 };
+const stripYear = (s) => s.replace(/, \d{4}\)/, ")").replace(/ \(\d{4}\)/, "");
 
 // Chart data — show S&P for all, NASDAQ where available
 const chartData = preWarData.map(d => ({
@@ -41,7 +42,7 @@ function ConflictCard({ d }) {
   return (
     <div style={{ background: "#0F172A", border: "1px solid #334155", borderRadius: 10, padding: 20 }}>
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 12 }}>
-        <h3 style={{ fontWeight: 600, color: "#E2E8F0", fontSize: 14 }}>{d.label}</h3>
+        <h3 style={{ fontWeight: 600, color: "#E2E8F0", fontSize: 14 }}>{stripYear(d.label)}</h3>
         {d.surprise && (
           <span style={{ fontSize: 10, fontWeight: 600, color: "#FBBF24", background: "rgba(251,191,36,0.12)", padding: "2px 8px", borderRadius: 4, textTransform: "uppercase", letterSpacing: "0.05em" }}>
             Surprise
