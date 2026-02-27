@@ -1,29 +1,35 @@
+const card = { background: "#1E293B", border: "1px solid #334155", borderRadius: 12, padding: 20 };
+const th = { textAlign: "left", padding: "8px 12px", color: "#64748B", fontWeight: 500, fontSize: 11, textTransform: "uppercase", letterSpacing: "0.05em", borderBottom: "1px solid #334155" };
+const td = { padding: "8px 12px", color: "#CBD5E1", fontSize: 13, borderBottom: "1px solid #1E293B" };
+
 export default function DataTable({ title, color, data }) {
   return (
-    <div className="bg-slate-800 border border-slate-700 rounded-xl p-5">
-      <h3 className="text-base font-semibold text-slate-100 mb-4 flex items-center gap-2">
-        <span className="w-2.5 h-2.5 rounded-full inline-block" style={{ background: color }} />
+    <div style={card}>
+      <h3 style={{ fontSize: 15, fontWeight: 600, color: "#F8FAFC", marginBottom: 16, display: "flex", alignItems: "center", gap: 8 }}>
+        <span style={{ width: 10, height: 10, borderRadius: "50%", background: color, display: "inline-block" }} />
         {title}
       </h3>
-      <div className="overflow-x-auto">
-        <table className="w-full text-sm">
+      <div style={{ overflowX: "auto" }}>
+        <table style={{ width: "100%", borderCollapse: "collapse" }}>
           <thead>
-            <tr className="border-b border-slate-700">
-              <th className="text-left py-2 px-3 text-xs text-slate-500 uppercase tracking-wide font-medium">Conflict</th>
-              <th className="text-left py-2 px-3 text-xs text-slate-500 uppercase tracking-wide font-medium">Date</th>
-              <th className="text-left py-2 px-3 text-xs text-slate-500 uppercase tracking-wide font-medium">Decline</th>
-              <th className="text-left py-2 px-3 text-xs text-slate-500 uppercase tracking-wide font-medium">Days Down</th>
-              <th className="text-left py-2 px-3 text-xs text-slate-500 uppercase tracking-wide font-medium">Days Recover</th>
+            <tr>
+              <th style={th}>Conflict</th>
+              <th style={th}>Date</th>
+              <th style={th}>Decline</th>
+              <th style={th}>Days Down</th>
+              <th style={th}>Days Recover</th>
             </tr>
           </thead>
           <tbody>
             {data.map((d) => (
-              <tr key={d.conflict} className="border-b border-slate-700/50 hover:bg-slate-700/50 transition-colors">
-                <td className="py-2 px-3 text-slate-300">{d.label}</td>
-                <td className="py-2 px-3 text-slate-400">{d.date}</td>
-                <td className="py-2 px-3 text-red-400 font-semibold">-{d.decline}%</td>
-                <td className="py-2 px-3 text-slate-400">{d.daysToBottom}</td>
-                <td className="py-2 px-3 text-slate-400">{d.daysToRecover}</td>
+              <tr key={d.conflict} style={{ transition: "background 0.15s" }}
+                onMouseEnter={e => e.currentTarget.style.background = "#334155"}
+                onMouseLeave={e => e.currentTarget.style.background = "transparent"}>
+                <td style={td}>{d.label}</td>
+                <td style={{ ...td, color: "#94A3B8" }}>{d.date}</td>
+                <td style={{ ...td, color: "#EF4444", fontWeight: 600 }}>-{d.decline}%</td>
+                <td style={td}>{d.daysToBottom}</td>
+                <td style={td}>{d.daysToRecover}</td>
               </tr>
             ))}
           </tbody>

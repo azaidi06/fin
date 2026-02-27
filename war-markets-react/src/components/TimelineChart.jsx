@@ -1,115 +1,69 @@
 import {
-  ComposedChart, Scatter, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend,
-  ResponsiveContainer, ZAxis,
+  BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend,
+  ResponsiveContainer,
 } from "recharts";
 import { combinedData } from "../data/warData";
 
-// Reshape data for the scatter plot
-const bottomData = combinedData.map(d => ({
+const card = { background: "#1E293B", border: "1px solid #334155", borderRadius: 12, padding: 24, marginBottom: 32 };
+
+// Transform data for a grouped bar chart: days to bottom + days to recover per conflict
+const timelineData = combinedData.map(d => ({
   label: d.label,
-  conflict: d.conflict,
-  spDays: d.spDaysToBottom,
-  nqDays: d.nqDaysToBottom,
+  spBottom: d.spDaysToBottom,
+  spRecover: d.spDaysToRecover,
+  nqBottom: d.nqDaysToBottom,
+  nqRecover: d.nqDaysToRecover,
 }));
 
-const recoverData = combinedData.map(d => ({
-  label: d.label,
-  conflict: d.conflict,
-  spDays: d.spDaysToRecover,
-  nqDays: d.nqDaysToRecover,
-}));
-
-function CustomTooltip({ active, payload }) {
+function CustomTooltip({ active, payload, label }) {
   if (!active || !payload?.length) return null;
-  const d = payload[0]?.payload;
-  if (!d) return null;
+  const names = {
+    spBottom: "S&P Days to Bottom",
+    spRecover: "S&P Days to Recover",
+    nqBottom: "NQ Days to Bottom",
+    nqRecover: "NQ Days to Recover",
+  };
+  const colors = {
+    spBottom: "#F59E0B",
+    spRecover: "#6366F1",
+    nqBottom: "#FBBF24",
+    nqRecover: "#10B981",
+  };
   return (
-    <div className="bg-slate-700 border border-slate-600 rounded-lg px-4 py-3 text-sm shadow-xl">
-      <p className="font-semibold text-slate-100 mb-1">{d.label}</p>
-      {payload.map((p) => (
-        <p key={p.dataKey} style={{ color: p.color || p.fill }}>
-          {p.name}: {p.value} days
+    <div style={{ background: "#334155", border: "1px solid #475569", borderRadius: 8, padding: "12px 16px", fontSize: 13, color: "#F8FAFC", boxShadow: "0 8px 24px rgba(0,0,0,0.4)" }}>
+      <p style={{ fontWeight: 600, marginBottom: 6 }}>{label}</p>
+      {payload.map(p => p.value != null && (
+        <p key={p.dataKey} style={{ color: colors[p.dataKey] || p.color, margin: "2px 0" }}>
+          {names[p.dataKey] || p.name}: <strong>{p.value}d</strong>
         </p>
       ))}
     </div>
   );
 }
 
-// Custom shape for dumbbell rows
-function DumbbellRow({ data }) {
-  return (
-    <div className="space-y-3">
-      {data.map((d) => {
-        const maxVal = Math.max(d.spDaysToRecover, d.nqDaysToRecover || 0);
-        const scale = (v) => (v / 950) * 100; // Scale to percentage of container width
-        return (
-          <div key={d.conflict} className="flex items-center gap-4">
-            <div className="w-44 text-sm text-slate-300 text-right shrink-0">{d.label}</div>
-            <div className="relative flex-1 h-12">
-              {/* S&P line */}
-              <div className="absolute top-3 h-0.5 bg-slate-500"
-                style={{ left: `${scale(d.spDaysToBottom)}%`, width: `${scale(d.spDaysToRecover - d.spDaysToBottom)}%` }} />
-              {/* S&P bottom dot */}
-              <div className="absolute top-1 w-4 h-4 rounded-full bg-amber-500 border-2 border-slate-800"
-                style={{ left: `calc(${scale(d.spDaysToBottom)}% - 8px)` }}
-                title={`S&P Days to bottom: ${d.spDaysToBottom}`} />
-              {/* S&P recover dot */}
-              <div className="absolute top-1 w-4 h-4 rounded-full bg-emerald-500 border-2 border-slate-800"
-                style={{ left: `calc(${scale(d.spDaysToRecover)}% - 8px)` }}
-                title={`S&P Days to recover: ${d.spDaysToRecover}`} />
-
-              {d.nqDaysToBottom != null && (
-                <>
-                  {/* NASDAQ line (dashed) */}
-                  <div className="absolute top-8 h-0.5 border-t-2 border-dashed border-slate-500"
-                    style={{ left: `${scale(d.nqDaysToBottom)}%`, width: `${scale(d.nqDaysToRecover - d.nqDaysToBottom)}%` }} />
-                  <div className="absolute top-6 w-3 h-3 rounded-full bg-amber-500/80 border-2 border-slate-800"
-                    style={{ left: `calc(${scale(d.nqDaysToBottom)}% - 6px)` }}
-                    title={`NASDAQ Days to bottom: ${d.nqDaysToBottom}`} />
-                  <div className="absolute top-6 w-3 h-3 rounded-full bg-emerald-500/80 border-2 border-slate-800"
-                    style={{ left: `calc(${scale(d.nqDaysToRecover)}% - 6px)` }}
-                    title={`NASDAQ Days to recover: ${d.nqDaysToRecover}`} />
-                </>
-              )}
-
-              {/* WWII annotation */}
-              {d.conflict === "WWII" && (
-                <span className="absolute top-0 text-xs text-slate-500 italic"
-                  style={{ left: `calc(${scale(d.spDaysToRecover)}% + 12px)` }}>
-                  917d (~2.5 yrs)
-                </span>
-              )}
-            </div>
-          </div>
-        );
-      })}
-    </div>
-  );
-}
-
 export default function TimelineChart() {
   return (
-    <section className="bg-slate-800 border border-slate-700 rounded-xl p-6 mb-8">
-      <h2 className="text-xl font-semibold text-slate-100 mb-1">Speed of Decline vs. Recovery</h2>
-      <p className="text-sm text-slate-500 mb-2">Trading days from conflict start to market bottom, and from bottom back to pre-war level</p>
-      <div className="flex flex-wrap gap-4 justify-center mb-4 text-xs text-slate-400">
-        <span className="flex items-center gap-1.5"><span className="w-3 h-3 rounded-full bg-amber-500 inline-block" /> Days to bottom</span>
-        <span className="flex items-center gap-1.5"><span className="w-3 h-3 rounded-full bg-emerald-500 inline-block" /> Days to recover</span>
-        <span className="flex items-center gap-1.5"><span className="w-4 h-0.5 bg-slate-400 inline-block" /> S&P 500</span>
-        <span className="flex items-center gap-1.5"><span className="w-4 border-t-2 border-dashed border-slate-400 inline-block" /> NASDAQ</span>
-      </div>
-
-      {/* Scale bar */}
-      <div className="flex items-center gap-4 mb-2 ml-48">
-        <div className="flex-1 relative h-6">
-          {[0, 100, 200, 300, 500, 700, 900].map(v => (
-            <span key={v} className="absolute text-xs text-slate-600 -translate-x-1/2"
-              style={{ left: `${(v / 950) * 100}%`, top: 0 }}>{v}d</span>
-          ))}
-        </div>
-      </div>
-
-      <DumbbellRow data={combinedData} />
+    <section style={card}>
+      <h2 style={{ fontSize: 20, fontWeight: 600, color: "#F8FAFC", marginBottom: 4 }}>Speed of Decline vs. Recovery</h2>
+      <p style={{ fontSize: 13, color: "#94A3B8", marginBottom: 20 }}>
+        Trading days from conflict start to market bottom, and from bottom back to pre-war level
+      </p>
+      <ResponsiveContainer width="100%" height={420}>
+        <BarChart data={timelineData} layout="vertical" margin={{ top: 5, right: 50, left: 10, bottom: 5 }}>
+          <CartesianGrid strokeDasharray="3 3" stroke="#475569" opacity={0.25} horizontal={false} />
+          <XAxis type="number" tickFormatter={(v) => `${v}d`} stroke="#475569"
+            tick={{ fill: "#94A3B8", fontSize: 12 }} axisLine={false} tickLine={false}
+            label={{ value: "Trading Days", position: "insideBottom", offset: -2, fill: "#94A3B8", fontSize: 12 }} />
+          <YAxis type="category" dataKey="label" width={185} stroke="#475569"
+            tick={{ fill: "#CBD5E1", fontSize: 12 }} axisLine={false} tickLine={false} />
+          <Tooltip content={<CustomTooltip />} cursor={{ fill: "rgba(99,102,241,0.06)" }} />
+          <Legend wrapperStyle={{ fontSize: 12, color: "#CBD5E1", paddingTop: 8 }} iconType="square" iconSize={10} />
+          <Bar dataKey="spBottom" name="S&P Bottom" fill="#F59E0B" radius={[0, 4, 4, 0]} barSize={10} />
+          <Bar dataKey="spRecover" name="S&P Recover" fill="#6366F1" radius={[0, 4, 4, 0]} barSize={10} />
+          <Bar dataKey="nqBottom" name="NQ Bottom" fill="#FBBF24" radius={[0, 4, 4, 0]} barSize={10} fillOpacity={0.7} />
+          <Bar dataKey="nqRecover" name="NQ Recover" fill="#10B981" radius={[0, 4, 4, 0]} barSize={10} />
+        </BarChart>
+      </ResponsiveContainer>
     </section>
   );
 }
