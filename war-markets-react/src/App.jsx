@@ -5,11 +5,13 @@ import DrawdownChart from "./components/DrawdownChart";
 import TimelineChart from "./components/TimelineChart";
 import DataTable from "./components/DataTable";
 import ComparisonPanel from "./components/ComparisonPanel";
+import GlobalMarketsPanel from "./components/GlobalMarketsPanel";
 import { sp500Data, nasdaqData } from "./data/warData";
 
 const tabs = [
   { id: "reaction", label: "Post-Conflict Reaction" },
   { id: "buildup", label: "Pre-War Buildup" },
+  { id: "global", label: "Global Markets" },
 ];
 
 const tabBtn = (active) => ({
@@ -58,6 +60,11 @@ export default function App() {
         {/* Pre-War Buildup tab */}
         {activeTab === "buildup" && (
           <BuildupPanel />
+        )}
+
+        {/* Global Markets tab */}
+        {activeTab === "global" && (
+          <GlobalMarketsPanel />
         )}
 
         <footer className="text-center text-xs pt-4 border-t leading-relaxed" style={{ color: "#64748B", borderColor: "#334155" }}>
