@@ -105,6 +105,24 @@
   tr:hover td { background: var(--surface-elevated); }
   td.decline { color: var(--red); font-weight: 600; }
 
+  /* Buildup cards */
+  .buildup-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-top: 1.5rem; }
+  .buildup-card {
+    background: var(--bg); border: 1px solid var(--border); border-radius: 10px; padding: 1.25rem;
+  }
+  .buildup-card h3 { font-weight: 600; color: #E2E8F0; font-size: 0.9rem; margin-bottom: 0.75rem; display: flex; justify-content: space-between; align-items: center; }
+  .buildup-card .badge {
+    font-size: 0.6rem; font-weight: 600; color: var(--amber-light); background: rgba(251,191,36,0.12);
+    padding: 2px 8px; border-radius: 4px; text-transform: uppercase; letter-spacing: 0.05em;
+  }
+  .buildup-card .meta-label { font-size: 0.68rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 2px; }
+  .buildup-card .meta-value { font-size: 0.8rem; color: var(--text-secondary); margin-bottom: 0.75rem; }
+  .buildup-card .change-val { font-size: 1.15rem; font-weight: 700; }
+  .buildup-card .change-val.neg { color: var(--red); }
+  .buildup-card .change-val.pos { color: var(--emerald); }
+  .buildup-card .narrative { font-size: 0.78rem; color: var(--text-muted); line-height: 1.5; border-top: 1px solid var(--border); padding-top: 0.6rem; margin-top: 0.6rem; }
+  .buildup-note { font-size: 0.72rem; color: var(--text-muted); text-align: center; font-style: italic; margin-top: 0.5rem; }
+
   /* Footer */
   .footer {
     text-align: center; color: var(--text-muted); font-size: 0.75rem;
@@ -118,6 +136,7 @@
     .header h1 { font-size: 1.5rem; }
     .header .subtitle { font-size: 0.95rem; }
     .tables-grid { grid-template-columns: 1fr; }
+    .buildup-grid { grid-template-columns: 1fr; }
     .chart-section { padding: 1rem; }
   }
 </style>
@@ -133,6 +152,21 @@
       trading day before each conflict's start event. Recovery = return to pre-war close.
       NASDAQ data available from 1971 onward (Gulf War, 9/11, Iraq only).
     </p>
+  </div>
+
+  <!-- Pre-War Buildup -->
+  <div class="chart-section">
+    <h2 class="section-title">Pre-War Market Buildup</h2>
+    <p class="section-desc">How markets performed in the lead-up to each conflict — anticipatory selloffs vs. surprise shocks</p>
+    <div class="legend">
+      <div class="legend-item"><div class="legend-swatch" style="background:var(--indigo)"></div><span>S&P 500</span></div>
+      <div class="legend-item"><div class="legend-swatch" style="background:var(--emerald)"></div><span>NASDAQ</span></div>
+      <div class="legend-item" style="opacity:0.5"><div class="legend-swatch" style="background:#94A3B8"></div><span>Surprise (context)</span></div>
+    </div>
+    <div id="buildup-chart"></div>
+    <p class="buildup-note">Faded bars = surprise events (context only, not anticipatory). Positive values = market was rising before the conflict.</p>
+
+    <div class="buildup-grid" id="buildup-cards"></div>
   </div>
 
   <!-- Bar Chart: Max Decline -->
@@ -221,6 +255,167 @@ function showTooltip(event, html) {
   tooltip.style("left", tx + "px").style("top", ty + "px");
 }
 function hideTooltip() { tooltip.style("opacity", 0); }
+
+// ── PRE-WAR BUILDUP DATA ─────────────────────────────────────
+const preWarData = [
+  { conflict: "WWII", label: "WWII (Pearl Harbor)", period: "Jul 25 – Dec 5, 1941", days: 91,
+    spChange: -9.9, nqChange: null, surprise: false, spStart: "10.34", spEnd: "9.32",
+    catalyst: "US freezes Japanese assets, oil embargo (Jul 26)",
+    narrative: "Gradual decline as US-Japan tensions escalated after the asset freeze cut off 80% of Japan's oil. Pearl Harbor itself was a surprise, but the collision course was visible." },
+  { conflict: "Korea", label: "Korean War", period: "None (surprise invasion)", days: null,
+    spChange: 11.0, nqChange: null, surprise: true, spStart: "17.24", spEnd: "19.14",
+    catalyst: "North Korea invaded with no warning (Jun 25, 1950)",
+    narrative: "Complete surprise. Markets were at 52-week highs, up +11% in the prior 3 months. The S&P fell 5.4% on the first trading day after." },
+  { conflict: "Vietnam", label: "Vietnam (Gulf of Tonkin)", period: "Feb 3 – Aug 7, 1964", days: 131,
+    spChange: 6.4, nqChange: null, surprise: false, spStart: "76.97", spEnd: "81.86",
+    catalyst: "Gulf of Tonkin incident (Aug 2–4)",
+    narrative: "Markets showed zero concern about Vietnam in 1964. The S&P rose steadily and barely flinched at Tonkin. War's economic impact wouldn't hit until 1966." },
+  { conflict: "Gulf War", label: "Gulf War (Kuwait)", period: "Jul 16 – Aug 1, 1990", days: 13,
+    spChange: -3.6, nqChange: -7.2, surprise: false, spStart: "368.95", spEnd: "355.52", nqStart: "469.60", nqEnd: "435.90",
+    catalyst: "Saddam threatens Kuwait (Jul 17), troops mass on border",
+    narrative: "S&P peaked the day before Saddam's threatening speech. Brief 2-week selloff. NASDAQ fell harder (−7.2%) as tech was more sensitive to oil shock fears." },
+  { conflict: "9/11", label: "9/11 / Afghanistan", period: "None (surprise attack)", days: null,
+    spChange: -20.5, nqChange: -21.9, surprise: true, spStart: "1,373.73", spEnd: "1,092.54", nqStart: "2,170.78", nqEnd: "1,695.38",
+    catalyst: "Terrorist attacks — completely unexpected",
+    narrative: "No pre-war buildup. Both indices were already in severe decline from the dot-com bust. S&P down 28.5% from 2000 peak; NASDAQ down 66% from its March 2000 high." },
+  { conflict: "Iraq", label: "Iraq War", period: "Nov 27, 2002 – Mar 11, 2003", days: 70,
+    spChange: -14.7, nqChange: -5.9, surprise: false, spStart: "938.87", spEnd: "800.73", nqStart: "1,487.94", nqEnd: "1,400.55",
+    catalyst: "UN Resolution 1441 → Powell UN speech → Bush ultimatum",
+    narrative: "The textbook 'sell the buildup, buy the invasion.' S&P fell 14.7% as war certainty grew. Once the invasion began, markets immediately rallied." },
+];
+
+// ── BUILDUP CHART ────────────────────────────────────────────
+(function() {
+  const container = d3.select("#buildup-chart");
+  const fullWidth = Math.min(container.node().getBoundingClientRect().width, 900);
+  const margin = { top: 10, right: 60, bottom: 40, left: 160 };
+  const width = fullWidth - margin.left - margin.right;
+  const height = preWarData.length * 72;
+
+  const svg = container.append("svg")
+    .attr("viewBox", `0 0 ${fullWidth} ${height + margin.top + margin.bottom}`)
+    .attr("preserveAspectRatio", "xMidYMid meet")
+    .style("width", "100%").style("max-width", fullWidth + "px");
+
+  const g = svg.append("g").attr("transform", `translate(${margin.left},${margin.top})`);
+
+  const y0 = d3.scaleBand().domain(preWarData.map(d => d.conflict)).range([0, height]).padding(0.25);
+  const vals = preWarData.flatMap(d => [d.spChange, d.nqChange].filter(v => v != null));
+  const xMin = Math.floor(d3.min(vals) / 5) * 5;
+  const xMax = Math.ceil(d3.max(vals) / 5) * 5;
+  const x = d3.scaleLinear().domain([xMin, xMax]).range([0, width]);
+
+  // Grid
+  const gridG = g.append("g");
+  gridG.call(d3.axisBottom(x).tickSize(height).tickFormat("").ticks(6));
+  gridG.select(".domain").remove();
+  gridG.selectAll("line").attr("stroke", "#475569").attr("stroke-opacity", 0.25);
+  gridG.selectAll("text").remove();
+
+  // Zero line
+  g.append("line")
+    .attr("x1", x(0)).attr("y1", 0).attr("x2", x(0)).attr("y2", height)
+    .attr("stroke", "#64748B").attr("stroke-width", 1.5);
+
+  // Y axis
+  const yAxisG = g.append("g").call(d3.axisLeft(y0).tickSize(0).tickFormat(c => {
+    const d = preWarData.find(dd => dd.conflict === c);
+    return d ? d.label : c;
+  }));
+  yAxisG.select(".domain").remove();
+  yAxisG.selectAll("text").attr("fill", "#CBD5E1").attr("font-size", "0.78rem");
+
+  // X axis
+  const xAxisG = g.append("g").attr("transform", `translate(0,${height})`);
+  xAxisG.call(d3.axisBottom(x).ticks(6).tickFormat(d => (d > 0 ? "+" : "") + d + "%"));
+  xAxisG.select(".domain").remove();
+  xAxisG.selectAll("text").attr("fill", "#94A3B8").attr("font-size", "0.72rem");
+  xAxisG.selectAll("line").attr("stroke", "#475569");
+
+  function buildupTip(d, index, change) {
+    return `<div class="tt-title">${d.label} — ${index}</div>
+      <span class="tt-label">Period:</span> <span class="tt-value">${d.period}</span><br>
+      <span class="tt-label">Change:</span> <span class="tt-value" style="color:${change < 0 ? '#EF4444' : '#10B981'}">${change > 0 ? '+' : ''}${change}%</span><br>
+      <span class="tt-label">Catalyst:</span> <span class="tt-value">${d.catalyst}</span>
+      ${d.surprise ? '<br><span style="color:#FBBF24;font-style:italic;font-size:0.72rem">Surprise event — context only</span>' : ''}`;
+  }
+
+  preWarData.forEach(d => {
+    const nq = d.nqChange;
+    const hasNQ = nq != null;
+    const bandH = y0.bandwidth();
+    const opacity = d.surprise ? 0.4 : 1;
+
+    function addBuildupBar(yPos, h, fill, change, tipHtml) {
+      const barX = change < 0 ? x(change) : x(0);
+      const barW = Math.abs(x(change) - x(0));
+      g.append("rect").attr("class", "bar")
+        .attr("x", barX).attr("y", yPos).attr("width", 0).attr("height", h)
+        .attr("rx", 4).attr("fill", fill).attr("opacity", opacity)
+        .on("mouseenter", function(event) {
+          d3.selectAll(".bar").attr("opacity", 0.25);
+          d3.select(this).attr("opacity", 1);
+          showTooltip(event, tipHtml);
+        })
+        .on("mousemove", event => showTooltip(event, tooltip.html()))
+        .on("mouseleave", function() { d3.selectAll(".bar").attr("opacity", b => b === d ? opacity : 1); hideTooltip(); })
+        .transition().duration(800).ease(d3.easeCubicOut).attr("width", barW);
+
+      // Label
+      const labelX = change < 0 ? barX - 6 : barX + barW + 6;
+      const anchor = change < 0 ? "end" : "start";
+      g.append("text")
+        .attr("x", labelX).attr("y", yPos + h / 2).attr("dy", "0.35em")
+        .attr("fill", change < 0 ? "#EF4444" : "#10B981").attr("font-size", "0.72rem").attr("font-weight", "600")
+        .attr("text-anchor", anchor).attr("opacity", 0)
+        .text(`${change > 0 ? '+' : ''}${change}%`)
+        .transition().delay(600).duration(400).attr("opacity", opacity);
+    }
+
+    if (hasNQ) {
+      const barH = bandH / 2 - 3;
+      addBuildupBar(y0(d.conflict), barH, "#6366F1", d.spChange, buildupTip(d, "S&P 500", d.spChange));
+      addBuildupBar(y0(d.conflict) + barH + 6, barH, "#10B981", nq, buildupTip(d, "NASDAQ", nq));
+    } else {
+      const barH = bandH * 0.55;
+      addBuildupBar(y0(d.conflict) + (bandH - barH) / 2, barH, "#6366F1", d.spChange, buildupTip(d, "S&P 500", d.spChange));
+    }
+  });
+})();
+
+// ── BUILDUP CARDS ────────────────────────────────────────────
+(function() {
+  const grid = d3.select("#buildup-cards");
+  preWarData.forEach(d => {
+    const isNeg = d.spChange < 0;
+    const card = grid.append("div").attr("class", "buildup-card");
+
+    let h3 = `${d.label}`;
+    if (d.surprise) h3 += `<span class="badge">Surprise</span>`;
+    card.append("h3").html(h3);
+
+    card.append("div").attr("class", "meta-label").text(d.surprise ? "Context Period" : "Buildup Period");
+    card.append("div").attr("class", "meta-value").text(d.period + (d.days ? ` (${d.days} trading days)` : ""));
+
+    card.append("div").attr("class", "meta-label").text("Catalyst");
+    card.append("div").attr("class", "meta-value").text(d.catalyst);
+
+    const row = card.append("div").style("display", "flex").style("gap", "1.5rem").style("margin-bottom", "0.5rem");
+    const spCol = row.append("div");
+    spCol.append("div").attr("class", "meta-label").text("S&P 500");
+    spCol.append("div").attr("class", `change-val ${isNeg ? 'neg' : 'pos'}`).text(`${d.spChange > 0 ? '+' : ''}${d.spChange}%`);
+    spCol.append("div").style("font-size", "0.68rem").style("color", "#475569").text(`${d.spStart} → ${d.spEnd}`);
+
+    if (d.nqChange != null) {
+      const nqCol = row.append("div");
+      nqCol.append("div").attr("class", "meta-label").text("NASDAQ");
+      nqCol.append("div").attr("class", `change-val ${d.nqChange < 0 ? 'neg' : 'pos'}`).text(`${d.nqChange > 0 ? '+' : ''}${d.nqChange}%`);
+      nqCol.append("div").style("font-size", "0.68rem").style("color", "#475569").text(`${d.nqStart} → ${d.nqEnd}`);
+    }
+
+    card.append("div").attr("class", "narrative").text(d.narrative);
+  });
+})();
 
 // ── BAR CHART ─────────────────────────────────────────────────
 (function() {

@@ -1,4 +1,5 @@
 import Header from "./components/Header";
+import BuildupPanel from "./components/BuildupPanel";
 import DrawdownChart from "./components/DrawdownChart";
 import TimelineChart from "./components/TimelineChart";
 import DataTable from "./components/DataTable";
@@ -10,6 +11,7 @@ export default function App() {
     <div className="min-h-screen px-4 py-10 sm:px-6 lg:px-8" style={{ background: "#0F172A", color: "#F8FAFC" }}>
       <div className="max-w-[960px] mx-auto">
         <Header />
+        <BuildupPanel />
         <DrawdownChart />
         <TimelineChart />
         <ComparisonPanel />
