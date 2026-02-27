@@ -545,6 +545,7 @@ const preWarData = [
 
 // ── DUMBBELL CHART ────────────────────────────────────────────
 (function() {
+  const CAP = 250; // cap axis so WWII 917d doesn't squash everything
   const container = d3.select("#dumbbell-chart");
   const fullWidth = Math.min(container.node().getBoundingClientRect().width, 900);
   const margin = { top: 10, right: 90, bottom: 45, left: 160 };
@@ -558,14 +559,12 @@ const preWarData = [
 
   const g = svg.append("g").attr("transform", `translate(${margin.left},${margin.top})`);
 
-  const allDays = [...sp500Data.flatMap(d => [d.daysToBottom, d.daysToRecover]),
-                   ...nasdaqData.flatMap(d => [d.daysToBottom, d.daysToRecover])];
-  const x = d3.scaleLinear().domain([0, d3.max(allDays) * 1.08]).range([0, width]);
+  const x = d3.scaleLinear().domain([0, CAP]).range([0, width]);
   const y = d3.scaleBand().domain(conflicts).range([0, height]).padding(0.35);
 
   // Grid
   const gridG = g.append("g");
-  gridG.call(d3.axisBottom(x).tickSize(height).tickFormat("").ticks(6));
+  gridG.call(d3.axisBottom(x).tickSize(height).tickFormat("").ticks(5));
   gridG.select(".domain").remove();
   gridG.selectAll("line").attr("stroke", "#475569").attr("stroke-opacity", 0.2);
   gridG.selectAll("text").remove();
@@ -580,14 +579,14 @@ const preWarData = [
 
   // X axis
   const xAxisG = g.append("g").attr("transform", `translate(0,${height})`);
-  xAxisG.call(d3.axisBottom(x).ticks(6).tickFormat(d => d + "d"));
+  xAxisG.call(d3.axisBottom(x).ticks(5).tickFormat(d => d + "d"));
   xAxisG.select(".domain").remove();
   xAxisG.selectAll("text").attr("fill", "#94A3B8").attr("font-size", "0.72rem");
   xAxisG.selectAll("line").attr("stroke", "#475569");
 
   g.append("text").attr("x", width / 2).attr("y", height + 38)
     .attr("text-anchor", "middle").attr("fill", "#94A3B8").attr("font-size", "0.72rem")
-    .text("Trading Days");
+    .text("Trading Days (axis capped at " + CAP + "d — WWII recovery annotated)");
 
   function dotTip(label, index, metric, value, extra) {
     return `<div class="tt-title">${label} — ${index}</div>
@@ -595,9 +594,12 @@ const preWarData = [
       ${extra || ""}`;
   }
 
-  function addDot(cx, cy, r, fill, tipHtml) {
+  // Clamp position but keep real value for tooltips/annotations
+  function cx(val) { return x(Math.min(val, CAP)); }
+
+  function addDot(dotCx, cy, r, fill, tipHtml) {
     g.append("circle").attr("class", "dot")
-      .attr("cx", cx).attr("cy", cy).attr("r", r)
+      .attr("cx", dotCx).attr("cy", cy).attr("r", r)
       .attr("fill", fill).attr("stroke", "transparent").attr("stroke-width", 2.5)
       .on("mouseenter", function(event) {
         d3.select(this).transition().duration(120).attr("r", r * 1.5).attr("stroke", "#fff");
@@ -617,39 +619,39 @@ const preWarData = [
     const hasNQ = !!nq;
     const spY = hasNQ ? cy - 10 : cy;
 
-    // S&P connecting line (solid)
+    // S&P connecting line (solid) — clamp end position
     g.append("line")
-      .attr("x1", x(sp.daysToBottom)).attr("y1", spY)
-      .attr("x2", x(sp.daysToRecover)).attr("y2", spY)
+      .attr("x1", cx(sp.daysToBottom)).attr("y1", spY)
+      .attr("x2", cx(sp.daysToRecover)).attr("y2", spY)
       .attr("stroke", "#64748B").attr("stroke-width", 2);
 
-    addDot(x(sp.daysToBottom), spY, 7, "#F59E0B",
+    addDot(cx(sp.daysToBottom), spY, 7, "#F59E0B",
       dotTip(sp.label, "S&P 500", "Days to bottom", sp.daysToBottom,
         `<br><span class="tt-label">Max decline:</span> <span class="tt-value" style="color:#EF4444">-${sp.decline}%</span>`));
-    addDot(x(sp.daysToRecover), spY, 7, "#10B981",
+    addDot(cx(sp.daysToRecover), spY, 7, "#10B981",
       dotTip(sp.label, "S&P 500", "Days to recover", sp.daysToRecover,
         `<br><span class="tt-label">Drawdown:</span> <span class="tt-value">-${sp.decline}% in ${sp.daysToBottom}d</span>`));
+
+    // Annotation for capped values
+    if (sp.daysToRecover > CAP) {
+      g.append("text").attr("x", cx(sp.daysToRecover) + 10).attr("y", spY).attr("dy", "0.35em")
+        .attr("fill", "#94A3B8").attr("font-size", "0.72rem").attr("font-weight", "600").attr("font-style", "italic")
+        .text(sp.daysToRecover + "d →");
+    }
 
     if (hasNQ) {
       const nqY = cy + 10;
       g.append("line")
-        .attr("x1", x(nq.daysToBottom)).attr("y1", nqY)
-        .attr("x2", x(nq.daysToRecover)).attr("y2", nqY)
+        .attr("x1", cx(nq.daysToBottom)).attr("y1", nqY)
+        .attr("x2", cx(nq.daysToRecover)).attr("y2", nqY)
         .attr("stroke", "#64748B").attr("stroke-width", 2).attr("stroke-dasharray", "5,4");
 
-      addDot(x(nq.daysToBottom), nqY, 5.5, "#F59E0B",
+      addDot(cx(nq.daysToBottom), nqY, 5.5, "#F59E0B",
         dotTip(nq.label, "NASDAQ", "Days to bottom", nq.daysToBottom,
           `<br><span class="tt-label">Max decline:</span> <span class="tt-value" style="color:#EF4444">-${nq.decline}%</span>`));
-      addDot(x(nq.daysToRecover), nqY, 5.5, "#10B981",
+      addDot(cx(nq.daysToRecover), nqY, 5.5, "#10B981",
         dotTip(nq.label, "NASDAQ", "Days to recover", nq.daysToRecover,
           `<br><span class="tt-label">Drawdown:</span> <span class="tt-value">-${nq.decline}% in ${nq.daysToBottom}d</span>`));
-    }
-
-    // WWII outlier annotation
-    if (conflict === "WWII") {
-      g.append("text").attr("x", x(sp.daysToRecover) + 10).attr("y", spY).attr("dy", "0.35em")
-        .attr("fill", "#94A3B8").attr("font-size", "0.68rem").attr("font-style", "italic")
-        .text("917 days (~2.5 yrs)");
     }
   });
 })();
