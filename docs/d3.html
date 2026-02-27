@@ -123,6 +123,21 @@
   .buildup-card .narrative { font-size: 0.78rem; color: var(--text-muted); line-height: 1.5; border-top: 1px solid var(--border); padding-top: 0.6rem; margin-top: 0.6rem; }
   .buildup-note { font-size: 0.72rem; color: var(--text-muted); text-align: center; font-style: italic; margin-top: 0.5rem; }
 
+  /* Tabs */
+  .tab-bar { display: flex; gap: 8px; justify-content: center; margin-bottom: 2rem; flex-wrap: wrap; }
+  .tab-btn {
+    padding: 10px 24px; font-size: 0.9rem; font-weight: 400; font-family: inherit;
+    color: var(--text-muted); background: transparent; border: 1px solid transparent;
+    border-radius: 8px; cursor: pointer; transition: all 0.15s ease;
+  }
+  .tab-btn.active {
+    font-weight: 600; color: var(--text-primary); background: var(--surface-elevated);
+    border-color: var(--border-light);
+  }
+  .tab-btn:hover:not(.active) { color: var(--text-secondary); }
+  .tab-content { display: none; }
+  .tab-content.active { display: block; }
+
   /* Footer */
   .footer {
     text-align: center; color: var(--text-muted); font-size: 0.75rem;
@@ -154,66 +169,77 @@
     </p>
   </div>
 
-  <!-- Pre-War Buildup -->
-  <div class="chart-section">
-    <h2 class="section-title">Pre-War Market Buildup</h2>
-    <p class="section-desc">How markets performed in the lead-up to each conflict — anticipatory selloffs vs. surprise shocks</p>
-    <div class="legend">
-      <div class="legend-item"><div class="legend-swatch" style="background:var(--indigo)"></div><span>S&P 500</span></div>
-      <div class="legend-item"><div class="legend-swatch" style="background:var(--emerald)"></div><span>NASDAQ</span></div>
-      <div class="legend-item" style="opacity:0.5"><div class="legend-swatch" style="background:#94A3B8"></div><span>Surprise (context)</span></div>
-    </div>
-    <div id="buildup-chart"></div>
-    <p class="buildup-note">Faded bars = surprise events (context only, not anticipatory). Positive values = market was rising before the conflict.</p>
-
-    <div class="buildup-grid" id="buildup-cards"></div>
+  <!-- Tab bar -->
+  <div class="tab-bar">
+    <button class="tab-btn active" onclick="switchTab('reaction')">Post-Conflict Reaction</button>
+    <button class="tab-btn" onclick="switchTab('buildup')">Pre-War Buildup</button>
   </div>
 
-  <!-- Bar Chart: Max Decline -->
-  <div class="chart-section">
-    <h2 class="section-title">Maximum Drawdown by Conflict</h2>
-    <p class="section-desc">Peak-to-trough decline from the pre-war close</p>
-    <div class="legend">
-      <div class="legend-item"><div class="legend-swatch" style="background:var(--indigo)"></div><span>S&P 500</span></div>
-      <div class="legend-item"><div class="legend-swatch" style="background:var(--emerald)"></div><span>NASDAQ</span></div>
-    </div>
-    <div id="bar-chart"></div>
-  </div>
-
-  <!-- Dumbbell Chart -->
-  <div class="chart-section">
-    <h2 class="section-title">Speed of Decline vs. Recovery</h2>
-    <p class="section-desc">Trading days from conflict start to market bottom, and from bottom back to pre-war level</p>
-    <div class="legend">
-      <div class="legend-item"><div class="legend-swatch" style="background:var(--amber);border-radius:50%"></div><span>Days to bottom</span></div>
-      <div class="legend-item"><div class="legend-swatch" style="background:var(--emerald);border-radius:50%"></div><span>Days to recover</span></div>
-      <div class="legend-item">
-        <svg width="14" height="14"><line x1="0" y1="7" x2="14" y2="7" stroke="#94A3B8" stroke-width="2"/></svg>
-        <span>S&P 500</span>
+  <!-- TAB 1: Post-Conflict Reaction -->
+  <div class="tab-content active" id="tab-reaction">
+    <!-- Bar Chart: Max Decline -->
+    <div class="chart-section">
+      <h2 class="section-title">Maximum Drawdown by Conflict</h2>
+      <p class="section-desc">Peak-to-trough decline from the pre-war close</p>
+      <div class="legend">
+        <div class="legend-item"><div class="legend-swatch" style="background:var(--indigo)"></div><span>S&P 500</span></div>
+        <div class="legend-item"><div class="legend-swatch" style="background:var(--emerald)"></div><span>NASDAQ</span></div>
       </div>
-      <div class="legend-item">
-        <svg width="14" height="14"><line x1="0" y1="7" x2="14" y2="7" stroke="#94A3B8" stroke-width="2" stroke-dasharray="3,3"/></svg>
-        <span>NASDAQ</span>
+      <div id="bar-chart"></div>
+    </div>
+
+    <!-- Dumbbell Chart -->
+    <div class="chart-section">
+      <h2 class="section-title">Speed of Decline vs. Recovery</h2>
+      <p class="section-desc">Trading days from conflict start to market bottom, and from bottom back to pre-war level</p>
+      <div class="legend">
+        <div class="legend-item"><div class="legend-swatch" style="background:var(--amber);border-radius:50%"></div><span>Days to bottom</span></div>
+        <div class="legend-item"><div class="legend-swatch" style="background:var(--emerald);border-radius:50%"></div><span>Days to recover</span></div>
+        <div class="legend-item">
+          <svg width="14" height="14"><line x1="0" y1="7" x2="14" y2="7" stroke="#94A3B8" stroke-width="2"/></svg>
+          <span>S&P 500</span>
+        </div>
+        <div class="legend-item">
+          <svg width="14" height="14"><line x1="0" y1="7" x2="14" y2="7" stroke="#94A3B8" stroke-width="2" stroke-dasharray="3,3"/></svg>
+          <span>NASDAQ</span>
+        </div>
+      </div>
+      <div id="dumbbell-chart"></div>
+    </div>
+
+    <!-- Data Tables -->
+    <div class="tables-grid">
+      <div class="table-card">
+        <h3><span class="dot" style="background:var(--indigo)"></span> S&P 500</h3>
+        <table>
+          <thead><tr><th>Conflict</th><th>Date</th><th>Decline</th><th>Days Down</th><th>Days Recover</th></tr></thead>
+          <tbody id="sp500-table"></tbody>
+        </table>
+      </div>
+      <div class="table-card">
+        <h3><span class="dot" style="background:var(--emerald)"></span> NASDAQ</h3>
+        <table>
+          <thead><tr><th>Conflict</th><th>Date</th><th>Decline</th><th>Days Down</th><th>Days Recover</th></tr></thead>
+          <tbody id="nasdaq-table"></tbody>
+        </table>
       </div>
     </div>
-    <div id="dumbbell-chart"></div>
   </div>
 
-  <!-- Data Tables -->
-  <div class="tables-grid">
-    <div class="table-card">
-      <h3><span class="dot" style="background:var(--indigo)"></span> S&P 500</h3>
-      <table>
-        <thead><tr><th>Conflict</th><th>Date</th><th>Decline</th><th>Days Down</th><th>Days Recover</th></tr></thead>
-        <tbody id="sp500-table"></tbody>
-      </table>
-    </div>
-    <div class="table-card">
-      <h3><span class="dot" style="background:var(--emerald)"></span> NASDAQ</h3>
-      <table>
-        <thead><tr><th>Conflict</th><th>Date</th><th>Decline</th><th>Days Down</th><th>Days Recover</th></tr></thead>
-        <tbody id="nasdaq-table"></tbody>
-      </table>
+  <!-- TAB 2: Pre-War Buildup -->
+  <div class="tab-content" id="tab-buildup">
+    <div class="chart-section">
+      <h2 class="section-title">Pre-War Market Buildup</h2>
+      <p class="section-desc">How markets performed in the lead-up to each conflict — anticipatory selloffs vs. surprise shocks</p>
+      <div class="legend">
+        <div class="legend-item"><div class="legend-swatch" style="background:var(--indigo)"></div><span>S&P 500</span></div>
+        <div class="legend-item"><div class="legend-swatch" style="background:var(--emerald)"></div><span>NASDAQ</span></div>
+        <div class="legend-item" style="opacity:0.5"><div class="legend-swatch" style="background:#94A3B8"></div><span>Surprise (context)</span></div>
+      </div>
+      <div id="buildup-chart"></div>
+      <p class="buildup-note">Faded bars = surprise events (context only, not anticipatory). Positive values = market was rising before the conflict.</p>
+
+      <div class="buildup-grid" id="buildup-cards"></div>
     </div>
   </div>
 
@@ -226,6 +252,14 @@
 <div class="tooltip" id="tooltip"></div>
 
 <script>
+// ── TAB SWITCHING ────────────────────────────────────────────
+function switchTab(id) {
+  document.querySelectorAll(".tab-content").forEach(el => el.classList.remove("active"));
+  document.querySelectorAll(".tab-btn").forEach(el => el.classList.remove("active"));
+  document.getElementById("tab-" + id).classList.add("active");
+  document.querySelector(`.tab-btn[onclick="switchTab('${id}')"]`).classList.add("active");
+}
+
 // ── DATA ──────────────────────────────────────────────────────
 const sp500Data = [
   { conflict: "WWII",     label: "WWII (Pearl Harbor)",      date: "Dec 7, 1941",  decline: 20.3, daysToBottom: 143, daysToRecover: 917 },
