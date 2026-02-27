@@ -188,23 +188,18 @@
       <div id="bar-chart"></div>
     </div>
 
-    <!-- Dumbbell Chart -->
+    <!-- Timeline Cards -->
     <div class="chart-section">
       <h2 class="section-title">Speed of Decline vs. Recovery</h2>
       <p class="section-desc">Trading days from conflict start to market bottom, and from bottom back to pre-war level</p>
       <div class="legend">
-        <div class="legend-item"><div class="legend-swatch" style="background:var(--amber);border-radius:50%"></div><span>Days to bottom</span></div>
-        <div class="legend-item"><div class="legend-swatch" style="background:var(--emerald);border-radius:50%"></div><span>Days to recover</span></div>
-        <div class="legend-item">
-          <svg width="24" height="14"><line x1="0" y1="7" x2="24" y2="7" stroke="#818CF8" stroke-width="3"/></svg>
-          <span>S&P 500</span>
-        </div>
-        <div class="legend-item">
-          <svg width="24" height="14"><line x1="0" y1="7" x2="24" y2="7" stroke="#34D399" stroke-width="3"/></svg>
-          <span>NASDAQ</span>
-        </div>
+        <div class="legend-item"><div class="legend-swatch" style="background:var(--amber)"></div><span>Days to Bottom</span></div>
+        <div class="legend-item"><div class="legend-swatch" style="background:var(--emerald)"></div><span>Days to Recover</span></div>
+        <div class="legend-item"><div class="legend-swatch" style="background:#818CF8"></div><span>S&P 500</span></div>
+        <div class="legend-item"><div class="legend-swatch" style="background:#34D399"></div><span>NASDAQ</span></div>
       </div>
-      <div id="dumbbell-chart"></div>
+      <div id="timeline-cards" class="tables-grid" style="margin-top:1rem"></div>
+      <p class="buildup-note" style="margin-top:0.75rem">Bars scaled to 250 days max. WWII recovery (917d) extends beyond scale.</p>
     </div>
 
     <!-- Data Tables -->
@@ -543,158 +538,66 @@ const preWarData = [
   });
 })();
 
-// ── DUMBBELL CHART ────────────────────────────────────────────
+// ── TIMELINE CARDS ────────────────────────────────────────────
 (function() {
   const CAP = 250;
-  const ROW_H = 110; // taller rows for readability
-  const SP_LINE = "#818CF8"; // indigo-light
-  const NQ_LINE = "#34D399"; // emerald-light
+  const grid = d3.select("#timeline-cards");
 
-  const container = d3.select("#dumbbell-chart");
-  const fullWidth = Math.min(container.node().getBoundingClientRect().width, 900);
-  const margin = { top: 10, right: 90, bottom: 45, left: 160 };
-  const width = fullWidth - margin.left - margin.right;
-  const height = conflicts.length * ROW_H;
-
-  const svg = container.append("svg")
-    .attr("viewBox", `0 0 ${fullWidth} ${height + margin.top + margin.bottom}`)
-    .attr("preserveAspectRatio", "xMidYMid meet")
-    .style("width", "100%").style("max-width", fullWidth + "px");
-
-  const g = svg.append("g").attr("transform", `translate(${margin.left},${margin.top})`);
-
-  const x = d3.scaleLinear().domain([0, CAP]).range([0, width]);
-  const y = d3.scaleBand().domain(conflicts).range([0, height]).padding(0.15);
-
-  // Grid
-  const gridG = g.append("g");
-  gridG.call(d3.axisBottom(x).tickSize(height).tickFormat("").ticks(5));
-  gridG.select(".domain").remove();
-  gridG.selectAll("line").attr("stroke", "#475569").attr("stroke-opacity", 0.2);
-  gridG.selectAll("text").remove();
-
-  // Row separators
-  conflicts.forEach((c, i) => {
-    if (i > 0) {
-      g.append("line").attr("x1", 0).attr("y1", y(c) - y.step() * 0.15 / 2)
-        .attr("x2", width).attr("y2", y(c) - y.step() * 0.15 / 2)
-        .attr("stroke", "#334155").attr("stroke-opacity", 0.5);
+  function barRow(parent, label, value, color) {
+    const pct = Math.min(value / CAP, 1) * 100;
+    const capped = value > CAP;
+    const row = parent.append("div")
+      .style("display", "flex").style("align-items", "center").style("gap", "8px").style("margin-bottom", "6px");
+    row.append("span")
+      .style("width", "56px").style("font-size", "0.72rem").style("color", "#64748B").style("flex-shrink", "0")
+      .text(label);
+    const track = row.append("div")
+      .style("flex", "1").style("height", "14px").style("background", "#0F172A")
+      .style("border-radius", "7px").style("overflow", "hidden").style("position", "relative");
+    track.append("div")
+      .style("width", pct + "%").style("height", "100%").style("background", color)
+      .style("border-radius", "7px").style("transition", "width 0.6s ease");
+    if (capped) {
+      track.append("div")
+        .style("position", "absolute").style("right", "0").style("top", "0").style("bottom", "0")
+        .style("width", "3px").style("background", "#F8FAFC").style("opacity", "0.5")
+        .style("border-radius", "2px");
     }
-  });
-
-  // Y axis
-  const yAxisG = g.append("g").call(d3.axisLeft(y).tickSize(0).tickFormat(c => {
-    const sp = sp500Data.find(d => d.conflict === c);
-    return sp ? sp.label : c;
-  }));
-  yAxisG.select(".domain").remove();
-  yAxisG.selectAll("text").attr("fill", "#CBD5E1").attr("font-size", "0.78rem").attr("font-weight", "500");
-
-  // X axis
-  const xAxisG = g.append("g").attr("transform", `translate(0,${height})`);
-  xAxisG.call(d3.axisBottom(x).ticks(5).tickFormat(d => d + "d"));
-  xAxisG.select(".domain").remove();
-  xAxisG.selectAll("text").attr("fill", "#94A3B8").attr("font-size", "0.72rem");
-  xAxisG.selectAll("line").attr("stroke", "#475569");
-
-  g.append("text").attr("x", width / 2).attr("y", height + 38)
-    .attr("text-anchor", "middle").attr("fill", "#94A3B8").attr("font-size", "0.72rem")
-    .text("Trading Days (capped at " + CAP + "d)");
-
-  function dotTip(label, index, metric, value, extra) {
-    return `<div class="tt-title">${label} — ${index}</div>
-      <span class="tt-label">${metric}:</span> <span class="tt-value" style="color:${metric.includes("bottom") ? "#F59E0B" : "#10B981"}">${value} days</span>
-      ${extra || ""}`;
+    row.append("span")
+      .style("font-size", "0.78rem").style("font-weight", "600").style("color", color)
+      .style("min-width", "48px").style("text-align", "right")
+      .text(value + "d" + (capped ? " →" : ""));
   }
 
-  function cx(val) { return x(Math.min(val, CAP)); }
-
-  function addDot(dotCx, cy, r, fill, strokeColor, tipHtml) {
-    g.append("circle").attr("class", "dot")
-      .attr("cx", dotCx).attr("cy", cy).attr("r", r)
-      .attr("fill", fill).attr("stroke", strokeColor).attr("stroke-width", 2)
-      .on("mouseenter", function(event) {
-        d3.select(this).transition().duration(120).attr("r", r * 1.4).attr("stroke", "#fff");
-        showTooltip(event, tipHtml);
-      })
-      .on("mousemove", event => showTooltip(event, tooltip.html()))
-      .on("mouseleave", function() {
-        d3.select(this).transition().duration(120).attr("r", r).attr("stroke", strokeColor);
-        hideTooltip();
-      });
+  function indexBlock(parent, name, color, bottom, recover) {
+    const block = parent.append("div").style("margin-bottom", "12px");
+    block.append("div")
+      .style("font-size", "0.72rem").style("font-weight", "700").style("color", color)
+      .style("letter-spacing", "0.05em").style("margin-bottom", "6px")
+      .text(name);
+    barRow(block, "Bottom", bottom, "#F59E0B");
+    barRow(block, "Recover", recover, "#10B981");
   }
 
   conflicts.forEach(conflict => {
     const sp = sp500Data.find(d => d.conflict === conflict);
     const nq = nasdaqMap[conflict];
-    const cy = y(conflict) + y.bandwidth() / 2;
-    const hasNQ = !!nq;
-    const spY = hasNQ ? cy - 16 : cy;
 
-    // "S&P" label
-    g.append("text").attr("x", 4).attr("y", spY - 13)
-      .attr("fill", SP_LINE).attr("font-size", "0.62rem").attr("font-weight", "700").attr("letter-spacing", "0.05em")
-      .text("S&P");
+    const card = grid.append("div")
+      .style("background", "#0F172A").style("border", "1px solid #334155")
+      .style("border-radius", "10px").style("padding", "16px");
 
-    // S&P connecting line — colored
-    g.append("line")
-      .attr("x1", cx(sp.daysToBottom)).attr("y1", spY)
-      .attr("x2", cx(sp.daysToRecover)).attr("y2", spY)
-      .attr("stroke", SP_LINE).attr("stroke-width", 3).attr("stroke-linecap", "round");
+    card.append("h3")
+      .style("font-size", "0.9rem").style("font-weight", "600").style("color", "#E2E8F0").style("margin-bottom", "12px")
+      .text(sp.label);
 
-    addDot(cx(sp.daysToBottom), spY, 8, "#F59E0B", SP_LINE,
-      dotTip(sp.label, "S&P 500", "Days to bottom", sp.daysToBottom,
-        `<br><span class="tt-label">Max decline:</span> <span class="tt-value" style="color:#EF4444">-${sp.decline}%</span>`));
-    addDot(cx(sp.daysToRecover), spY, 8, "#10B981", SP_LINE,
-      dotTip(sp.label, "S&P 500", "Days to recover", sp.daysToRecover,
-        `<br><span class="tt-label">Drawdown:</span> <span class="tt-value">-${sp.decline}% in ${sp.daysToBottom}d</span>`));
+    indexBlock(card, "S&P 500", "#818CF8", sp.daysToBottom, sp.daysToRecover);
 
-    // S&P day labels
-    g.append("text").attr("x", cx(sp.daysToBottom)).attr("y", spY + 18)
-      .attr("text-anchor", "middle").attr("fill", "#F59E0B").attr("font-size", "0.68rem").attr("font-weight", "600")
-      .text(sp.daysToBottom + "d");
-
-    if (sp.daysToRecover <= CAP) {
-      g.append("text").attr("x", cx(sp.daysToRecover)).attr("y", spY + 18)
-        .attr("text-anchor", "middle").attr("fill", "#10B981").attr("font-size", "0.68rem").attr("font-weight", "600")
-        .text(sp.daysToRecover + "d");
+    if (nq) {
+      indexBlock(card, "NASDAQ", "#34D399", nq.daysToBottom, nq.daysToRecover);
     } else {
-      g.append("text").attr("x", cx(sp.daysToRecover) + 10).attr("y", spY).attr("dy", "0.35em")
-        .attr("fill", "#94A3B8").attr("font-size", "0.75rem").attr("font-weight", "700").attr("font-style", "italic")
-        .text(sp.daysToRecover + "d →");
-    }
-
-    if (hasNQ) {
-      const nqY = cy + 16;
-
-      // "NQ" label
-      g.append("text").attr("x", 4).attr("y", nqY - 13)
-        .attr("fill", NQ_LINE).attr("font-size", "0.62rem").attr("font-weight", "700").attr("letter-spacing", "0.05em")
-        .text("NQ");
-
-      // NASDAQ connecting line — colored
-      g.append("line")
-        .attr("x1", cx(nq.daysToBottom)).attr("y1", nqY)
-        .attr("x2", cx(nq.daysToRecover)).attr("y2", nqY)
-        .attr("stroke", NQ_LINE).attr("stroke-width", 3).attr("stroke-linecap", "round");
-
-      addDot(cx(nq.daysToBottom), nqY, 6.5, "#F59E0B", NQ_LINE,
-        dotTip(nq.label, "NASDAQ", "Days to bottom", nq.daysToBottom,
-          `<br><span class="tt-label">Max decline:</span> <span class="tt-value" style="color:#EF4444">-${nq.decline}%</span>`));
-      addDot(cx(nq.daysToRecover), nqY, 6.5, "#10B981", NQ_LINE,
-        dotTip(nq.label, "NASDAQ", "Days to recover", nq.daysToRecover,
-          `<br><span class="tt-label">Drawdown:</span> <span class="tt-value">-${nq.decline}% in ${nq.daysToBottom}d</span>`));
-
-      // NQ day labels
-      g.append("text").attr("x", cx(nq.daysToBottom)).attr("y", nqY + 16)
-        .attr("text-anchor", "middle").attr("fill", "#F59E0B").attr("font-size", "0.62rem").attr("font-weight", "600")
-        .text(nq.daysToBottom + "d");
-      g.append("text").attr("x", cx(nq.daysToRecover)).attr("y", nqY + 16)
-        .attr("text-anchor", "middle").attr("fill", "#10B981").attr("font-size", "0.62rem").attr("font-weight", "600")
-        .text(nq.daysToRecover + "d");
-    } else {
-      g.append("text").attr("x", 4).attr("y", cy + 16)
-        .attr("fill", "#475569").attr("font-size", "0.62rem").attr("font-style", "italic")
+      card.append("div")
+        .style("font-size", "0.72rem").style("color", "#475569").style("font-style", "italic").style("margin-top", "4px")
         .text("NASDAQ not yet trading");
     }
   });
