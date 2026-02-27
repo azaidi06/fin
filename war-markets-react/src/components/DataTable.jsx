@@ -17,7 +17,7 @@ export default function DataTable({ title, color, data }) {
               <th style={th}>Date</th>
               <th style={th}>Decline</th>
               <th style={th}>Days Down</th>
-              <th style={th}>Days Recover</th>
+              <th style={th}>Days to Recover</th>
             </tr>
           </thead>
           <tbody>

@@ -35,7 +35,7 @@ function IndexBlock({ name, color, bottom, recover, maxVal }) {
         {name}
       </div>
       <BarRow label="Bottom" value={bottom} color="#F59E0B" maxVal={maxVal} />
-      <BarRow label="Recover" value={recover} color="#10B981" maxVal={maxVal} />
+      <BarRow label="to Recover" value={recover} color="#10B981" maxVal={maxVal} />
     </div>
   );
 }

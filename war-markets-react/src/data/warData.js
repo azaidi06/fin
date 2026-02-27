@@ -1,23 +1,23 @@
 export const sp500Data = [
-  { conflict: "WWII", label: "WWII (Pearl Harbor)", date: "Dec 7, 1941", decline: 20.3, daysToBottom: 143, daysToRecover: 917 },
-  { conflict: "Korea", label: "Korean War", date: "Jun 25, 1950", decline: 12.0, daysToBottom: 18, daysToRecover: 60 },
-  { conflict: "Vietnam", label: "Vietnam (Gulf of Tonkin)", date: "Aug 7, 1964", decline: 5.0, daysToBottom: 26, daysToRecover: 50 },
-  { conflict: "Gulf War", label: "Gulf War (Kuwait)", date: "Aug 2, 1990", decline: 16.9, daysToBottom: 71, daysToRecover: 189 },
-  { conflict: "9/11", label: "9/11 / Afghanistan", date: "Sep 11, 2001", decline: 11.6, daysToBottom: 10, daysToRecover: 31 },
-  { conflict: "Iraq", label: "Iraq War", date: "Mar 19, 2003", decline: 5.3, daysToBottom: 10, daysToRecover: 16 },
+  { conflict: "WWII", label: "WWII (Pearl Harbor, 1941)", date: "Dec 7, 1941", decline: 20.3, daysToBottom: 143, daysToRecover: 917 },
+  { conflict: "Korea", label: "Korean War (1950)", date: "Jun 25, 1950", decline: 12.0, daysToBottom: 18, daysToRecover: 60 },
+  { conflict: "Vietnam", label: "Vietnam (Gulf of Tonkin, 1964)", date: "Aug 7, 1964", decline: 5.0, daysToBottom: 26, daysToRecover: 50 },
+  { conflict: "Gulf War", label: "Gulf War (Kuwait, 1990)", date: "Aug 2, 1990", decline: 16.9, daysToBottom: 71, daysToRecover: 189 },
+  { conflict: "9/11", label: "9/11 / Afghanistan (2001)", date: "Sep 11, 2001", decline: 11.6, daysToBottom: 10, daysToRecover: 31 },
+  { conflict: "Iraq", label: "Iraq War (2003)", date: "Mar 19, 2003", decline: 5.3, daysToBottom: 10, daysToRecover: 16 },
 ];
 
 export const nasdaqData = [
-  { conflict: "Gulf War", label: "Gulf War (Kuwait)", date: "Aug 2, 1990", decline: 24.1, daysToBottom: 75, daysToRecover: 187, preClose: 428.90, bottomClose: 325.40 },
-  { conflict: "9/11", label: "9/11 / Afghanistan", date: "Sep 11, 2001", decline: 16.1, daysToBottom: 11, daysToRecover: 31, preClose: 1695.38, bottomClose: 1423.19 },
-  { conflict: "Iraq", label: "Iraq War", date: "Mar 19, 2003", decline: 4.0, daysToBottom: 12, daysToRecover: 29, preClose: 1397.07, bottomClose: 1341.17 },
+  { conflict: "Gulf War", label: "Gulf War (Kuwait, 1990)", date: "Aug 2, 1990", decline: 24.1, daysToBottom: 75, daysToRecover: 187, preClose: 428.90, bottomClose: 325.40 },
+  { conflict: "9/11", label: "9/11 / Afghanistan (2001)", date: "Sep 11, 2001", decline: 16.1, daysToBottom: 11, daysToRecover: 31, preClose: 1695.38, bottomClose: 1423.19 },
+  { conflict: "Iraq", label: "Iraq War (2003)", date: "Mar 19, 2003", decline: 4.0, daysToBottom: 12, daysToRecover: 29, preClose: 1397.07, bottomClose: 1341.17 },
 ];
 
 // Pre-war buildup data — market performance in the lead-up to each conflict
 // change: negative = market fell, positive = market rose during buildup
 export const preWarData = [
   {
-    conflict: "WWII", label: "WWII (Pearl Harbor)",
+    conflict: "WWII", label: "WWII (Pearl Harbor, 1941)",
     period: "Jul 25 – Dec 5, 1941", days: 91,
     spChange: -9.9, nqChange: null,
     surprise: false,
@@ -27,7 +27,7 @@ export const preWarData = [
     narrative: "Gradual decline as US-Japan tensions escalated after the asset freeze cut off 80% of Japan's oil. Pearl Harbor itself was a surprise, but the collision course was visible.",
   },
   {
-    conflict: "Korea", label: "Korean War",
+    conflict: "Korea", label: "Korean War (1950)",
     period: "None (surprise invasion)", days: null,
     spChange: 11.0, nqChange: null,
     surprise: true,
@@ -37,7 +37,7 @@ export const preWarData = [
     narrative: "Complete surprise. Markets were at 52-week highs, up +11% in the prior 3 months. The S&P fell 5.4% on the first trading day after the invasion.",
   },
   {
-    conflict: "Vietnam", label: "Vietnam (Gulf of Tonkin)",
+    conflict: "Vietnam", label: "Vietnam (Gulf of Tonkin, 1964)",
     period: "Feb 3 – Aug 7, 1964", days: 131,
     spChange: 6.4, nqChange: null,
     surprise: false,
@@ -47,7 +47,7 @@ export const preWarData = [
     narrative: "Markets showed zero concern about Vietnam in 1964. The S&P rose steadily and barely flinched at Tonkin (< 1% dip). War's economic impact wouldn't hit until 1966.",
   },
   {
-    conflict: "Gulf War", label: "Gulf War (Kuwait)",
+    conflict: "Gulf War", label: "Gulf War (Kuwait, 1990)",
     period: "Jul 16 – Aug 1, 1990", days: 13,
     spChange: -3.6, nqChange: -7.2,
     surprise: false,
@@ -57,7 +57,7 @@ export const preWarData = [
     narrative: "S&P peaked the day before Saddam's threatening speech. Brief 2-week selloff before the actual invasion. NASDAQ fell harder (-7.2%) as tech was more sensitive to oil shock fears.",
   },
   {
-    conflict: "9/11", label: "9/11 / Afghanistan",
+    conflict: "9/11", label: "9/11 / Afghanistan (2001)",
     period: "None (surprise attack)", days: null,
     spChange: -20.5, nqChange: -21.9,
     surprise: true,
@@ -67,7 +67,7 @@ export const preWarData = [
     narrative: "No pre-war buildup. Both indices were already in severe decline from the dot-com bust. The S&P was down 28.5% from its 2000 peak; NASDAQ down 66% from its March 2000 high.",
   },
   {
-    conflict: "Iraq", label: "Iraq War",
+    conflict: "Iraq", label: "Iraq War (2003)",
     period: "Nov 27, 2002 – Mar 11, 2003", days: 70,
     spChange: -14.7, nqChange: -5.9,
     surprise: false,
