@@ -1,3 +1,4 @@
+import { useState } from "react";
 import {
   BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend,
   ResponsiveContainer, ReferenceLine, Cell,
@@ -15,14 +16,14 @@ const chartData = preWarData.map(d => ({
   surprise: d.surprise,
 }));
 
-function CustomTooltip({ active, payload, label }) {
+function CustomTooltip({ active, payload, label, hiddenSeries }) {
   if (!active || !payload?.length) return null;
   const row = preWarData.find(d => d.label === label);
   return (
     <div style={{ background: "#334155", border: "1px solid #475569", borderRadius: 8, padding: "12px 16px", fontSize: 13, color: "#F8FAFC", boxShadow: "0 8px 24px rgba(0,0,0,0.4)", maxWidth: 300 }}>
       <p style={{ fontWeight: 600, marginBottom: 4 }}>{label}</p>
       <p style={{ fontSize: 11, color: "#94A3B8", marginBottom: 6 }}>{row?.period}</p>
-      {payload.map((p) => p.value != null && (
+      {payload.map((p) => p.value != null && !hiddenSeries.includes(p.dataKey) && (
         <p key={p.dataKey} style={{ color: p.color, margin: "2px 0" }}>
           {p.name}: <strong>{p.value > 0 ? "+" : ""}{p.value}%</strong>
         </p>
@@ -85,6 +86,54 @@ function ConflictCard({ d }) {
 }
 
 export default function BuildupPanel() {
+  const [hiddenSeries, setHiddenSeries] = useState([]);
+  const [hoveredSeries, setHoveredSeries] = useState(null);
+
+  const toggleSeries = (key) => {
+    setHiddenSeries(prev =>
+      prev.includes(key) ? prev.filter(k => k !== key) : [...prev, key]
+    );
+  };
+
+  const renderLegend = (props) => {
+    const { payload } = props;
+    return (
+      <div style={{ display: "flex", flexWrap: "wrap", justifyContent: "center", gap: "12px", paddingTop: "12px" }}>
+        {payload.map((entry, index) => {
+          const isHidden = hiddenSeries.includes(entry.dataKey);
+          const isHovered = hoveredSeries === entry.dataKey;
+          return (
+            <div
+              key={`item-${index}`}
+              style={{
+                display: "flex", alignItems: "center", gap: "6px",
+                cursor: "pointer", padding: "4px 8px", borderRadius: "6px",
+                background: isHovered ? "rgba(255,255,255,0.05)" : "transparent",
+                transition: "all 0.2s", opacity: isHidden ? 0.4 : 1,
+              }}
+              onClick={() => toggleSeries(entry.dataKey)}
+              onMouseEnter={() => setHoveredSeries(entry.dataKey)}
+              onMouseLeave={() => setHoveredSeries(null)}
+            >
+              <div style={{ width: 10, height: 10, borderRadius: 2, background: entry.color }} />
+              <span style={{
+                fontSize: 12,
+                color: isHovered ? "#F8FAFC" : "#CBD5E1",
+                fontWeight: isHovered ? 600 : 400,
+                textDecoration: isHidden ? "line-through" : "none",
+              }}>
+                {entry.value}
+              </span>
+            </div>
+          );
+        })}
+      </div>
+    );
+  };
+
+  const spHidden = hiddenSeries.includes("spChange");
+  const nqHidden = hiddenSeries.includes("nqChange");
+
   return (
     <section style={card}>
       <h2 style={{ fontSize: 20, fontWeight: 600, color: "#F8FAFC", marginBottom: 4 }}>Pre-War Market Buildup</h2>
@@ -100,17 +149,17 @@ export default function BuildupPanel() {
             tick={{ fill: "#94A3B8", fontSize: 12 }} axisLine={false} tickLine={false} />
           <YAxis type="category" dataKey="label" width={185} stroke="#475569"
             tick={{ fill: "#CBD5E1", fontSize: 12 }} axisLine={false} tickLine={false} />
-          <Tooltip content={<CustomTooltip />} cursor={{ fill: "rgba(99,102,241,0.06)" }} />
-          <Legend wrapperStyle={{ fontSize: 12, color: "#CBD5E1", paddingTop: 8 }} iconType="square" iconSize={10} />
+          <Tooltip content={<CustomTooltip hiddenSeries={hiddenSeries} />} cursor={{ fill: "rgba(99,102,241,0.06)" }} />
+          <Legend content={renderLegend} />
           <ReferenceLine x={0} stroke="#64748B" strokeWidth={1.5} />
           <Bar dataKey="spChange" name="S&P 500" radius={4} barSize={14}>
             {chartData.map((d, i) => (
-              <Cell key={i} fill={d.spChange < 0 ? "#6366F1" : "#818CF8"} fillOpacity={d.surprise ? 0.45 : 1} />
+              <Cell key={i} fill={d.spChange < 0 ? "#6366F1" : "#818CF8"} fillOpacity={spHidden ? 0 : (d.surprise ? 0.45 : 1)} />
             ))}
           </Bar>
           <Bar dataKey="nqChange" name="NASDAQ" radius={4} barSize={14}>
             {chartData.map((d, i) => (
-              <Cell key={i} fill={d.nqChange != null ? (d.nqChange < 0 ? "#10B981" : "#34D399") : "transparent"} fillOpacity={d.surprise ? 0.45 : 1} />
+              <Cell key={i} fill={d.nqChange != null ? (d.nqChange < 0 ? "#10B981" : "#34D399") : "transparent"} fillOpacity={nqHidden ? 0 : (d.surprise ? 0.45 : 1)} />
             ))}
           </Bar>
         </BarChart>
