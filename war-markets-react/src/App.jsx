@@ -49,7 +49,7 @@ export default function App() {
   return (
     <div className="min-h-screen px-4 py-10 sm:px-6 lg:px-8" style={{ background: "#0F172A", color: "#F8FAFC" }}>
       <div className="max-w-[960px] mx-auto">
-        <Header />
+        <Header compact={activeTab === "home"} />
 
         {activeTab === "home" ? (
           <HomePage onSelect={setActiveTab} />
@@ -106,35 +106,37 @@ export default function App() {
         )}
 
         {/* ── FOOTER ── */}
-        <footer style={{ borderTop: "1px solid #334155", paddingTop: 20, marginTop: 8 }}>
-          {/* Structured sources */}
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: "8px 24px", marginBottom: 16 }}>
-            <div style={sourceCategory}>
-              <p style={sourceCatLabel}>Market Data</p>
-              <p style={sourceList}>
-                Yahoo Finance (via yfinance), iSectors, Hennion & Walsh, The Motley Fool, CFA Institute, Invesco
-              </p>
+        {activeTab !== "home" && (
+          <footer style={{ borderTop: "1px solid #334155", paddingTop: 20, marginTop: 8 }}>
+            {/* Structured sources */}
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: "8px 24px", marginBottom: 16 }}>
+              <div style={sourceCategory}>
+                <p style={sourceCatLabel}>Market Data</p>
+                <p style={sourceList}>
+                  Yahoo Finance (via yfinance), iSectors, Hennion & Walsh, The Motley Fool, CFA Institute, Invesco
+                </p>
+              </div>
+              <div style={sourceCategory}>
+                <p style={sourceCatLabel}>Economic Data</p>
+                <p style={sourceList}>
+                  FRED CPIAUCSL (BLS CPI-U), FRED GFDGDPA188S (Debt/GDP), Minneapolis Fed historical tables
+                </p>
+              </div>
+              <div style={sourceCategory}>
+                <p style={sourceCatLabel}>Cost of Living</p>
+                <p style={sourceList}>
+                  Census Bureau (housing), EIA (gasoline), USDA (food), NCES (tuition), BLS (income)
+                </p>
+              </div>
             </div>
-            <div style={sourceCategory}>
-              <p style={sourceCatLabel}>Economic Data</p>
-              <p style={sourceList}>
-                FRED CPIAUCSL (BLS CPI-U), FRED GFDGDPA188S (Debt/GDP), Minneapolis Fed historical tables
-              </p>
-            </div>
-            <div style={sourceCategory}>
-              <p style={sourceCatLabel}>Cost of Living</p>
-              <p style={sourceList}>
-                Census Bureau (housing), EIA (gasoline), USDA (food), NCES (tuition), BLS (income)
-              </p>
-            </div>
-          </div>
 
-          {/* Key assumptions note */}
-          <p style={{ fontSize: 11, color: "#475569", textAlign: "center", lineHeight: 1.5 }}>
-            S&P 500 uses DJIA as proxy for pre-1957 conflicts. NASDAQ data available from 1971 onward.
-            All cost-of-living prices adjusted to 2024 USD using CPI-U annual average multipliers.
-          </p>
-        </footer>
+            {/* Key assumptions note */}
+            <p style={{ fontSize: 11, color: "#475569", textAlign: "center", lineHeight: 1.5 }}>
+              S&P 500 uses DJIA as proxy for pre-1957 conflicts. NASDAQ data available from 1971 onward.
+              All cost-of-living prices adjusted to 2024 USD using CPI-U annual average multipliers.
+            </p>
+          </footer>
+        )}
       </div>
     </div>
   );

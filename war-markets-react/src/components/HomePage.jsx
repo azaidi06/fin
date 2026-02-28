@@ -2,38 +2,44 @@ const cards = [
   {
     id: "reaction",
     title: "Post-Conflict Reaction",
-    desc: "S&P 500 & NASDAQ drawdowns after major conflicts — how far markets fell and how long recovery took.",
+    desc: "How far markets fell and how long recovery took.",
     gradient: "linear-gradient(135deg, #6366F1, #818CF8)",
+    accent: "#6366F1",
   },
   {
     id: "buildup",
     title: "Pre-War Buildup",
-    desc: "How markets behaved in the lead-up to war — from first escalation signals to the eve of conflict.",
+    desc: "Market behavior from first escalation to eve of conflict.",
     gradient: "linear-gradient(135deg, #10B981, #34D399)",
+    accent: "#10B981",
   },
   {
     id: "global",
     title: "Global Markets",
-    desc: "International index reactions to U.S. conflicts — FTSE, DAX, Nikkei, Hang Seng, and more.",
+    desc: "FTSE, DAX, Nikkei, and Hang Seng reactions to U.S. wars.",
     gradient: "linear-gradient(135deg, #F59E0B, #FBBF24)",
+    accent: "#F59E0B",
   },
   {
     id: "fiscal",
     title: "Fiscal Impact",
-    desc: "CPI inflation & federal debt trajectories across wartime eras — the long-term fiscal footprint.",
+    desc: "Inflation spikes and federal debt across wartime eras.",
     gradient: "linear-gradient(135deg, #EF4444, #F87171)",
+    accent: "#EF4444",
   },
   {
     id: "cost",
     title: "Cost of Living",
-    desc: "Everyday prices across wartime eras — housing, gas, food, tuition, and income in 2024 dollars.",
+    desc: "Housing, gas, food, and income in 2024 dollars.",
     gradient: "linear-gradient(135deg, #8B5CF6, #A78BFA)",
+    accent: "#8B5CF6",
   },
   {
     id: "methodology",
     title: "Methodology",
-    desc: "How we calculate every number — formulas, data sources, CPI adjustments, and limitations.",
+    desc: "Formulas, data sources, and limitations.",
     gradient: "linear-gradient(135deg, #64748B, #94A3B8)",
+    accent: "#64748B",
   },
 ];
 
@@ -41,23 +47,18 @@ const cardStyle = {
   background: "#1E293B",
   border: "1px solid #334155",
   borderRadius: 12,
-  padding: "28px 24px",
+  padding: "24px 24px 24px 28px",
   cursor: "pointer",
   transition: "all 0.2s ease",
   textAlign: "left",
+  position: "relative",
+  overflow: "hidden",
+  boxShadow: "0 2px 8px rgba(0,0,0,0.2)",
 };
 
 export default function HomePage({ onSelect }) {
   return (
     <div style={{ maxWidth: 640, margin: "0 auto" }}>
-      <div style={{ textAlign: "center", marginBottom: 36 }}>
-        <p style={{ fontSize: 15, color: "#94A3B8", lineHeight: 1.6 }}>
-          Explore how U.S. stock markets have reacted to every major conflict
-          from WWII to the Iraq War — drawdowns, recoveries, inflation, and the
-          true cost of war.
-        </p>
-      </div>
-
       <div
         style={{
           display: "grid",
@@ -72,24 +73,26 @@ export default function HomePage({ onSelect }) {
             onClick={() => onSelect(c.id)}
             style={cardStyle}
             onMouseEnter={(e) => {
-              e.currentTarget.style.borderColor = "#6366F1";
+              e.currentTarget.style.borderColor = c.accent;
               e.currentTarget.style.transform = "translateY(-2px)";
-              e.currentTarget.style.boxShadow =
-                "0 8px 30px rgba(99,102,241,0.15)";
+              e.currentTarget.style.boxShadow = `0 8px 30px ${c.accent}26`;
             }}
             onMouseLeave={(e) => {
               e.currentTarget.style.borderColor = "#334155";
               e.currentTarget.style.transform = "none";
-              e.currentTarget.style.boxShadow = "none";
+              e.currentTarget.style.boxShadow = "0 2px 8px rgba(0,0,0,0.2)";
             }}
           >
+            {/* Left accent bar */}
             <div
               style={{
-                width: 6,
-                height: 6,
-                borderRadius: "50%",
+                position: "absolute",
+                left: 0,
+                top: 0,
+                bottom: 0,
+                width: 4,
                 backgroundImage: c.gradient,
-                marginBottom: 12,
+                borderRadius: "12px 0 0 12px",
               }}
             />
             <h3
