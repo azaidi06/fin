@@ -53,6 +53,35 @@ body::after {
 .card-enter-3 { animation-delay: 240ms; }
 .card-enter-4 { animation-delay: 320ms; }
 .card-enter-5 { animation-delay: 400ms; }
+.card-enter-6 { animation-delay: 480ms; }
+.card-enter-7 { animation-delay: 560ms; }
+
+/* ── Live pulse dot ── */
+@keyframes livePulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.5; transform: scale(0.8); }
+}
+.live-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #34D399;
+  box-shadow: 0 0 8px #34D39966;
+  animation: livePulse 2s ease-in-out infinite;
+  flex-shrink: 0;
+}
+
+/* ── Skeleton shimmer ── */
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+.skeleton {
+  background: linear-gradient(90deg, rgba(255,255,255,0.04) 25%, rgba(255,255,255,0.08) 50%, rgba(255,255,255,0.04) 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+  border-radius: 6px;
+}
 
 /* ── Glassmorphism card ── */
 .glass-card {

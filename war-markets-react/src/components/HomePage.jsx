@@ -200,9 +200,9 @@ const costValues = costOfLivingData.map((d) => d.cpiMultiplier);
 const debtTimelineValues = totalDebtData.map((d) => d.debt);
 
 /* ── Card sparkline map ── */
-function CardSparkline({ id, color, hero }) {
-  const w = hero ? 200 : 120;
-  const h = hero ? 48 : 32;
+function CardSparkline({ id, color }) {
+  const w = 120;
+  const h = 32;
   switch (id) {
     case "reaction":
       return <BarSparkline values={reactionValues} color={color} width={w} height={h} animated />;
@@ -221,6 +221,164 @@ function CardSparkline({ id, color, hero }) {
   }
 }
 
+/* ── Live Market Hero ── */
+
+const STOCK_NAMES = { SPY: "S&P 500", QQQ: "NASDAQ", DIA: "DOW 30" };
+
+function formatPrice(price) {
+  if (price >= 1000) return "$" + Math.round(price).toLocaleString();
+  if (price >= 1) return "$" + price.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+  return "$" + price.toFixed(4);
+}
+
+function LiveMarketHero() {
+  const [assets, setAssets] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    let cancelled = false;
+    async function fetchMarkets() {
+      const results = [];
+
+      // Stocks via Yahoo Finance proxy
+      try {
+        const symbols = ["SPY", "QQQ", "DIA"];
+        const stockRes = await Promise.all(
+          symbols.map((s) =>
+            fetch(`/api/yahoo/v8/finance/chart/${s}?range=5d&interval=1d`)
+              .then((r) => r.ok ? r.json() : null)
+              .catch(() => null)
+          )
+        );
+        stockRes.forEach((data, i) => {
+          if (!data?.chart?.result?.[0]) return;
+          const meta = data.chart.result[0].meta;
+          const price = meta.regularMarketPrice;
+          const prev = meta.chartPreviousClose;
+          if (price && prev) {
+            results.push({
+              symbol: symbols[i],
+              name: STOCK_NAMES[symbols[i]],
+              price,
+              change7d: ((price - prev) / prev) * 100,
+            });
+          }
+        });
+      } catch { /* proxy unavailable */ }
+
+      // Crypto via CoinGecko
+      try {
+        const res = await fetch(
+          "https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&ids=bitcoin,ethereum,solana&price_change_percentage=7d&sparkline=false"
+        );
+        if (res.ok) {
+          const coins = await res.json();
+          coins.forEach((c) =>
+            results.push({
+              symbol: c.symbol.toUpperCase(),
+              name: c.name,
+              price: c.current_price,
+              change7d: c.price_change_percentage_7d_in_currency,
+            })
+          );
+        }
+      } catch { /* CoinGecko unavailable */ }
+
+      if (!cancelled) {
+        setAssets(results);
+        setLoading(false);
+      }
+    }
+    fetchMarkets();
+    return () => { cancelled = true; };
+  }, []);
+
+  return (
+    <div
+      className="glass-card card-enter card-enter-0 bento-hero"
+      style={{ "--card-glow": "linear-gradient(135deg, #34D3994D, transparent 60%)", cursor: "default" }}
+    >
+      {/* Header */}
+      <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 4 }}>
+        <span className="live-dot" />
+        <h3 style={{ fontSize: 18, fontWeight: 600, color: "#F8FAFC", margin: 0 }}>
+          Live Markets
+        </h3>
+        <span style={{ fontSize: 10, color: "#64748B", marginLeft: "auto" }}>7d change</span>
+      </div>
+
+      {loading ? (
+        /* Skeleton loading state */
+        <div style={{ display: "flex", flexDirection: "column", gap: 12, marginTop: 8 }}>
+          {[...Array(6)].map((_, i) => (
+            <div key={i} className="skeleton" style={{ height: 28, opacity: 1 - i * 0.1 }} />
+          ))}
+        </div>
+      ) : assets.length === 0 ? (
+        <p style={{ fontSize: 13, color: "#64748B", marginTop: 12 }}>Market data unavailable</p>
+      ) : (
+        <div style={{ display: "flex", flexDirection: "column", gap: 2, marginTop: 4 }}>
+          {assets.map((a) => {
+            const up = a.change7d >= 0;
+            return (
+              <div
+                key={a.symbol}
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "space-between",
+                  padding: "8px 10px",
+                  borderRadius: 10,
+                  transition: "background 0.2s",
+                }}
+                onMouseEnter={(e) => { e.currentTarget.style.background = "rgba(255,255,255,0.04)"; }}
+                onMouseLeave={(e) => { e.currentTarget.style.background = "transparent"; }}
+              >
+                {/* Symbol + name */}
+                <div style={{ display: "flex", alignItems: "center", gap: 10, minWidth: 0 }}>
+                  <span style={{
+                    fontSize: 13,
+                    fontWeight: 700,
+                    color: "#F8FAFC",
+                    width: 52,
+                    flexShrink: 0,
+                  }}>
+                    {a.symbol}
+                  </span>
+                  <span style={{ fontSize: 12, color: "#64748B", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
+                    {a.name}
+                  </span>
+                </div>
+
+                {/* Price + change */}
+                <div style={{ display: "flex", alignItems: "center", gap: 12, flexShrink: 0 }}>
+                  <span style={{ fontSize: 13, fontWeight: 600, color: "#CBD5E1", fontVariantNumeric: "tabular-nums" }}>
+                    {formatPrice(a.price)}
+                  </span>
+                  <span style={{
+                    fontSize: 12,
+                    fontWeight: 600,
+                    color: up ? "#34D399" : "#EF4444",
+                    background: up ? "rgba(52, 211, 153, 0.1)" : "rgba(239, 68, 68, 0.1)",
+                    border: `1px solid ${up ? "rgba(52, 211, 153, 0.2)" : "rgba(239, 68, 68, 0.2)"}`,
+                    padding: "2px 8px",
+                    borderRadius: 6,
+                    minWidth: 56,
+                    textAlign: "right",
+                    fontVariantNumeric: "tabular-nums",
+                  }}>
+                    {up ? "+" : ""}{a.change7d.toFixed(1)}%
+                  </span>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      )}
+    </div>
+  );
+}
+
 /* ── Card data ── */
 
 const cards = [
@@ -232,7 +390,6 @@ const cards = [
     stat: "33.8%",
     statLabel: "Worst drawdown (WWII)",
     tag: "S&P 500 + NASDAQ",
-    hero: true,
   },
   {
     id: "buildup",
@@ -332,10 +489,14 @@ export default function HomePage({ onSelect }) {
       <GlowOrb color="#10B981" size={400} top="60%" left="70%" delay={6} />
 
       <div className="bento-grid">
+        {/* Live market hero tile */}
+        <LiveMarketHero />
+
+        {/* Content cards */}
         {cards.map((c, i) => (
           <button
             key={c.id}
-            className={`glass-card card-enter card-enter-${i}${c.hero ? " bento-hero" : ""}`}
+            className={`glass-card card-enter card-enter-${i + 1}`}
             style={{
               "--card-glow": `linear-gradient(135deg, ${c.color}4D, transparent 60%)`,
               boxShadow: "none",
@@ -359,7 +520,7 @@ export default function HomePage({ onSelect }) {
                   flexShrink: 0,
                 }}
               />
-              <h3 style={{ fontSize: c.hero ? 18 : 15, fontWeight: 600, color: "#F8FAFC", margin: 0 }}>
+              <h3 style={{ fontSize: 15, fontWeight: 600, color: "#F8FAFC", margin: 0 }}>
                 {c.title}
               </h3>
             </div>
@@ -371,13 +532,13 @@ export default function HomePage({ onSelect }) {
 
             {/* Sparkline */}
             {c.id !== "methodology" && (
-              <div style={{ marginTop: c.hero ? 4 : -4, marginBottom: c.hero ? 4 : -4 }}>
-                <CardSparkline id={c.id} color={c.color} hero={c.hero} />
+              <div style={{ marginTop: -4, marginBottom: -4 }}>
+                <CardSparkline id={c.id} color={c.color} />
               </div>
             )}
 
             {/* Stat + tag row */}
-            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-end", marginTop: c.hero ? 8 : 4 }}>
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-end", marginTop: 4 }}>
               {c.stat ? (
                 <div>
                   <AnimatedStat value={c.stat} color={c.color} />
