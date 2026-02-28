@@ -385,6 +385,132 @@ export const fiscalSummary = [
     narrative: "War costs and the financial crisis combined to push debt from 60% to 100% of GDP in a decade. CPI briefly went negative in 2009 (-0.4%) before stabilizing — the only deflationary year since WWII." },
 ];
 
+// ── COST OF LIVING DATA ────────────────────────────────────
+// All "adjusted" values are in 2024 USD using CPI-U annual average multipliers (BLS)
+// Sources: BLS CPI-U, Census Bureau (housing), EIA (gas), USDA (food), NCES (tuition), BLS (income)
+
+export const costItemColors = {
+  Home: "#EF4444",
+  Car: "#6366F1",
+  Tuition: "#F59E0B",
+  Income: "#10B981",
+  Milk: "#E2E8F0",
+  Eggs: "#FBBF24",
+  Gas: "#F97316",
+  Bread: "#A78BFA",
+};
+
+export const costOfLivingData = [
+  {
+    era: "WWII", year: 1941, cpiMultiplier: 21.29,
+    items: {
+      home:    { nominal: 4075,  adjusted: 86756 },
+      car:     { nominal: 850,   adjusted: 18097 },
+      tuition: { nominal: 150,   adjusted: 3194 },
+      income:  { nominal: 1500,  adjusted: 31935 },
+      milk:    { nominal: 0.51,  adjusted: 10.86 },
+      eggs:    { nominal: 0.40,  adjusted: 8.52 },
+      gas:     { nominal: 0.19,  adjusted: 4.05 },
+      bread:   { nominal: 0.08,  adjusted: 1.70 },
+    },
+  },
+  {
+    era: "Korea", year: 1950, cpiMultiplier: 12.99,
+    items: {
+      home:    { nominal: 7354,  adjusted: 95530 },
+      car:     { nominal: 1510,  adjusted: 19615 },
+      tuition: { nominal: 250,   adjusted: 3248 },
+      income:  { nominal: 3300,  adjusted: 42867 },
+      milk:    { nominal: 0.84,  adjusted: 10.91 },
+      eggs:    { nominal: 0.60,  adjusted: 7.79 },
+      gas:     { nominal: 0.27,  adjusted: 3.51 },
+      bread:   { nominal: 0.14,  adjusted: 1.82 },
+    },
+  },
+  {
+    era: "Vietnam", year: 1964, cpiMultiplier: 10.10,
+    items: {
+      home:    { nominal: 18900, adjusted: 190890 },
+      car:     { nominal: 3500,  adjusted: 35350 },
+      tuition: { nominal: 350,   adjusted: 3535 },
+      income:  { nominal: 6900,  adjusted: 69690 },
+      milk:    { nominal: 1.06,  adjusted: 10.71 },
+      eggs:    { nominal: 0.54,  adjusted: 5.45 },
+      gas:     { nominal: 0.30,  adjusted: 3.03 },
+      bread:   { nominal: 0.21,  adjusted: 2.12 },
+    },
+  },
+  {
+    era: "Gulf War", year: 1990, cpiMultiplier: 2.39,
+    items: {
+      home:    { nominal: 117000, adjusted: 279630 },
+      car:     { nominal: 15400,  adjusted: 36806 },
+      tuition: { nominal: 2035,   adjusted: 4864 },
+      income:  { nominal: 29943,  adjusted: 71564 },
+      milk:    { nominal: 2.78,   adjusted: 6.64 },
+      eggs:    { nominal: 1.00,   adjusted: 2.39 },
+      gas:     { nominal: 1.16,   adjusted: 2.77 },
+      bread:   { nominal: 0.70,   adjusted: 1.67 },
+    },
+  },
+  {
+    era: "9/11", year: 2001, cpiMultiplier: 1.77,
+    items: {
+      home:    { nominal: 175200, adjusted: 310104 },
+      car:     { nominal: 21600,  adjusted: 38232 },
+      tuition: { nominal: 3735,   adjusted: 6611 },
+      income:  { nominal: 42228,  adjusted: 74744 },
+      milk:    { nominal: 2.89,   adjusted: 5.12 },
+      eggs:    { nominal: 0.93,   adjusted: 1.65 },
+      gas:     { nominal: 1.46,   adjusted: 2.58 },
+      bread:   { nominal: 1.03,   adjusted: 1.82 },
+    },
+  },
+  {
+    era: "Iraq", year: 2003, cpiMultiplier: 1.70,
+    items: {
+      home:    { nominal: 195000, adjusted: 331500 },
+      car:     { nominal: 22600,  adjusted: 38420 },
+      tuition: { nominal: 4694,   adjusted: 7980 },
+      income:  { nominal: 43318,  adjusted: 73641 },
+      milk:    { nominal: 2.76,   adjusted: 4.69 },
+      eggs:    { nominal: 1.03,   adjusted: 1.75 },
+      gas:     { nominal: 1.59,   adjusted: 2.70 },
+      bread:   { nominal: 1.05,   adjusted: 1.79 },
+    },
+  },
+  {
+    era: "Today", year: 2024, cpiMultiplier: 1.00,
+    items: {
+      home:    { nominal: 420800, adjusted: 420800 },
+      car:     { nominal: 48500,  adjusted: 48500 },
+      tuition: { nominal: 11260,  adjusted: 11260 },
+      income:  { nominal: 63795,  adjusted: 63795 },
+      milk:    { nominal: 4.25,   adjusted: 4.25 },
+      eggs:    { nominal: 3.20,   adjusted: 3.20 },
+      gas:     { nominal: 3.52,   adjusted: 3.52 },
+      bread:   { nominal: 2.09,   adjusted: 2.09 },
+    },
+  },
+];
+
+// Flattened for Recharts — one row per era, column per item
+export const bigPurchaseChartData = costOfLivingData.map(d => ({
+  era: `${d.era} (${d.year})`,
+  Home: d.items.home.adjusted,
+  Car: d.items.car.adjusted,
+  Tuition: d.items.tuition.adjusted,
+  Income: d.items.income.adjusted,
+}));
+
+export const everydayChartData = costOfLivingData.map(d => ({
+  era: `${d.era} (${d.year})`,
+  Milk: d.items.milk.adjusted,
+  Eggs: d.items.eggs.adjusted,
+  Gas: d.items.gas.adjusted,
+  Bread: d.items.bread.adjusted,
+}));
+
 // Shared conflicts only (for comparison panel)
 export const sharedConflicts = sp500Data
   .filter(sp => nasdaqData.some(nq => nq.conflict === sp.conflict))
