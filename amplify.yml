@@ -3,10 +3,10 @@ frontend:
   phases:
     preBuild:
       commands:
-        - cd war-markets-react && npm ci
+        - npm ci --prefix war-markets-react
     build:
       commands:
-        - cd war-markets-react && npm run build
+        - npm run build --prefix war-markets-react
     postBuild:
       commands:
         - mkdir -p _site/react
