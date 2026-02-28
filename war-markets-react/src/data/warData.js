@@ -511,6 +511,53 @@ export const everydayChartData = costOfLivingData.map(d => ({
   Bread: d.items.bread.adjusted,
 }));
 
+// ── SOURCE URLS ──────────────────────────────────────────
+// Direct links to the original data source for every data point
+export const sourceUrls = {
+  sp500:          "https://finance.yahoo.com/quote/%5EGSPC/history/",
+  nasdaq:         "https://finance.yahoo.com/quote/%5EIXIC/history/",
+  djia:           "https://finance.yahoo.com/quote/%5EDJI/history/",
+  cpi:            "https://fred.stlouisfed.org/series/CPIAUCSL",
+  cpiHistorical:  "https://www.minneapolisfed.org/about-us/monetary-policy/inflation-calculator/consumer-price-index-1800-",
+  debtGdp:        "https://fred.stlouisfed.org/series/GFDGDPA188S",
+  home:           "https://fred.stlouisfed.org/series/MSPUS",
+  car:            "https://www.bls.gov/data/#prices",
+  tuition:        "https://nces.ed.gov/programs/digest/d23/tables/dt23_330.10.asp",
+  income:         "https://fred.stlouisfed.org/series/MEHOINUSA672N",
+  milk:           "https://fred.stlouisfed.org/series/APU0000709112",
+  eggs:           "https://fred.stlouisfed.org/series/APU0000708111",
+  gas:            "https://www.eia.gov/dnav/pet/pet_pri_gnd_dcus_nus_a.htm",
+  bread:          "https://fred.stlouisfed.org/series/APU0000702111",
+};
+
+export const sourceLabels = {
+  sp500:          "Yahoo Finance ^GSPC",
+  nasdaq:         "Yahoo Finance ^IXIC",
+  djia:           "Yahoo Finance ^DJI",
+  cpi:            "FRED CPIAUCSL",
+  cpiHistorical:  "Minneapolis Fed CPI",
+  debtGdp:        "FRED GFDGDPA188S",
+  home:           "FRED MSPUS",
+  car:            "BLS Avg. Prices",
+  tuition:        "NCES Table 330.10",
+  income:         "FRED MEHOINUSA672N",
+  milk:           "FRED APU0000709112",
+  eggs:           "FRED APU0000708111",
+  gas:            "EIA Retail Gas",
+  bread:          "FRED APU0000702111",
+};
+
+export const globalIndexSourceUrls = {
+  "S&P 500":   "https://finance.yahoo.com/quote/%5EGSPC/history/",
+  "DJIA":      "https://finance.yahoo.com/quote/%5EDJI/history/",
+  "FTSE 100":  "https://finance.yahoo.com/quote/%5EFTSE/history/",
+  "FT 30":     "https://finance.yahoo.com/quote/%5EFTSE/history/",
+  "Nikkei 225":"https://finance.yahoo.com/quote/%5EN225/history/",
+  "DAX":       "https://finance.yahoo.com/quote/%5EGDAXI/history/",
+  "CAC 40":    "https://finance.yahoo.com/quote/%5EFCHI/history/",
+  "Hang Seng": "https://finance.yahoo.com/quote/%5EHSI/history/",
+};
+
 // Shared conflicts only (for comparison panel)
 export const sharedConflicts = sp500Data
   .filter(sp => nasdaqData.some(nq => nq.conflict === sp.conflict))

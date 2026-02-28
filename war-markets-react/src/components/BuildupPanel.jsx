@@ -3,6 +3,8 @@ import {
   ResponsiveContainer, ReferenceLine, Cell,
 } from "recharts";
 import { preWarData } from "../data/warData";
+import { MultiSourceTooltip } from "./SourceLink";
+import SourceLink from "./SourceLink";
 
 const card = { background: "#1E293B", border: "1px solid #334155", borderRadius: 12, padding: 24, marginBottom: 32 };
 const stripYear = (s) => s.replace(/, \d{4}\)/, ")").replace(/ \(\d{4}\)/, "");
@@ -32,6 +34,7 @@ function CustomTooltip({ active, payload, label }) {
           Surprise event — showing prior context, not anticipatory decline
         </p>
       )}
+      <MultiSourceTooltip sourceKeys={["sp500", "nasdaq"]} />
     </div>
   );
 }
@@ -80,6 +83,10 @@ function ConflictCard({ d }) {
       <p style={{ fontSize: 12, color: "#94A3B8", lineHeight: 1.5, borderTop: "1px solid #334155", paddingTop: 10 }}>
         {d.narrative}
       </p>
+      <div style={{ display: "flex", gap: 12, marginTop: 8 }}>
+        <SourceLink sourceKey="sp500" />
+        {d.nqChange != null && <SourceLink sourceKey="nasdaq" />}
+      </div>
     </div>
   );
 }

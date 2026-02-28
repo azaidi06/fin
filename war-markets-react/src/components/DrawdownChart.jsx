@@ -3,6 +3,7 @@ import {
   ResponsiveContainer,
 } from "recharts";
 import { combinedData } from "../data/warData";
+import { MultiSourceTooltip } from "./SourceLink";
 
 const card = { background: "#1E293B", border: "1px solid #334155", borderRadius: 12, padding: 24, marginBottom: 32 };
 
@@ -16,6 +17,7 @@ function CustomTooltip({ active, payload, label }) {
           {p.name}: <strong>-{p.value}%</strong>
         </p>
       ))}
+      <MultiSourceTooltip sourceKeys={["sp500", "nasdaq"]} />
     </div>
   );
 }

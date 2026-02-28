@@ -3,6 +3,8 @@ import {
   ResponsiveContainer, Cell,
 } from "recharts";
 import { costOfLivingData } from "../data/warData";
+import { TooltipSourceLink } from "./SourceLink";
+import SourceLink from "./SourceLink";
 
 const card = { background: "#1E293B", border: "1px solid #334155", borderRadius: 12, padding: 24, marginBottom: 32 };
 const innerCard = { background: "#0F172A", border: "1px solid #334155", borderRadius: 10, padding: 20 };
@@ -38,7 +40,7 @@ function getItemData(itemKey) {
   }));
 }
 
-function ItemTooltip({ active, payload }) {
+function ItemTooltip({ active, payload, itemKey }) {
   if (!active || !payload?.length) return null;
   const d = payload[0].payload;
   return (
@@ -46,6 +48,7 @@ function ItemTooltip({ active, payload }) {
       <p style={{ fontWeight: 600, marginBottom: 4 }}>{d.era} ({d.year})</p>
       <p style={{ color: "#94A3B8", margin: "2px 0" }}>Nominal: <strong style={{ color: "#CBD5E1" }}>{fmtNominal(d.nominal)}</strong></p>
       <p style={{ color: "#94A3B8", margin: "2px 0" }}>2024 USD: <strong style={{ color: "#F8FAFC" }}>{fmtUsd(d.value)}</strong></p>
+      {itemKey && <TooltipSourceLink sourceKey={itemKey} />}
     </div>
   );
 }
@@ -71,7 +74,7 @@ function ItemChart({ itemKey, height = 240, yFormatter, big = false }) {
             tick={{ fill: "#94A3B8", fontSize: 11 }} axisLine={false} tickLine={false}
             width={big ? 65 : 45}
           />
-          <Tooltip content={<ItemTooltip />} cursor={{ fill: "rgba(255,255,255,0.04)" }} />
+          <Tooltip content={<ItemTooltip itemKey={itemKey} />} cursor={{ fill: "rgba(255,255,255,0.04)" }} />
           <Bar dataKey="value" radius={[4, 4, 0, 0]} maxBarSize={big ? 50 : 32}>
             {data.map(d => (
               <Cell key={d.era} fill={eraColors[d.era]} />
@@ -111,9 +114,10 @@ function EraCard({ d }) {
             <span style={{ width: 8, height: 8, borderRadius: 2, background: itemColors[key], flexShrink: 0 }} />
             <span style={{ fontSize: 12, color: "#CBD5E1" }}>{itemLabels[key]}</span>
           </div>
-          <div style={{ display: "flex", gap: 12, flexShrink: 0 }}>
+          <div style={{ display: "flex", alignItems: "center", gap: 12, flexShrink: 0 }}>
             <span style={{ fontSize: 11, color: "#64748B", minWidth: 64, textAlign: "right" }}>{fmtNominal(val.nominal)}</span>
             <span style={{ fontSize: 11, color: "#F8FAFC", fontWeight: 600, minWidth: 70, textAlign: "right" }}>{fmtUsd(val.adjusted)}</span>
+            <SourceLink sourceKey={key} style={{ fontSize: 9, marginLeft: 4 }} />
           </div>
         </div>
       ))}

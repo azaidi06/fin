@@ -1,4 +1,5 @@
 import { combinedData } from "../data/warData";
+import SourceLink from "./SourceLink";
 
 const section = { background: "#1E293B", border: "1px solid #334155", borderRadius: 12, padding: 24, marginBottom: 32 };
 const CAP = 250;
@@ -59,6 +60,10 @@ function ConflictCard({ d, maxVal }) {
           NASDAQ not yet trading
         </div>
       )}
+      <div style={{ display: "flex", gap: 12, marginTop: 8, borderTop: "1px solid #334155", paddingTop: 8 }}>
+        <SourceLink sourceKey="sp500" />
+        {hasNQ && <SourceLink sourceKey="nasdaq" />}
+      </div>
     </div>
   );
 }

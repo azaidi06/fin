@@ -1,4 +1,5 @@
 import { sharedConflicts } from "../data/warData";
+import SourceLink from "./SourceLink";
 
 const card = { background: "#1E293B", border: "1px solid #334155", borderRadius: 12, padding: 24, marginBottom: 32 };
 
@@ -50,6 +51,11 @@ export default function ComparisonPanel() {
                 <span style={{ fontSize: 12, fontWeight: 600, color: parseFloat(d.ratio) > 1 ? "#EF4444" : "#10B981" }}>
                   {d.ratio}x
                 </span>
+              </div>
+
+              <div style={{ display: "flex", gap: 12, marginTop: 8 }}>
+                <SourceLink sourceKey="sp500" />
+                <SourceLink sourceKey="nasdaq" />
               </div>
             </div>
           </div>

@@ -3,12 +3,12 @@ frontend:
   phases:
     preBuild:
       commands:
-        - cd war-markets-react
-        - npm ci
+        - cd war-markets-react && npm ci
     build:
       commands:
-        - AMPLIFY=true npm run build
-        - cd ..
+        - cd war-markets-react && npm run build
+    postBuild:
+      commands:
         - mkdir -p _site/react
         - cp docs/index.html _site/
         - cp docs/d3.html _site/ 2>/dev/null || true

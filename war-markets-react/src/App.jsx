@@ -65,8 +65,8 @@ export default function App() {
                 <TimelineChart />
                 <ComparisonPanel />
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-10">
-                  <DataTable title="S&P 500" color="#6366F1" data={sp500Data} />
-                  <DataTable title="NASDAQ" color="#10B981" data={nasdaqData} />
+                  <DataTable title="S&P 500" color="#6366F1" data={sp500Data} sourceKey="sp500" />
+                  <DataTable title="NASDAQ" color="#10B981" data={nasdaqData} sourceKey="nasdaq" />
                 </div>
               </>
             )}

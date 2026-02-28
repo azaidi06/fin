@@ -3,6 +3,8 @@ import {
   ResponsiveContainer, Cell,
 } from "recharts";
 import { globalMarketsData, globalIndexColors, indexCountries, indexFlags } from "../data/warData";
+import { MultiSourceTooltip } from "./SourceLink";
+import SourceLink from "./SourceLink";
 
 const card = { background: "#1E293B", border: "1px solid #334155", borderRadius: 12, padding: 24, marginBottom: 32 };
 
@@ -37,6 +39,7 @@ function CustomTooltip({ active, payload, label }) {
           {p.name}: <strong>-{p.value}%</strong>
         </p>
       ))}
+      <MultiSourceTooltip sourceKeys={["sp500", "djia"]} />
     </div>
   );
 }
@@ -73,6 +76,7 @@ function IndexRow({ idx, maxVal }) {
             {indexCountries[idx.id]}
           </span>
         </span>
+        <SourceLink indexId={idx.id} style={{ fontSize: 9, marginLeft: 4 }} />
         {idx.caveat && (
           <span style={{ fontSize: 9, fontWeight: 600, color: "#FBBF24", background: "rgba(251,191,36,0.12)", padding: "1px 6px", borderRadius: 4, marginLeft: "auto" }}>
             {idx.caveat}

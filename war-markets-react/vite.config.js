@@ -4,5 +4,5 @@ import tailwindcss from '@tailwindcss/vite'
 
 export default defineConfig({
   plugins: [react(), tailwindcss()],
-  base: process.env.AMPLIFY ? '/react/' : '/fin/react/',
+  base: '/react/',
 })

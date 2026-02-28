@@ -6,13 +6,15 @@ import {
 import {
   fiscalConflictColors, cpiChartData, debtGdpChartData, fiscalSummary,
 } from "../data/warData";
+import { TooltipSourceLink } from "./SourceLink";
+import SourceLink from "./SourceLink";
 
 const card = { background: "#1E293B", border: "1px solid #334155", borderRadius: 12, padding: 24, marginBottom: 32 };
 const innerCard = { background: "#0F172A", border: "1px solid #334155", borderRadius: 10, padding: 20, marginBottom: 24 };
 
 const conflicts = ["WWII", "Korea", "Vietnam", "Gulf War", "9/11", "Iraq"];
 
-function CustomTooltip({ active, payload, label, hoveredConflict }) {
+function CustomTooltip({ active, payload, label, hoveredConflict, sourceKey }) {
   if (!active || !payload?.length) return null;
   return (
     <div style={{ background: "#334155", border: "1px solid #475569", borderRadius: 8, padding: "12px 16px", fontSize: 13, color: "#F8FAFC", boxShadow: "0 8px 24px rgba(0,0,0,0.4)", maxWidth: 260 }}>
@@ -20,8 +22,8 @@ function CustomTooltip({ active, payload, label, hoveredConflict }) {
       {payload.map(p => {
         const isHovered = hoveredConflict === p.dataKey;
         return (
-          <p key={p.dataKey} style={{ 
-            color: p.color, 
+          <p key={p.dataKey} style={{
+            color: p.color,
             margin: "2px 0",
             fontWeight: isHovered ? 700 : 400,
             opacity: !hoveredConflict || isHovered ? 1 : 0.6
@@ -30,11 +32,12 @@ function CustomTooltip({ active, payload, label, hoveredConflict }) {
           </p>
         );
       })}
+      <TooltipSourceLink sourceKey={sourceKey} />
     </div>
   );
 }
 
-function FiscalChart({ title, subtitle, data, yLabel, yDomain, yTickFormatter }) {
+function FiscalChart({ title, subtitle, data, yLabel, yDomain, yTickFormatter, sourceKey }) {
   const [hoveredConflict, setHoveredConflict] = useState(null);
   const [hiddenConflicts, setHiddenConflicts] = useState([]);
 
@@ -104,7 +107,7 @@ function FiscalChart({ title, subtitle, data, yLabel, yDomain, yTickFormatter })
             domain={yDomain}
             label={{ value: yLabel, angle: -90, position: "insideLeft", offset: -2, style: { fill: "#64748B", fontSize: 11 } }}
           />
-          <Tooltip content={<CustomTooltip hoveredConflict={hoveredConflict} />} />
+          <Tooltip content={<CustomTooltip hoveredConflict={hoveredConflict} sourceKey={sourceKey} />} />
           <Legend content={renderLegend} />
           <ReferenceLine
             x="T=0" stroke="#F8FAFC" strokeDasharray="6 4" strokeOpacity={0.5}
@@ -171,6 +174,10 @@ function FiscalCard({ d }) {
       <p style={{ fontSize: 11, color: "#94A3B8", lineHeight: 1.5, borderTop: "1px solid #334155", paddingTop: 10 }}>
         {d.narrative}
       </p>
+      <div style={{ display: "flex", gap: 12, marginTop: 8 }}>
+        <SourceLink sourceKey="cpi" />
+        <SourceLink sourceKey="debtGdp" />
+      </div>
     </div>
   );
 }
@@ -189,6 +196,7 @@ export default function FiscalImpactPanel() {
         data={cpiChartData}
         yLabel="CPI YoY %"
         yDomain={["auto", "auto"]}
+        sourceKey="cpi"
       />
 
       <FiscalChart
@@ -197,6 +205,7 @@ export default function FiscalImpactPanel() {
         data={debtGdpChartData}
         yLabel="Debt / GDP %"
         yDomain={["auto", "auto"]}
+        sourceKey="debtGdp"
       />
 
       <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", gap: 16 }}>
