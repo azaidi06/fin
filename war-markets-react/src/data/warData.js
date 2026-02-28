@@ -404,7 +404,7 @@ export const costOfLivingData = [
   {
     era: "WWII", year: 1941, cpiMultiplier: 21.29,
     items: {
-      home:    { nominal: 4075,  adjusted: 86756 },
+      home:    { nominal: 2938,  adjusted: 62550 },
       car:     { nominal: 850,   adjusted: 18097 },
       tuition: { nominal: 150,   adjusted: 3194 },
       income:  { nominal: 1500,  adjusted: 31935 },
@@ -470,7 +470,7 @@ export const costOfLivingData = [
     era: "Iraq", year: 2003, cpiMultiplier: 1.70,
     items: {
       home:    { nominal: 195000, adjusted: 331500 },
-      car:     { nominal: 22600,  adjusted: 38420 },
+      car:     { nominal: 24773, adjusted: 42114 },
       tuition: { nominal: 4694,   adjusted: 7980 },
       income:  { nominal: 43318,  adjusted: 73641 },
       milk:    { nominal: 2.76,   adjusted: 4.69 },
@@ -485,7 +485,7 @@ export const costOfLivingData = [
       home:    { nominal: 420800, adjusted: 420800 },
       car:     { nominal: 48500,  adjusted: 48500 },
       tuition: { nominal: 11260,  adjusted: 11260 },
-      income:  { nominal: 63795,  adjusted: 63795 },
+      income:  { nominal: 83730,  adjusted: 83730 },
       milk:    { nominal: 4.25,   adjusted: 4.25 },
       eggs:    { nominal: 3.20,   adjusted: 3.20 },
       gas:     { nominal: 3.52,   adjusted: 3.52 },
