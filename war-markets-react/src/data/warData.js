@@ -511,6 +511,49 @@ export const everydayChartData = costOfLivingData.map(d => ({
   Bread: d.items.bread.adjusted,
 }));
 
+// ── TOTAL US FEDERAL DEBT TIMELINE ─────────────────────────
+// Nominal USD (billions), sourced from FRED GFDEBTN
+// ~25 data points: every ~3-5 years + every conflict start year for marker precision
+export const totalDebtData = [
+  { year: 1940, debt: 42.97 },
+  { year: 1941, debt: 48.96 },
+  { year: 1945, debt: 258.68 },
+  { year: 1950, debt: 256.85 },
+  { year: 1953, debt: 265.96 },
+  { year: 1955, debt: 272.75 },
+  { year: 1960, debt: 286.33 },
+  { year: 1964, debt: 311.71 },
+  { year: 1968, debt: 347.58 },
+  { year: 1970, debt: 370.92 },
+  { year: 1975, debt: 533.19 },
+  { year: 1980, debt: 907.70 },
+  { year: 1985, debt: 1823.10 },
+  { year: 1990, debt: 3233.31 },
+  { year: 1995, debt: 4974.00 },
+  { year: 2000, debt: 5674.18 },
+  { year: 2001, debt: 5807.46 },
+  { year: 2003, debt: 6783.23 },
+  { year: 2005, debt: 7932.71 },
+  { year: 2008, debt: 10024.72 },
+  { year: 2010, debt: 13561.62 },
+  { year: 2013, debt: 16738.18 },
+  { year: 2016, debt: 19573.45 },
+  { year: 2019, debt: 22719.40 },
+  { year: 2020, debt: 27747.78 },
+  { year: 2022, debt: 30928.91 },
+  { year: 2024, debt: 35464.00 },
+];
+
+// Conflict start-year markers for vertical reference lines on the timeline
+export const conflictMarkers = [
+  { year: 1941, label: "WWII" },
+  { year: 1950, label: "Korea" },
+  { year: 1964, label: "Vietnam" },
+  { year: 1990, label: "Gulf War" },
+  { year: 2001, label: "9/11" },
+  { year: 2003, label: "Iraq" },
+];
+
 // ── SOURCE URLS ──────────────────────────────────────────
 // Direct links to the original data source for every data point
 export const sourceUrls = {
@@ -528,6 +571,7 @@ export const sourceUrls = {
   eggs:           "https://fred.stlouisfed.org/series/APU0000708111",
   gas:            "https://www.eia.gov/dnav/pet/pet_pri_gnd_dcus_nus_a.htm",
   bread:          "https://fred.stlouisfed.org/series/APU0000702111",
+  totalDebt:      "https://fred.stlouisfed.org/series/GFDEBTN",
 };
 
 export const sourceLabels = {
@@ -545,6 +589,7 @@ export const sourceLabels = {
   eggs:           "FRED APU0000708111",
   gas:            "EIA Retail Gas",
   bread:          "FRED APU0000702111",
+  totalDebt:      "FRED GFDEBTN",
 };
 
 export const globalIndexSourceUrls = {

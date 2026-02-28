@@ -1,10 +1,11 @@
 import { useState } from "react";
 import {
-  LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend,
+  LineChart, Line, AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, Legend,
   ResponsiveContainer, ReferenceLine,
 } from "recharts";
 import {
   fiscalConflictColors, cpiChartData, debtGdpChartData, fiscalSummary,
+  totalDebtData, conflictMarkers,
 } from "../data/warData";
 import { TooltipSourceLink } from "./SourceLink";
 import SourceLink from "./SourceLink";
@@ -13,6 +14,76 @@ const card = { background: "#1E293B", border: "1px solid #334155", borderRadius:
 const innerCard = { background: "#0F172A", border: "1px solid #334155", borderRadius: 10, padding: 20, marginBottom: 24 };
 
 const conflicts = ["WWII", "Korea", "Vietnam", "Gulf War", "9/11", "Iraq"];
+
+function DebtTimelineTooltip({ active, payload, label }) {
+  if (!active || !payload?.length) return null;
+  const debt = payload[0].value;
+  const formatted = debt >= 1000
+    ? `$${(debt / 1000).toFixed(1)}T`
+    : `$${debt.toFixed(0)}B`;
+  return (
+    <div style={{ background: "#334155", border: "1px solid #475569", borderRadius: 8, padding: "10px 14px", fontSize: 13, color: "#F8FAFC", boxShadow: "0 8px 24px rgba(0,0,0,0.4)" }}>
+      <p style={{ fontWeight: 600, marginBottom: 4 }}>{label}</p>
+      <p style={{ color: "#06B6D4", fontWeight: 700 }}>{formatted}</p>
+      <TooltipSourceLink sourceKey="totalDebt" />
+    </div>
+  );
+}
+
+function DebtTimelineChart() {
+  return (
+    <div style={innerCard}>
+      <h3 style={{ fontSize: 15, fontWeight: 600, color: "#E2E8F0", marginBottom: 4 }}>US Total Federal Debt (1940–2024)</h3>
+      <p style={{ fontSize: 11, color: "#64748B", marginBottom: 16 }}>Nominal USD — vertical lines mark conflict start years</p>
+      <ResponsiveContainer width="100%" height={360}>
+        <AreaChart data={totalDebtData} margin={{ top: 20, right: 30, left: 10, bottom: 5 }}>
+          <defs>
+            <linearGradient id="debtGradient" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="5%" stopColor="#06B6D4" stopOpacity={0.3} />
+              <stop offset="95%" stopColor="#06B6D4" stopOpacity={0} />
+            </linearGradient>
+          </defs>
+          <CartesianGrid strokeDasharray="3 3" stroke="#475569" opacity={0.25} />
+          <XAxis
+            dataKey="year" stroke="#475569"
+            tick={{ fill: "#94A3B8", fontSize: 12 }} axisLine={false} tickLine={false}
+            type="number" domain={[1940, 2024]}
+            ticks={[1940, 1950, 1960, 1970, 1980, 1990, 2000, 2010, 2020]}
+          />
+          <YAxis
+            stroke="#475569"
+            tickFormatter={(v) => v >= 1000 ? `$${(v / 1000).toFixed(0)}T` : `$${v}B`}
+            tick={{ fill: "#94A3B8", fontSize: 12 }} axisLine={false} tickLine={false}
+            label={{ value: "Total Debt", angle: -90, position: "insideLeft", offset: -2, style: { fill: "#64748B", fontSize: 11 } }}
+          />
+          <Tooltip content={<DebtTimelineTooltip />} />
+          {conflictMarkers.map((m) => (
+            <ReferenceLine
+              key={m.year}
+              x={m.year}
+              stroke="#F8FAFC"
+              strokeDasharray="6 4"
+              strokeOpacity={0.4}
+              label={{ value: m.label, position: "top", fill: "#94A3B8", fontSize: 9 }}
+            />
+          ))}
+          <Area
+            type="monotone"
+            dataKey="debt"
+            stroke="#06B6D4"
+            strokeWidth={2}
+            fill="url(#debtGradient)"
+            dot={{ r: 3, fill: "#06B6D4", strokeWidth: 0 }}
+            activeDot={{ r: 6, strokeWidth: 0, fill: "#06B6D4" }}
+          />
+        </AreaChart>
+      </ResponsiveContainer>
+      <div style={{ marginTop: 8 }}>
+        <SourceLink sourceKey="totalDebt" />
+      </div>
+    </div>
+  );
+}
 
 function CustomTooltip({ active, payload, label, hoveredConflict, sourceKey }) {
   if (!active || !payload?.length) return null;
@@ -189,6 +260,8 @@ export default function FiscalImpactPanel() {
       <p style={{ fontSize: 13, color: "#94A3B8", marginBottom: 24 }}>
         How inflation and federal debt responded in the years surrounding each conflict (T=0 is the war start year)
       </p>
+
+      <DebtTimelineChart />
 
       <FiscalChart
         title="CPI Inflation Trajectory"

@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from "react";
-import { sp500Data, preWarData, globalMarketsData, cpiChartData, costOfLivingData } from "../data/warData";
+import { sp500Data, preWarData, globalMarketsData, cpiChartData, costOfLivingData, totalDebtData } from "../data/warData";
 
 /* ── AnimatedStat: counts from 0 to final value ── */
 
@@ -196,6 +196,9 @@ const fiscalValues = cpiChartData.map((row) => row["WWII"]).filter((v) => v != n
 // Cost of Living: CPI multipliers per era
 const costValues = costOfLivingData.map((d) => d.cpiMultiplier);
 
+// National Debt: total debt timeline (exponential curve)
+const debtTimelineValues = totalDebtData.map((d) => d.debt);
+
 /* ── Card sparkline map ── */
 function CardSparkline({ id, color, hero }) {
   const w = hero ? 200 : 120;
@@ -211,6 +214,8 @@ function CardSparkline({ id, color, hero }) {
       return <LineSparkline values={fiscalValues} color={color} width={w} height={h} animated />;
     case "cost":
       return <BarSparkline values={costValues} color={color} width={w} height={h} animated />;
+    case "debt":
+      return <LineSparkline values={debtTimelineValues} color={color} width={w} height={h} animated />;
     default:
       return null;
   }
@@ -264,6 +269,15 @@ const cards = [
     stat: "21.3×",
     statLabel: "CPI multiplier since 1941",
     tag: "Adjusted to 2024 USD",
+  },
+  {
+    id: "debt",
+    title: "National Debt",
+    desc: "Total US federal debt from WWII to today",
+    color: "#06B6D4",
+    stat: "$35.5T",
+    statLabel: "Total federal debt (2024)",
+    tag: "FRED GFDEBTN",
   },
   {
     id: "methodology",
@@ -326,7 +340,7 @@ export default function HomePage({ onSelect }) {
               "--card-glow": `linear-gradient(135deg, ${c.color}4D, transparent 60%)`,
               boxShadow: "none",
             }}
-            onClick={() => onSelect(c.id)}
+            onClick={() => onSelect(c.id === "debt" ? "fiscal" : c.id)}
             onMouseEnter={(e) => {
               e.currentTarget.style.boxShadow = `0 8px 32px ${c.color}33`;
             }}
