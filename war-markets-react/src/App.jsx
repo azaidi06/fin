@@ -6,12 +6,14 @@ import TimelineChart from "./components/TimelineChart";
 import DataTable from "./components/DataTable";
 import ComparisonPanel from "./components/ComparisonPanel";
 import GlobalMarketsPanel from "./components/GlobalMarketsPanel";
+import FiscalImpactPanel from "./components/FiscalImpactPanel";
 import { sp500Data, nasdaqData } from "./data/warData";
 
 const tabs = [
   { id: "reaction", label: "Post-Conflict Reaction" },
   { id: "buildup", label: "Pre-War Buildup" },
   { id: "global", label: "Global Markets" },
+  { id: "fiscal", label: "Fiscal Impact" },
 ];
 
 const tabBtn = (active) => ({
@@ -67,8 +69,13 @@ export default function App() {
           <GlobalMarketsPanel />
         )}
 
+        {/* Fiscal Impact tab */}
+        {activeTab === "fiscal" && (
+          <FiscalImpactPanel />
+        )}
+
         <footer className="text-center text-xs pt-4 border-t leading-relaxed" style={{ color: "#64748B", borderColor: "#334155" }}>
-          Data sources: Yahoo Finance (via yfinance), iSectors, Hennion & Walsh, The Motley Fool, CFA Institute, Invesco<br />
+          Data sources: Yahoo Finance (via yfinance), iSectors, Hennion & Walsh, The Motley Fool, CFA Institute, Invesco, FRED (BLS CPI, Federal Debt/GDP)<br />
           S&P 500 uses DJIA as proxy for pre-1957 conflicts. NASDAQ began trading in 1971.
         </footer>
       </div>

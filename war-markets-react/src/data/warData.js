@@ -206,6 +206,149 @@ export const globalMarketsData = [
   },
 ];
 
+// ── FISCAL IMPACT DATA ─────────────────────────────────────
+// CPI YoY% — annual averages from BLS / FRED CPIAUCSL (pre-1947: Minneapolis Fed historical tables)
+// Debt/GDP% — FRED series GFDGDPA188S (federal debt as % of GDP, annual)
+
+export const fiscalConflictColors = {
+  WWII: "#EF4444",
+  Korea: "#F59E0B",
+  Vietnam: "#10B981",
+  "Gulf War": "#6366F1",
+  "9/11": "#EC4899",
+  Iraq: "#3B82F6",
+};
+
+export const cpiData = [
+  { conflict: "WWII", label: "WWII (1941)", startYear: 1941,
+    series: [
+      { t: -2, year: 1939, value: -1.4 }, { t: -1, year: 1940, value: 0.7 },
+      { t: 0, year: 1941, value: 5.0 },  { t: 1, year: 1942, value: 10.9 },
+      { t: 2, year: 1943, value: 6.1 },  { t: 3, year: 1944, value: 1.7 },
+      { t: 4, year: 1945, value: 2.3 },  { t: 5, year: 1946, value: 8.3 },
+    ] },
+  { conflict: "Korea", label: "Korean War (1950)", startYear: 1950,
+    series: [
+      { t: -2, year: 1948, value: 8.1 },  { t: -1, year: 1949, value: -1.2 },
+      { t: 0, year: 1950, value: 1.3 },   { t: 1, year: 1951, value: 7.9 },
+      { t: 2, year: 1952, value: 1.9 },   { t: 3, year: 1953, value: 0.8 },
+      { t: 4, year: 1954, value: 0.7 },   { t: 5, year: 1955, value: -0.4 },
+    ] },
+  { conflict: "Vietnam", label: "Vietnam (1964)", startYear: 1964,
+    series: [
+      { t: -2, year: 1962, value: 1.0 }, { t: -1, year: 1963, value: 1.3 },
+      { t: 0, year: 1964, value: 1.3 },  { t: 1, year: 1965, value: 1.6 },
+      { t: 2, year: 1966, value: 2.9 },  { t: 3, year: 1967, value: 3.1 },
+      { t: 4, year: 1968, value: 4.2 },  { t: 5, year: 1969, value: 5.5 },
+    ] },
+  { conflict: "Gulf War", label: "Gulf War (1990)", startYear: 1990,
+    series: [
+      { t: -2, year: 1988, value: 4.1 }, { t: -1, year: 1989, value: 4.8 },
+      { t: 0, year: 1990, value: 5.4 },  { t: 1, year: 1991, value: 4.2 },
+      { t: 2, year: 1992, value: 3.0 },  { t: 3, year: 1993, value: 3.0 },
+      { t: 4, year: 1994, value: 2.6 },  { t: 5, year: 1995, value: 2.8 },
+    ] },
+  { conflict: "9/11", label: "9/11 (2001)", startYear: 2001,
+    series: [
+      { t: -2, year: 1999, value: 2.2 }, { t: -1, year: 2000, value: 3.4 },
+      { t: 0, year: 2001, value: 2.8 },  { t: 1, year: 2002, value: 1.6 },
+      { t: 2, year: 2003, value: 2.3 },  { t: 3, year: 2004, value: 2.7 },
+      { t: 4, year: 2005, value: 3.4 },  { t: 5, year: 2006, value: 3.2 },
+    ] },
+  { conflict: "Iraq", label: "Iraq War (2003)", startYear: 2003,
+    series: [
+      { t: -2, year: 2001, value: 2.8 }, { t: -1, year: 2002, value: 1.6 },
+      { t: 0, year: 2003, value: 2.3 },  { t: 1, year: 2004, value: 2.7 },
+      { t: 2, year: 2005, value: 3.4 },  { t: 3, year: 2006, value: 3.2 },
+      { t: 4, year: 2007, value: 2.8 },  { t: 5, year: 2008, value: 3.8 },
+    ] },
+];
+
+export const debtGdpData = [
+  { conflict: "WWII", label: "WWII (1941)", startYear: 1941,
+    series: [
+      { t: -2, year: 1939, value: 42.7 }, { t: -1, year: 1940, value: 44.2 },
+      { t: 0, year: 1941, value: 42.3 },  { t: 1, year: 1942, value: 47.8 },
+      { t: 2, year: 1943, value: 70.9 },  { t: 3, year: 1944, value: 91.4 },
+      { t: 4, year: 1945, value: 114.0 }, { t: 5, year: 1946, value: 118.4 },
+    ] },
+  { conflict: "Korea", label: "Korean War (1950)", startYear: 1950,
+    series: [
+      { t: -2, year: 1948, value: 85.7 }, { t: -1, year: 1949, value: 79.0 },
+      { t: 0, year: 1950, value: 80.2 },  { t: 1, year: 1951, value: 66.8 },
+      { t: 2, year: 1952, value: 61.7 },  { t: 3, year: 1953, value: 58.6 },
+      { t: 4, year: 1954, value: 59.5 },  { t: 5, year: 1955, value: 56.9 },
+    ] },
+  { conflict: "Vietnam", label: "Vietnam (1964)", startYear: 1964,
+    series: [
+      { t: -2, year: 1962, value: 42.4 }, { t: -1, year: 1963, value: 40.9 },
+      { t: 0, year: 1964, value: 38.5 },  { t: 1, year: 1965, value: 36.7 },
+      { t: 2, year: 1966, value: 33.8 },  { t: 3, year: 1967, value: 32.9 },
+      { t: 4, year: 1968, value: 33.3 },  { t: 5, year: 1969, value: 29.3 },
+    ] },
+  { conflict: "Gulf War", label: "Gulf War (1990)", startYear: 1990,
+    series: [
+      { t: -2, year: 1988, value: 50.5 }, { t: -1, year: 1989, value: 51.1 },
+      { t: 0, year: 1990, value: 54.2 },  { t: 1, year: 1991, value: 59.9 },
+      { t: 2, year: 1992, value: 62.4 },  { t: 3, year: 1993, value: 63.8 },
+      { t: 4, year: 1994, value: 63.2 },  { t: 5, year: 1995, value: 63.4 },
+    ] },
+  { conflict: "9/11", label: "9/11 (2001)", startYear: 2001,
+    series: [
+      { t: -2, year: 1999, value: 58.0 }, { t: -1, year: 2000, value: 54.7 },
+      { t: 0, year: 2001, value: 54.6 },  { t: 1, year: 2002, value: 57.0 },
+      { t: 2, year: 2003, value: 59.6 },  { t: 3, year: 2004, value: 60.6 },
+      { t: 4, year: 2005, value: 60.5 },  { t: 5, year: 2006, value: 61.0 },
+    ] },
+  { conflict: "Iraq", label: "Iraq War (2003)", startYear: 2003,
+    series: [
+      { t: -2, year: 2001, value: 54.6 }, { t: -1, year: 2002, value: 57.0 },
+      { t: 0, year: 2003, value: 59.6 },  { t: 1, year: 2004, value: 60.6 },
+      { t: 2, year: 2005, value: 60.5 },  { t: 3, year: 2006, value: 61.0 },
+      { t: 4, year: 2007, value: 62.0 },  { t: 5, year: 2008, value: 67.7 },
+    ] },
+];
+
+// Flattened for Recharts — one row per time point, column per conflict
+const conflicts = ["WWII", "Korea", "Vietnam", "Gulf War", "9/11", "Iraq"];
+const tValues = [-2, -1, 0, 1, 2, 3, 4, 5];
+const tLabels = ["T-2", "T-1", "T=0", "T+1", "T+2", "T+3", "T+4", "T+5"];
+
+export const cpiChartData = tValues.map((t, i) => {
+  const row = { t, tLabel: tLabels[i] };
+  conflicts.forEach(c => {
+    const cd = cpiData.find(d => d.conflict === c);
+    const pt = cd.series.find(s => s.t === t);
+    row[c] = pt ? pt.value : null;
+  });
+  return row;
+});
+
+export const debtGdpChartData = tValues.map((t, i) => {
+  const row = { t, tLabel: tLabels[i] };
+  conflicts.forEach(c => {
+    const dd = debtGdpData.find(d => d.conflict === c);
+    const pt = dd.series.find(s => s.t === t);
+    row[c] = pt ? pt.value : null;
+  });
+  return row;
+});
+
+export const fiscalSummary = [
+  { conflict: "WWII", peakCpi: 10.9, debtGdpDelta: 76.1,
+    narrative: "War spending pushed federal debt from 42% to 118% of GDP. CPI spiked to 10.9% in 1942 before price controls took hold, then surged again to 8.3% when controls were lifted in 1946." },
+  { conflict: "Korea", peakCpi: 7.9, debtGdpDelta: -23.3,
+    narrative: "Triggered an inflation spike to 7.9% in 1951, but rapid GDP growth from war mobilization actually reduced the debt-to-GDP ratio by 23 points over 5 years." },
+  { conflict: "Vietnam", peakCpi: 5.5, debtGdpDelta: -9.2,
+    narrative: "A slow burn — inflation crept from 1.3% to 5.5% over 5 years, setting the stage for 1970s stagflation. Debt/GDP continued declining on strong GDP growth." },
+  { conflict: "Gulf War", peakCpi: 5.4, debtGdpDelta: 9.2,
+    narrative: "Coincided with a recession already underway. Inflation was elevated at 5.4% but quickly moderated. The debt run-up reflected broader fiscal trends more than direct war costs." },
+  { conflict: "9/11", peakCpi: 3.4, debtGdpDelta: 6.4,
+    narrative: "Moderate fiscal impact. CPI dipped as the economy weakened post-attacks, then stabilized around 2.5–3.4%. Defense spending increases were partially offset by economic growth." },
+  { conflict: "Iraq", peakCpi: 3.8, debtGdpDelta: 8.1,
+    narrative: "War costs built slowly — inflation stayed tame through 2007 before the 2008 commodity spike. The real fiscal explosion came after 2008 when the financial crisis triggered massive deficit spending." },
+];
+
 // Shared conflicts only (for comparison panel)
 export const sharedConflicts = sp500Data
   .filter(sp => nasdaqData.some(nq => nq.conflict === sp.conflict))
