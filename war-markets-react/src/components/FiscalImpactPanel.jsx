@@ -115,24 +115,26 @@ function FiscalChart({ title, subtitle, data, yLabel, yDomain, yTickFormatter })
             const isAnyHovered = hoveredConflict !== null;
             const isHidden = hiddenConflicts.includes(c);
 
+            if (isHidden) return null;
+
             return (
               <Line
                 key={c}
                 type="monotone"
                 dataKey={c}
                 stroke={fiscalConflictColors[c]}
-                strokeWidth={isHidden ? 0 : (isHovered ? 4 : 2)}
-                strokeOpacity={isHidden ? 0 : (!isAnyHovered || isHovered ? 1 : 0.15)}
-                dot={isHidden ? false : {
-                  r: isHovered ? 4 : 3,
-                  fill: fiscalConflictColors[c],
+                strokeWidth={isHovered ? 4 : 2}
+                strokeOpacity={!isAnyHovered || isHovered ? 1 : 0.15}
+                dot={{ 
+                  r: isHovered ? 4 : 3, 
+                  fill: fiscalConflictColors[c], 
                   strokeWidth: 0,
-                  fillOpacity: !isAnyHovered || isHovered ? 1 : 0.15
+                  fillOpacity: !isAnyHovered || isHovered ? 1 : 0.15 
                 }}
-                activeDot={isHidden ? false : { r: 6, strokeWidth: 0 }}
+                activeDot={{ r: 6, strokeWidth: 0 }}
                 connectNulls
-                onMouseEnter={() => !isHidden && setHoveredConflict(c)}
-                onMouseLeave={() => !isHidden && setHoveredConflict(null)}
+                onMouseEnter={() => setHoveredConflict(c)}
+                onMouseLeave={() => setHoveredConflict(null)}
                 style={{ transition: "all 0.2s" }}
               />
             );
