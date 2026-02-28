@@ -1,3 +1,4 @@
+import { useState } from "react";
 import {
   LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend,
   ResponsiveContainer, ReferenceLine,
@@ -11,21 +12,81 @@ const innerCard = { background: "#0F172A", border: "1px solid #334155", borderRa
 
 const conflicts = ["WWII", "Korea", "Vietnam", "Gulf War", "9/11", "Iraq"];
 
-function CustomTooltip({ active, payload, label }) {
+function CustomTooltip({ active, payload, label, hoveredConflict }) {
   if (!active || !payload?.length) return null;
   return (
     <div style={{ background: "#334155", border: "1px solid #475569", borderRadius: 8, padding: "12px 16px", fontSize: 13, color: "#F8FAFC", boxShadow: "0 8px 24px rgba(0,0,0,0.4)", maxWidth: 260 }}>
       <p style={{ fontWeight: 600, marginBottom: 6 }}>{label}</p>
-      {payload.map(p => (
-        <p key={p.dataKey} style={{ color: p.color, margin: "2px 0" }}>
-          {p.dataKey}: <strong>{p.value}%</strong>
-        </p>
-      ))}
+      {payload.map(p => {
+        const isHovered = hoveredConflict === p.dataKey;
+        return (
+          <p key={p.dataKey} style={{ 
+            color: p.color, 
+            margin: "2px 0",
+            fontWeight: isHovered ? 700 : 400,
+            opacity: !hoveredConflict || isHovered ? 1 : 0.6
+          }}>
+            {p.dataKey}: <strong>{p.value}%</strong>
+          </p>
+        );
+      })}
     </div>
   );
 }
 
 function FiscalChart({ title, subtitle, data, yLabel, yDomain, yTickFormatter }) {
+  const [hoveredConflict, setHoveredConflict] = useState(null);
+  const [hiddenConflicts, setHiddenConflicts] = useState([]);
+
+  const toggleConflict = (conflict) => {
+    setHiddenConflicts(prev => 
+      prev.includes(conflict) 
+        ? prev.filter(c => c !== conflict) 
+        : [...prev, conflict]
+    );
+  };
+
+  const renderLegend = (props) => {
+    const { payload } = props;
+    return (
+      <div style={{ display: "flex", flexWrap: "wrap", justifyContent: "center", gap: "12px", paddingTop: "12px" }}>
+        {payload.map((entry, index) => {
+          const isHidden = hiddenConflicts.includes(entry.value);
+          const isHovered = hoveredConflict === entry.value;
+          return (
+            <div
+              key={`item-${index}`}
+              style={{
+                display: "flex",
+                alignItems: "center",
+                gap: "6px",
+                cursor: "pointer",
+                padding: "4px 8px",
+                borderRadius: "6px",
+                background: isHovered ? "rgba(255,255,255,0.05)" : "transparent",
+                transition: "all 0.2s",
+                opacity: isHidden ? 0.4 : 1
+              }}
+              onClick={() => toggleConflict(entry.value)}
+              onMouseEnter={() => setHoveredConflict(entry.value)}
+              onMouseLeave={() => setHoveredConflict(null)}
+            >
+              <div style={{ width: 10, height: 10, borderRadius: 2, background: entry.color }} />
+              <span style={{ 
+                fontSize: 12, 
+                color: isHovered ? "#F8FAFC" : "#CBD5E1",
+                fontWeight: isHovered ? 600 : 400,
+                textDecoration: isHidden ? "line-through" : "none"
+              }}>
+                {entry.value}
+              </span>
+            </div>
+          );
+        })}
+      </div>
+    );
+  };
+
   return (
     <div style={innerCard}>
       <h3 style={{ fontSize: 15, fontWeight: 600, color: "#E2E8F0", marginBottom: 4 }}>{title}</h3>
@@ -43,24 +104,41 @@ function FiscalChart({ title, subtitle, data, yLabel, yDomain, yTickFormatter })
             domain={yDomain}
             label={{ value: yLabel, angle: -90, position: "insideLeft", offset: -2, style: { fill: "#64748B", fontSize: 11 } }}
           />
-          <Tooltip content={<CustomTooltip />} />
-          <Legend
-            wrapperStyle={{ fontSize: 12, color: "#CBD5E1", paddingTop: 8 }}
-            iconType="plainline" iconSize={14}
-          />
+          <Tooltip content={<CustomTooltip hoveredConflict={hoveredConflict} />} />
+          <Legend content={renderLegend} />
           <ReferenceLine
             x="T=0" stroke="#F8FAFC" strokeDasharray="6 4" strokeOpacity={0.5}
             label={{ value: "War Start", position: "top", fill: "#94A3B8", fontSize: 10 }}
           />
-          {conflicts.map(c => (
-            <Line
-              key={c} type="monotone" dataKey={c}
-              stroke={fiscalConflictColors[c]} strokeWidth={2}
-              dot={{ r: 3, fill: fiscalConflictColors[c] }}
-              activeDot={{ r: 5 }}
-              connectNulls
-            />
-          ))}
+          {conflicts.map(c => {
+            const isHovered = hoveredConflict === c;
+            const isAnyHovered = hoveredConflict !== null;
+            const isHidden = hiddenConflicts.includes(c);
+
+            if (isHidden) return null;
+
+            return (
+              <Line
+                key={c}
+                type="monotone"
+                dataKey={c}
+                stroke={fiscalConflictColors[c]}
+                strokeWidth={isHovered ? 4 : 2}
+                strokeOpacity={!isAnyHovered || isHovered ? 1 : 0.15}
+                dot={{ 
+                  r: isHovered ? 4 : 3, 
+                  fill: fiscalConflictColors[c], 
+                  strokeWidth: 0,
+                  fillOpacity: !isAnyHovered || isHovered ? 1 : 0.15 
+                }}
+                activeDot={{ r: 6, strokeWidth: 0 }}
+                connectNulls
+                onMouseEnter={() => setHoveredConflict(c)}
+                onMouseLeave={() => setHoveredConflict(null)}
+                style={{ transition: "all 0.2s" }}
+              />
+            );
+          })}
         </LineChart>
       </ResponsiveContainer>
     </div>
