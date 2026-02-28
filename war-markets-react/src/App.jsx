@@ -47,7 +47,7 @@ export default function App() {
   };
 
   return (
-    <div className="min-h-screen px-4 py-10 sm:px-6 lg:px-8" style={{ background: "#0F172A", color: "#F8FAFC" }}>
+    <div className="min-h-screen px-4 py-10 sm:px-6 lg:px-8" style={{ color: "#F8FAFC" }}>
       <div className="max-w-[960px] mx-auto">
         <Header compact={activeTab === "home"} />
 
