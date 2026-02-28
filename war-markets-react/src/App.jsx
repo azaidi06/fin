@@ -1,5 +1,6 @@
 import { useState } from "react";
 import Header from "./components/Header";
+import HomePage from "./components/HomePage";
 import BuildupPanel from "./components/BuildupPanel";
 import DrawdownChart from "./components/DrawdownChart";
 import TimelineChart from "./components/TimelineChart";
@@ -17,6 +18,7 @@ const tabs = [
   { id: "global", label: "Global Markets" },
   { id: "fiscal", label: "Fiscal Impact" },
   { id: "cost", label: "Cost of Living" },
+  { id: "methodology", label: "Methodology" },
 ];
 
 const tabBtn = (active) => ({
@@ -37,20 +39,35 @@ const sourceCatLabel = { fontSize: 11, fontWeight: 600, color: "#94A3B8", textTr
 const sourceList = { fontSize: 11, color: "#64748B", lineHeight: 1.6, margin: 0 };
 
 export default function App() {
-  const [activeTab, setActiveTab] = useState("reaction");
-  const [showMethodology, setShowMethodology] = useState(false);
+  const [activeTab, setActiveTab] = useState("home");
+
+  const goHome = () => {
+    setActiveTab("home");
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
 
   return (
     <div className="min-h-screen px-4 py-10 sm:px-6 lg:px-8" style={{ background: "#0F172A", color: "#F8FAFC" }}>
       <div className="max-w-[960px] mx-auto">
         <Header />
 
-        {showMethodology ? (
-          <MethodologyPage onClose={() => setShowMethodology(false)} />
+        {activeTab === "home" ? (
+          <HomePage onSelect={setActiveTab} />
         ) : (
           <>
             {/* Tab bar */}
             <div style={{ display: "flex", gap: 8, marginBottom: 32, justifyContent: "center", flexWrap: "wrap" }}>
+              <button
+                style={{
+                  ...tabBtn(false),
+                  display: "flex",
+                  alignItems: "center",
+                  gap: 6,
+                }}
+                onClick={goHome}
+              >
+                ← Home
+              </button>
               {tabs.map(t => (
                 <button key={t.id} style={tabBtn(activeTab === t.id)} onClick={() => setActiveTab(t.id)}>
                   {t.label}
@@ -72,46 +89,24 @@ export default function App() {
             )}
 
             {/* Pre-War Buildup tab */}
-            {activeTab === "buildup" && (
-              <BuildupPanel />
-            )}
+            {activeTab === "buildup" && <BuildupPanel />}
 
             {/* Global Markets tab */}
-            {activeTab === "global" && (
-              <GlobalMarketsPanel />
-            )}
+            {activeTab === "global" && <GlobalMarketsPanel />}
 
             {/* Fiscal Impact tab */}
-            {activeTab === "fiscal" && (
-              <FiscalImpactPanel />
-            )}
+            {activeTab === "fiscal" && <FiscalImpactPanel />}
 
             {/* Cost of Living tab */}
-            {activeTab === "cost" && (
-              <CostOfLivingPanel />
-            )}
+            {activeTab === "cost" && <CostOfLivingPanel />}
+
+            {/* Methodology tab */}
+            {activeTab === "methodology" && <MethodologyPage onClose={goHome} />}
           </>
         )}
 
         {/* ── FOOTER ── */}
         <footer style={{ borderTop: "1px solid #334155", paddingTop: 20, marginTop: 8 }}>
-          {/* Methodology link */}
-          <div style={{ textAlign: "center", marginBottom: 20 }}>
-            <button
-              onClick={() => {
-                setShowMethodology(!showMethodology);
-                window.scrollTo({ top: 0, behavior: "smooth" });
-              }}
-              style={{
-                background: "rgba(99,102,241,0.08)", border: "1px solid rgba(99,102,241,0.25)",
-                borderRadius: 8, padding: "10px 24px", fontSize: 13, fontWeight: 600,
-                color: "#818CF8", cursor: "pointer", transition: "all 0.2s",
-              }}
-            >
-              {showMethodology ? "Back to Dashboard" : "Our Methodology — How We Calculate Every Number"}
-            </button>
-          </div>
-
           {/* Structured sources */}
           <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: "8px 24px", marginBottom: 16 }}>
             <div style={sourceCategory}>

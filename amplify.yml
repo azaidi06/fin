@@ -9,11 +9,8 @@ frontend:
         - npm run build --prefix war-markets-react
     postBuild:
       commands:
-        - mkdir -p _site/react
-        - cp docs/index.html _site/
-        - cp docs/d3.html _site/ 2>/dev/null || true
-        - cp -r war-markets-react/dist/* _site/react/
-        - cp war_drawdowns.html _site/ 2>/dev/null || true
+        - mkdir -p _site
+        - cp -r war-markets-react/dist/* _site/
   artifacts:
     baseDirectory: _site
     files:

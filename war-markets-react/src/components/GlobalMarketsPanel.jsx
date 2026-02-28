@@ -168,7 +168,7 @@ export default function GlobalMarketsPanel() {
               tick={{ fill: "#94A3B8", fontSize: 12 }} axisLine={false} tickLine={false} />
             <YAxis type="category" dataKey="index" width={175} stroke="#475569"
               tick={{ fill: "#CBD5E1", fontSize: 12 }} axisLine={false} tickLine={false} />
-            <Tooltip content={<CustomTooltip />} cursor={{ fill: "rgba(99,102,241,0.06)" }} />
+            <Tooltip content={<CustomTooltip />} cursor={{ fill: "rgba(99,102,241,0.06)" }} wrapperStyle={{ pointerEvents: "auto" }} />
             <Bar dataKey="Gulf War" name="Gulf War" fill="#6366F1" radius={4} barSize={14}>
               {comparisonData.map((d, i) => (
                 <Cell key={i} fill="#6366F1" fillOpacity={d["Gulf War"] == null ? 0 : 1} />

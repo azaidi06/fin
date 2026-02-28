@@ -107,7 +107,7 @@ export default function BuildupPanel() {
             tick={{ fill: "#94A3B8", fontSize: 12 }} axisLine={false} tickLine={false} />
           <YAxis type="category" dataKey="label" width={185} stroke="#475569"
             tick={{ fill: "#CBD5E1", fontSize: 12 }} axisLine={false} tickLine={false} />
-          <Tooltip content={<CustomTooltip />} cursor={{ fill: "rgba(99,102,241,0.06)" }} />
+          <Tooltip content={<CustomTooltip />} cursor={{ fill: "rgba(99,102,241,0.06)" }} wrapperStyle={{ pointerEvents: "auto" }} />
           <Legend wrapperStyle={{ fontSize: 12, color: "#CBD5E1", paddingTop: 8 }} iconType="square" iconSize={10} />
           <ReferenceLine x={0} stroke="#64748B" strokeWidth={1.5} />
           <Bar dataKey="spChange" name="S&P 500" radius={4} barSize={14}>

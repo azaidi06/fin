@@ -74,7 +74,7 @@ function ItemChart({ itemKey, height = 240, yFormatter, big = false }) {
             tick={{ fill: "#94A3B8", fontSize: 11 }} axisLine={false} tickLine={false}
             width={big ? 65 : 45}
           />
-          <Tooltip content={<ItemTooltip itemKey={itemKey} />} cursor={{ fill: "rgba(255,255,255,0.04)" }} />
+          <Tooltip content={<ItemTooltip itemKey={itemKey} />} cursor={{ fill: "rgba(255,255,255,0.04)" }} wrapperStyle={{ pointerEvents: "auto" }} />
           <Bar dataKey="value" radius={[4, 4, 0, 0]} maxBarSize={big ? 50 : 32}>
             {data.map(d => (
               <Cell key={d.era} fill={eraColors[d.era]} />

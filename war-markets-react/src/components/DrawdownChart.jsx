@@ -34,7 +34,7 @@ export default function DrawdownChart() {
             tick={{ fill: "#94A3B8", fontSize: 12 }} axisLine={false} tickLine={false} />
           <YAxis type="category" dataKey="label" width={185} stroke="#475569"
             tick={{ fill: "#CBD5E1", fontSize: 12 }} axisLine={false} tickLine={false} />
-          <Tooltip content={<CustomTooltip />} cursor={{ fill: "rgba(99,102,241,0.06)" }} />
+          <Tooltip content={<CustomTooltip />} cursor={{ fill: "rgba(99,102,241,0.06)" }} wrapperStyle={{ pointerEvents: "auto" }} />
           <Legend wrapperStyle={{ fontSize: 12, color: "#CBD5E1", paddingTop: 8 }} iconType="square" iconSize={10} />
           <Bar dataKey="spDecline" name="S&P 500" fill="#6366F1" radius={[0, 5, 5, 0]} barSize={14} />
           <Bar dataKey="nqDecline" name="NASDAQ" fill="#10B981" radius={[0, 5, 5, 0]} barSize={14} />

@@ -107,7 +107,7 @@ function FiscalChart({ title, subtitle, data, yLabel, yDomain, yTickFormatter, s
             domain={yDomain}
             label={{ value: yLabel, angle: -90, position: "insideLeft", offset: -2, style: { fill: "#64748B", fontSize: 11 } }}
           />
-          <Tooltip content={<CustomTooltip hoveredConflict={hoveredConflict} sourceKey={sourceKey} />} />
+          <Tooltip content={<CustomTooltip hoveredConflict={hoveredConflict} sourceKey={sourceKey} />} wrapperStyle={{ pointerEvents: "auto" }} />
           <Legend content={renderLegend} />
           <ReferenceLine
             x="T=0" stroke="#F8FAFC" strokeDasharray="6 4" strokeOpacity={0.5}
