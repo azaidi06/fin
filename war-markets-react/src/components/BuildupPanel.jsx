@@ -1,5 +1,5 @@
 import {
-  BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend,
+  BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip,
   ResponsiveContainer, ReferenceLine, Cell,
 } from "recharts";
 import { preWarData } from "../data/warData";
@@ -8,6 +8,92 @@ import SourceLink from "./SourceLink";
 
 const card = { background: "#1E293B", border: "1px solid #334155", borderRadius: 12, padding: 24, marginBottom: 32 };
 const stripYear = (s) => s.replace(/, \d{4}\)/, ")").replace(/ \(\d{4}\)/, "");
+
+/* ── Custom SVG defs: gradients + glow filter ── */
+function ChartDefs() {
+  return (
+    <defs>
+      {/* S&P 500 gradient: indigo → purple */}
+      <linearGradient id="grad-sp-neg" x1="1" y1="0" x2="0" y2="0">
+        <stop offset="0%" stopColor="#6366F1" />
+        <stop offset="100%" stopColor="#A78BFA" />
+      </linearGradient>
+      <linearGradient id="grad-sp-pos" x1="0" y1="0" x2="1" y2="0">
+        <stop offset="0%" stopColor="#818CF8" />
+        <stop offset="100%" stopColor="#C4B5FD" />
+      </linearGradient>
+      {/* NASDAQ gradient: teal → cyan */}
+      <linearGradient id="grad-nq-neg" x1="1" y1="0" x2="0" y2="0">
+        <stop offset="0%" stopColor="#14B8A6" />
+        <stop offset="100%" stopColor="#22D3EE" />
+      </linearGradient>
+      <linearGradient id="grad-nq-pos" x1="0" y1="0" x2="1" y2="0">
+        <stop offset="0%" stopColor="#2DD4BF" />
+        <stop offset="100%" stopColor="#67E8F9" />
+      </linearGradient>
+      {/* Neon glow filter */}
+      <filter id="glow-sp" x="-20%" y="-20%" width="140%" height="140%">
+        <feGaussianBlur in="SourceGraphic" stdDeviation="3" result="blur" />
+        <feFlood floodColor="#818CF8" floodOpacity="0.35" result="color" />
+        <feComposite in="color" in2="blur" operator="in" result="shadow" />
+        <feMerge>
+          <feMergeNode in="shadow" />
+          <feMergeNode in="SourceGraphic" />
+        </feMerge>
+      </filter>
+      <filter id="glow-nq" x="-20%" y="-20%" width="140%" height="140%">
+        <feGaussianBlur in="SourceGraphic" stdDeviation="3" result="blur" />
+        <feFlood floodColor="#22D3EE" floodOpacity="0.35" result="color" />
+        <feComposite in="color" in2="blur" operator="in" result="shadow" />
+        <feMerge>
+          <feMergeNode in="shadow" />
+          <feMergeNode in="SourceGraphic" />
+        </feMerge>
+      </filter>
+    </defs>
+  );
+}
+
+/* ── Custom pill legend ── */
+function PillLegend() {
+  const items = [
+    { label: "S&P 500", gradient: "linear-gradient(90deg, #6366F1, #A78BFA)", shadow: "#818CF8" },
+    { label: "NASDAQ", gradient: "linear-gradient(90deg, #14B8A6, #22D3EE)", shadow: "#22D3EE" },
+  ];
+  return (
+    <div style={{ display: "flex", justifyContent: "center", gap: 12, paddingTop: 12 }}>
+      {items.map((item) => (
+        <span
+          key={item.label}
+          style={{
+            display: "inline-flex",
+            alignItems: "center",
+            gap: 8,
+            background: "rgba(30, 41, 59, 0.6)",
+            border: "1px solid rgba(255,255,255,0.08)",
+            borderRadius: 20,
+            padding: "5px 14px",
+            fontSize: 12,
+            fontWeight: 500,
+            color: "#E2E8F0",
+          }}
+        >
+          <span
+            style={{
+              width: 10,
+              height: 10,
+              borderRadius: 3,
+              background: item.gradient,
+              boxShadow: `0 0 6px ${item.shadow}66`,
+              flexShrink: 0,
+            }}
+          />
+          {item.label}
+        </span>
+      ))}
+    </div>
+  );
+}
 
 // Chart data — show S&P for all, NASDAQ where available
 const chartData = preWarData.map(d => ({
@@ -102,26 +188,27 @@ export default function BuildupPanel() {
       {/* Bar chart */}
       <ResponsiveContainer width="100%" height={380}>
         <BarChart data={chartData} layout="vertical" margin={{ top: 5, right: 50, left: 10, bottom: 5 }}>
+          <ChartDefs />
           <CartesianGrid strokeDasharray="3 3" stroke="#475569" opacity={0.25} horizontal={false} />
           <XAxis type="number" tickFormatter={(v) => `${v > 0 ? "+" : ""}${v}%`} stroke="#475569"
             tick={{ fill: "#94A3B8", fontSize: 12 }} axisLine={false} tickLine={false} />
           <YAxis type="category" dataKey="label" width={185} stroke="#475569"
             tick={{ fill: "#CBD5E1", fontSize: 12 }} axisLine={false} tickLine={false} />
           <Tooltip content={<CustomTooltip />} cursor={{ fill: "rgba(99,102,241,0.06)" }} wrapperStyle={{ pointerEvents: "auto" }} />
-          <Legend wrapperStyle={{ fontSize: 12, color: "#CBD5E1", paddingTop: 8 }} iconType="square" iconSize={10} />
           <ReferenceLine x={0} stroke="#64748B" strokeWidth={1.5} />
-          <Bar dataKey="spChange" name="S&P 500" radius={4} barSize={14}>
+          <Bar dataKey="spChange" name="S&P 500" radius={4} barSize={14} filter="url(#glow-sp)">
             {chartData.map((d, i) => (
-              <Cell key={i} fill={d.spChange < 0 ? "#6366F1" : "#818CF8"} fillOpacity={d.surprise ? 0.45 : 1} />
+              <Cell key={i} fill={d.spChange < 0 ? "url(#grad-sp-neg)" : "url(#grad-sp-pos)"} fillOpacity={d.surprise ? 0.45 : 1} />
             ))}
           </Bar>
-          <Bar dataKey="nqChange" name="NASDAQ" radius={4} barSize={14}>
+          <Bar dataKey="nqChange" name="NASDAQ" radius={4} barSize={14} filter="url(#glow-nq)">
             {chartData.map((d, i) => (
-              <Cell key={i} fill={d.nqChange != null ? (d.nqChange < 0 ? "#10B981" : "#34D399") : "transparent"} fillOpacity={d.surprise ? 0.45 : 1} />
+              <Cell key={i} fill={d.nqChange != null ? (d.nqChange < 0 ? "url(#grad-nq-neg)" : "url(#grad-nq-pos)") : "transparent"} fillOpacity={d.surprise ? 0.45 : 1} />
             ))}
           </Bar>
         </BarChart>
       </ResponsiveContainer>
+      <PillLegend />
 
       <p style={{ fontSize: 11, color: "#64748B", textAlign: "center", marginTop: 8, marginBottom: 24, fontStyle: "italic" }}>
         Faded bars = surprise events (context only, not anticipatory). Positive values = market was rising before the conflict.
