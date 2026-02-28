@@ -3,7 +3,7 @@ import { useState, useEffect } from "react";
 const stats = [
   "33.8% — Worst S&P drawdown (WWII)",
   "118% — Peak debt-to-GDP ratio (WWII)",
-  "21.3\u00d7 — CPI multiplier since 1941",
+  "21.3× — CPI multiplier since 1941",
   "917 days — Longest market recovery",
   "5 global indices tracked",
 ];
@@ -26,20 +26,16 @@ export default function Header({ compact }) {
 
   return (
     <header className="text-center mb-10">
-      <h1 className="text-3xl sm:text-4xl font-bold mb-3" style={{
-        background: "linear-gradient(135deg, #818CF8, #34D399)",
-        WebkitBackgroundClip: "text",
-        WebkitTextFillColor: "transparent",
-      }}>
+      <h1 className="animated-gradient-text text-4xl sm:text-5xl font-bold mb-3">
         War & Markets
       </h1>
       {compact ? (
-        <p className="text-base sm:text-lg" style={{ color: "#CBD5E1" }}>
+        <p className="text-lg sm:text-xl" style={{ color: "#CBD5E1" }}>
           How U.S. Stocks React to the Onset of Major Conflicts
         </p>
       ) : (
         <>
-          <p className="text-base sm:text-lg mb-3" style={{ color: "#CBD5E1" }}>
+          <p className="text-lg sm:text-xl mb-3" style={{ color: "#CBD5E1" }}>
             How U.S. Stocks React to the Onset of Major Conflicts
           </p>
           <p className="text-sm max-w-2xl mx-auto leading-relaxed" style={{ color: "#94A3B8" }}>
@@ -59,6 +55,8 @@ export default function Header({ compact }) {
           >
             {stats[statIndex]}
           </p>
+          {/* Glowing divider */}
+          <div className="glow-divider" />
         </>
       )}
     </header>
