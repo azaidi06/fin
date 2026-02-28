@@ -675,6 +675,18 @@ const globalIndexColors = {
   "DJIA": "#818CF8", "FT 30": "#FBBF24",
 };
 
+const indexCountries = {
+  "S&P 500": "US", "DJIA": "US", "FTSE 100": "UK", "FT 30": "UK",
+  "Nikkei 225": "Japan", "DAX": "Germany", "CAC 40": "France", "Hang Seng": "Hong Kong",
+};
+
+const indexFlags = {
+  "S&P 500": "\u{1F1FA}\u{1F1F8}", "DJIA": "\u{1F1FA}\u{1F1F8}",
+  "FTSE 100": "\u{1F1EC}\u{1F1E7}", "FT 30": "\u{1F1EC}\u{1F1E7}",
+  "Nikkei 225": "\u{1F1EF}\u{1F1F5}", "DAX": "\u{1F1E9}\u{1F1EA}",
+  "CAC 40": "\u{1F1EB}\u{1F1F7}", "Hang Seng": "\u{1F1ED}\u{1F1F0}",
+};
+
 const globalMarketsData = [
   { conflict: "WWII", label: "WWII (Pearl Harbor, 1941)", dataQuality: "low", marketCapRanking: ["NYSE"],
     narrative: "Most modern global indices didn't exist yet. The FT 30 (predecessor to the FTSE 100) launched in 1935 and fell ~30% between 1939–1940 as Britain faced invasion fears, bottoming after Dunkirk. Recovery took until 1945.",
@@ -728,7 +740,8 @@ const globalMarketsData = [
   const highQuality = globalMarketsData.filter(d => d.dataQuality === "high");
   const allIdx = [...new Set(highQuality.flatMap(c => c.indices.filter(i => i.decline != null && !i.isPositive).map(i => i.id)))];
   const compData = allIdx.map(idx => {
-    const row = { index: idx };
+    const label = `${indexFlags[idx] || ""} ${idx} (${indexCountries[idx] || ""})`;
+    const row = { index: idx, label: label };
     highQuality.forEach(c => {
       const e = c.indices.find(i => i.id === idx);
       row[c.conflict] = e ? e.decline : null;
@@ -738,7 +751,7 @@ const globalMarketsData = [
 
   const container = d3.select("#global-comparison-chart");
   const fullWidth = Math.min(container.node().getBoundingClientRect().width, 860);
-  const margin = { top: 10, right: 60, bottom: 30, left: 90 };
+  const margin = { top: 10, right: 60, bottom: 30, left: 180 };
   const width = fullWidth - margin.left - margin.right;
   const height = compData.length * 60;
 
@@ -749,7 +762,7 @@ const globalMarketsData = [
 
   const g = svg.append("g").attr("transform", `translate(${margin.left},${margin.top})`);
 
-  const y0 = d3.scaleBand().domain(compData.map(d => d.index)).range([0, height]).padding(0.3);
+  const y0 = d3.scaleBand().domain(compData.map(d => d.label)).range([0, height]).padding(0.3);
   const maxVal = d3.max(compData.flatMap(d => [d["Gulf War"], d["9/11"]].filter(v => v != null)));
   const x = d3.scaleLinear().domain([0, Math.ceil(maxVal / 5) * 5]).range([0, width]);
 
@@ -779,7 +792,7 @@ const globalMarketsData = [
     highQuality.forEach((c, ci) => {
       const val = d[c.conflict];
       if (val == null) return;
-      const yPos = y0(d.index) + ci * (barH + 4);
+      const yPos = y0(d.label) + ci * (barH + 4);
       const color = conflictColors[c.conflict];
 
       g.append("rect").attr("class", "bar")
@@ -833,7 +846,9 @@ const globalMarketsData = [
       // Header line
       const hdr = row.append("div").attr("class", "idx-header");
       hdr.append("span").attr("class", "idx-swatch").style("background", color);
-      hdr.append("span").attr("class", "idx-name").style("color", color).text(idx.id);
+      const nameSpan = hdr.append("span").attr("class", "idx-name").style("color", color);
+      nameSpan.append("span").text((indexFlags[idx.id] || "") + " " + idx.id + " ");
+      nameSpan.append("span").style("font-weight", "400").style("font-size", "0.65rem").style("color", "#64748B").text(indexCountries[idx.id] || "");
       if (idx.caveat) {
         hdr.append("span").attr("class", "caveat-pill").text(idx.caveat);
       }

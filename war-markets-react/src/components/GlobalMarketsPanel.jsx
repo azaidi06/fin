@@ -2,7 +2,7 @@ import {
   BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend,
   ResponsiveContainer, Cell,
 } from "recharts";
-import { globalMarketsData, globalIndexColors } from "../data/warData";
+import { globalMarketsData, globalIndexColors, indexCountries, indexFlags } from "../data/warData";
 
 const card = { background: "#1E293B", border: "1px solid #334155", borderRadius: 12, padding: 24, marginBottom: 32 };
 
@@ -18,7 +18,8 @@ const comparisonConflicts = globalMarketsData.filter(d => d.dataQuality === "hig
 const allIndices = [...new Set(comparisonConflicts.flatMap(c => c.indices.filter(i => i.decline != null && !i.isPositive).map(i => i.id)))];
 
 const comparisonData = allIndices.map(idx => {
-  const row = { index: idx };
+  const label = `${indexFlags[idx] || ""} ${idx} (${indexCountries[idx] || ""})`;
+  const row = { index: label };
   comparisonConflicts.forEach(c => {
     const entry = c.indices.find(i => i.id === idx);
     row[c.conflict] = entry?.decline ?? null;
@@ -66,7 +67,12 @@ function IndexRow({ idx, maxVal }) {
     <div style={{ marginBottom: 10 }}>
       <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 4 }}>
         <span style={{ width: 10, height: 10, borderRadius: 3, background: color, flexShrink: 0 }} />
-        <span style={{ fontSize: 12, fontWeight: 600, color }}>{idx.id}</span>
+        <span style={{ fontSize: 12, fontWeight: 600, color }}>
+          {indexFlags[idx.id]} {idx.id}
+          <span style={{ fontWeight: 400, fontSize: 10, color: "#64748B", marginLeft: 4 }}>
+            {indexCountries[idx.id]}
+          </span>
+        </span>
         {idx.caveat && (
           <span style={{ fontSize: 9, fontWeight: 600, color: "#FBBF24", background: "rgba(251,191,36,0.12)", padding: "1px 6px", borderRadius: 4, marginLeft: "auto" }}>
             {idx.caveat}
@@ -156,7 +162,7 @@ export default function GlobalMarketsPanel() {
             <CartesianGrid strokeDasharray="3 3" stroke="#475569" opacity={0.25} horizontal={false} />
             <XAxis type="number" tickFormatter={v => `${v}%`} stroke="#475569"
               tick={{ fill: "#94A3B8", fontSize: 12 }} axisLine={false} tickLine={false} />
-            <YAxis type="category" dataKey="index" width={90} stroke="#475569"
+            <YAxis type="category" dataKey="index" width={175} stroke="#475569"
               tick={{ fill: "#CBD5E1", fontSize: 12 }} axisLine={false} tickLine={false} />
             <Tooltip content={<CustomTooltip />} cursor={{ fill: "rgba(99,102,241,0.06)" }} />
             <Bar dataKey="Gulf War" name="Gulf War" fill="#6366F1" radius={4} barSize={14}>

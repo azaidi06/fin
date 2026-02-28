@@ -106,6 +106,28 @@ export const globalIndexColors = {
   "FT 30": "#FBBF24",
 };
 
+export const indexCountries = {
+  "S&P 500": "US",
+  "DJIA": "US",
+  "FTSE 100": "UK",
+  "FT 30": "UK",
+  "Nikkei 225": "Japan",
+  "DAX": "Germany",
+  "CAC 40": "France",
+  "Hang Seng": "Hong Kong",
+};
+
+export const indexFlags = {
+  "S&P 500": "\u{1F1FA}\u{1F1F8}",
+  "DJIA": "\u{1F1FA}\u{1F1F8}",
+  "FTSE 100": "\u{1F1EC}\u{1F1E7}",
+  "FT 30": "\u{1F1EC}\u{1F1E7}",
+  "Nikkei 225": "\u{1F1EF}\u{1F1F5}",
+  "DAX": "\u{1F1E9}\u{1F1EA}",
+  "CAC 40": "\u{1F1EB}\u{1F1F7}",
+  "Hang Seng": "\u{1F1ED}\u{1F1F0}",
+};
+
 export const globalMarketsData = [
   {
     conflict: "WWII",
