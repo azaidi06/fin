@@ -7,7 +7,7 @@ frontend:
         - npm ci
     build:
       commands:
-        - npm run build
+        - AMPLIFY=true npm run build
         - cd ..
         - mkdir -p _site/react
         - cp docs/index.html _site/
