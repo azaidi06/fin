@@ -27,7 +27,7 @@ export default function Header({ compact }) {
   return (
     <header className="text-center mb-10">
       <h1 className="animated-gradient-text text-4xl sm:text-5xl font-bold mb-3">
-        War & Markets
+        Money 4 War
       </h1>
       {compact ? (
         <p className="text-lg sm:text-xl" style={{ color: "#CBD5E1" }}>
