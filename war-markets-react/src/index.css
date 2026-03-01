@@ -204,17 +204,39 @@ body::after {
   gap: 14px;
 }
 
-.bento-hero {
-  grid-column: span 2;
-  grid-row: span 2;
+/* ── Ticker strip ── */
+.ticker-strip {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 20px;
+  margin-bottom: 16px;
+  background: rgba(30, 41, 59, 0.4);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 12px;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+.ticker-strip::-webkit-scrollbar { display: none; }
+
+.ticker-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.ticker-sep {
+  width: 1px;
+  height: 16px;
+  background: #334155;
+  flex-shrink: 0;
+  margin: 0 4px;
 }
 
 @media (max-width: 600px) {
   .bento-grid {
     grid-template-columns: 1fr;
-  }
-  .bento-hero {
-    grid-column: span 1;
-    grid-row: span 1;
   }
 }

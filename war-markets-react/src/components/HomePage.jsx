@@ -215,7 +215,7 @@ function CardSparkline({ id, color, filterData, activeConflicts }) {
   }
 }
 
-/* ── Live Market Hero ── */
+/* ── Live Market helpers ── */
 
 function formatPrice(price) {
   if (price >= 1000) return "$" + Math.round(price).toLocaleString();
@@ -233,7 +233,7 @@ function timeAgo(iso) {
   return `${Math.floor(hrs / 24)}d ago`;
 }
 
-function LiveMarketHero() {
+function useMarketData() {
   const [assets, setAssets] = useState([]);
   const [updatedAt, setUpdatedAt] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -256,10 +256,52 @@ function LiveMarketHero() {
     return () => clearInterval(id);
   }, []);
 
+  return { assets, updatedAt, loading };
+}
+
+/* ── Ticker Strip (compact, above cards) ── */
+
+function TickerStrip({ assets, updatedAt, loading }) {
+  if (loading || assets.length === 0) return null;
+
+  return (
+    <div className="ticker-strip">
+      {assets.map((a, i) => {
+        const val = a.change1d ?? null;
+        const has = val != null && val !== 0;
+        const up = (val ?? 0) >= 0;
+        return (
+          <span key={a.symbol} className="ticker-item">
+            <span style={{ fontSize: 12, fontWeight: 700, color: "#F8FAFC" }}>{a.symbol}</span>
+            <span style={{ fontSize: 12, color: "#CBD5E1" }}>{formatPrice(a.price)}</span>
+            {has && (
+              <span style={{
+                fontSize: 11, fontWeight: 600, padding: "1px 6px", borderRadius: 4,
+                color: up ? "#34D399" : "#EF4444",
+                background: up ? "rgba(52,211,153,0.1)" : "rgba(239,68,68,0.1)",
+              }}>
+                {up ? "+" : ""}{val.toFixed(1)}%
+              </span>
+            )}
+            {i < assets.length - 1 && <span className="ticker-sep" />}
+          </span>
+        );
+      })}
+      <span style={{ display: "flex", alignItems: "center", gap: 6, marginLeft: "auto", flexShrink: 0 }}>
+        <span className="live-dot" style={{ width: 6, height: 6 }} />
+        <span style={{ fontSize: 10, color: "#64748B" }}>{updatedAt ? timeAgo(updatedAt) : ""}</span>
+      </span>
+    </div>
+  );
+}
+
+/* ── Live Market Detail (full-width, below cards) ── */
+
+function LiveMarketDetail({ assets, updatedAt, loading }) {
   return (
     <div
-      className="glass-card card-enter card-enter-0 bento-hero"
-      style={{ "--card-glow": "linear-gradient(135deg, #34D3994D, transparent 60%)", cursor: "default" }}
+      className="glass-card"
+      style={{ cursor: "default" }}
     >
       {/* Header */}
       <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 4 }}>
@@ -273,7 +315,6 @@ function LiveMarketHero() {
       </div>
 
       {loading ? (
-        /* Skeleton loading state */
         <div style={{ display: "flex", flexDirection: "column", gap: 12, marginTop: 8 }}>
           {[...Array(6)].map((_, i) => (
             <div key={i} className="skeleton" style={{ height: 28, opacity: 1 - i * 0.1 }} />
@@ -330,13 +371,7 @@ function LiveMarketHero() {
               >
                 {/* Symbol + name */}
                 <div style={{ display: "flex", alignItems: "center", gap: 10, minWidth: 0 }}>
-                  <span style={{
-                    fontSize: 13,
-                    fontWeight: 700,
-                    color: "#F8FAFC",
-                    width: 52,
-                    flexShrink: 0,
-                  }}>
+                  <span style={{ fontSize: 13, fontWeight: 700, color: "#F8FAFC", width: 52, flexShrink: 0 }}>
                     {a.symbol}
                   </span>
                   <span style={{ fontSize: 12, color: "#64748B", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
@@ -351,57 +386,29 @@ function LiveMarketHero() {
                   </span>
                   {has1d ? (
                     <span style={{
-                      fontSize: 12,
-                      fontWeight: 600,
+                      fontSize: 12, fontWeight: 600,
                       color: up1d ? "#34D399" : "#EF4444",
                       background: up1d ? "rgba(52, 211, 153, 0.1)" : "rgba(239, 68, 68, 0.1)",
                       border: `1px solid ${up1d ? "rgba(52, 211, 153, 0.2)" : "rgba(239, 68, 68, 0.2)"}`,
-                      padding: "2px 8px",
-                      borderRadius: 6,
-                      minWidth: 56,
-                      textAlign: "right",
-                      fontVariantNumeric: "tabular-nums",
+                      padding: "2px 8px", borderRadius: 6, minWidth: 56, textAlign: "right", fontVariantNumeric: "tabular-nums",
                     }}>
                       {up1d ? "+" : ""}{val1d.toFixed(1)}%
                     </span>
                   ) : (
-                    <span style={{
-                      fontSize: 12,
-                      fontWeight: 500,
-                      color: "#475569",
-                      padding: "2px 8px",
-                      minWidth: 56,
-                      textAlign: "right",
-                    }}>
-                      —
-                    </span>
+                    <span style={{ fontSize: 12, fontWeight: 500, color: "#475569", padding: "2px 8px", minWidth: 56, textAlign: "right" }}>—</span>
                   )}
                   {has7d ? (
                     <span style={{
-                      fontSize: 12,
-                      fontWeight: 600,
+                      fontSize: 12, fontWeight: 600,
                       color: up7d ? "#34D399" : "#EF4444",
                       background: up7d ? "rgba(52, 211, 153, 0.1)" : "rgba(239, 68, 68, 0.1)",
                       border: `1px solid ${up7d ? "rgba(52, 211, 153, 0.2)" : "rgba(239, 68, 68, 0.2)"}`,
-                      padding: "2px 8px",
-                      borderRadius: 6,
-                      minWidth: 56,
-                      textAlign: "right",
-                      fontVariantNumeric: "tabular-nums",
+                      padding: "2px 8px", borderRadius: 6, minWidth: 56, textAlign: "right", fontVariantNumeric: "tabular-nums",
                     }}>
                       {up7d ? "+" : ""}{val7d.toFixed(1)}%
                     </span>
                   ) : (
-                    <span style={{
-                      fontSize: 12,
-                      fontWeight: 500,
-                      color: "#475569",
-                      padding: "2px 8px",
-                      minWidth: 56,
-                      textAlign: "right",
-                    }}>
-                      —
-                    </span>
+                    <span style={{ fontSize: 12, fontWeight: 500, color: "#475569", padding: "2px 8px", minWidth: 56, textAlign: "right" }}>—</span>
                   )}
                 </div>
               </div>
@@ -534,6 +541,7 @@ function GlowOrb({ color, size, top, left, delay }) {
 
 export default function HomePage({ onSelect }) {
   const { filterData, activeConflicts } = useEventToggle();
+  const { assets, updatedAt, loading } = useMarketData();
 
   return (
     <div style={{ maxWidth: 900, margin: "0 auto", position: "relative", overflow: "hidden" }}>
@@ -542,10 +550,10 @@ export default function HomePage({ onSelect }) {
       <GlowOrb color="#8B5CF6" size={350} top="30%" left="40%" delay={3} />
       <GlowOrb color="#10B981" size={400} top="60%" left="70%" delay={6} />
 
-      <div className="bento-grid">
-        {/* Live market hero tile */}
-        <LiveMarketHero />
+      {/* Ticker strip — compact market glance */}
+      <TickerStrip assets={assets} updatedAt={updatedAt} loading={loading} />
 
+      <div className="bento-grid">
         {/* Content cards */}
         {cards.map((c, i) => (
           <button
@@ -608,6 +616,10 @@ export default function HomePage({ onSelect }) {
           </button>
         ))}
       </div>
+
+      {/* Full live market detail — below the fold */}
+      <hr className="glow-divider" style={{ marginTop: 32, marginBottom: 28 }} />
+      <LiveMarketDetail assets={assets} updatedAt={updatedAt} loading={loading} />
     </div>
   );
 }
