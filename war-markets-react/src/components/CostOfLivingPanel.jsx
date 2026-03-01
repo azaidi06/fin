@@ -3,9 +3,8 @@ import {
   BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip,
   ResponsiveContainer, Cell,
 } from "recharts";
-import { costOfLivingData } from "../data/warData";
+import { costOfLivingData, sourceUrls, sourceLabels } from "../data/warData";
 import { TooltipSourceLink } from "./SourceLink";
-import SourceLink from "./SourceLink";
 import { useEventToggle } from "../context/EventToggleContext";
 
 const card = { background: "#1E293B", border: "1px solid #334155", borderRadius: 12, padding: 24, marginBottom: 32 };
@@ -86,6 +85,37 @@ function ItemChart({ itemKey, filteredData, height = 240, yFormatter, big = fals
   );
 }
 
+function SourceIcon({ sourceKey }) {
+  const url = sourceUrls[sourceKey];
+  const label = sourceLabels[sourceKey];
+  if (!url) return null;
+  return (
+    <a
+      href={url}
+      target="_blank"
+      rel="noopener noreferrer"
+      title={label}
+      style={{
+        fontSize: 10,
+        color: "#475569",
+        textDecoration: "none",
+        display: "inline-flex",
+        alignItems: "center",
+        justifyContent: "center",
+        width: 18,
+        height: 18,
+        borderRadius: 4,
+        flexShrink: 0,
+        transition: "color 0.15s, background 0.15s",
+      }}
+      onMouseEnter={e => { e.currentTarget.style.color = "#94A3B8"; e.currentTarget.style.background = "rgba(255,255,255,0.06)"; }}
+      onMouseLeave={e => { e.currentTarget.style.color = "#475569"; e.currentTarget.style.background = "transparent"; }}
+    >
+      ↗
+    </a>
+  );
+}
+
 function EraCard({ d }) {
   const allItems = Object.entries(d.items);
   return (
@@ -102,22 +132,23 @@ function EraCard({ d }) {
       {/* Column headers */}
       <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "4px 0 2px", borderBottom: "1px solid #334155", marginBottom: 2 }}>
         <span style={{ fontSize: 9, color: "#475569", textTransform: "uppercase", letterSpacing: "0.05em" }}>Item</span>
-        <div style={{ display: "flex", gap: 12 }}>
-          <span style={{ fontSize: 9, color: "#475569", textTransform: "uppercase", letterSpacing: "0.05em", minWidth: 64, textAlign: "right" }}>Nominal</span>
-          <span style={{ fontSize: 9, color: "#475569", textTransform: "uppercase", letterSpacing: "0.05em", minWidth: 70, textAlign: "right" }}>2024 USD</span>
+        <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
+          <span style={{ fontSize: 9, color: "#475569", textTransform: "uppercase", letterSpacing: "0.05em", minWidth: 56, textAlign: "right" }}>Nominal</span>
+          <span style={{ fontSize: 9, color: "#475569", textTransform: "uppercase", letterSpacing: "0.05em", minWidth: 56, textAlign: "right" }}>2024 USD</span>
+          <span style={{ width: 18 }} />
         </div>
       </div>
 
       {allItems.map(([key, val]) => (
         <div key={key} style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "5px 0", borderTop: "1px solid #1E293B" }}>
-          <div style={{ display: "flex", alignItems: "center", gap: 8, flex: 1, minWidth: 0 }}>
+          <div style={{ display: "flex", alignItems: "center", gap: 6, flex: 1, minWidth: 0 }}>
             <span style={{ width: 8, height: 8, borderRadius: 2, background: itemColors[key], flexShrink: 0 }} />
-            <span style={{ fontSize: 12, color: "#CBD5E1" }}>{itemLabels[key]}</span>
+            <span style={{ fontSize: 12, color: "#CBD5E1", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{itemLabels[key]}</span>
           </div>
-          <div style={{ display: "flex", alignItems: "center", gap: 12, flexShrink: 0 }}>
-            <span style={{ fontSize: 11, color: "#64748B", minWidth: 64, textAlign: "right" }}>{fmtNominal(val.nominal)}</span>
-            <span style={{ fontSize: 11, color: "#F8FAFC", fontWeight: 600, minWidth: 70, textAlign: "right" }}>{fmtUsd(val.adjusted)}</span>
-            <SourceLink sourceKey={key} style={{ fontSize: 9, marginLeft: 4 }} />
+          <div style={{ display: "flex", alignItems: "center", gap: 8, flexShrink: 0 }}>
+            <span style={{ fontSize: 11, color: "#64748B", minWidth: 56, textAlign: "right" }}>{fmtNominal(val.nominal)}</span>
+            <span style={{ fontSize: 11, color: "#F8FAFC", fontWeight: 600, minWidth: 56, textAlign: "right" }}>{fmtUsd(val.adjusted)}</span>
+            <SourceIcon sourceKey={key} />
           </div>
         </div>
       ))}
