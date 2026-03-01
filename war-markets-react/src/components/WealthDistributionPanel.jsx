@@ -11,6 +11,24 @@ import {
 
 const ACCENT = "#F472B6";
 
+// Custom x-axis tick: shows year + colored war label below if the tick falls within a war period
+function WarAxisTick({ x, y, payload }) {
+  const year = payload.value;
+  const war = warPeriodBands.find(w => year >= w.startYear && year <= w.endYear);
+  return (
+    <g transform={`translate(${x},${y})`}>
+      <text x={0} y={0} dy={16} textAnchor="middle" fill={war ? war.color : "#94A3B8"} fontSize={12} fontWeight={war ? 600 : 400}>
+        {year}
+      </text>
+      {war && (
+        <>
+          <rect x={-2} y={22} width={4} height={4} rx={1} fill={war.color} />
+        </>
+      )}
+    </g>
+  );
+}
+
 const card = { background: "#1E293B", border: "1px solid #334155", borderRadius: 12, padding: 24, marginBottom: 32 };
 const innerCard = { background: "#0F172A", border: "1px solid #334155", borderRadius: 10, padding: 20, marginBottom: 24 };
 
@@ -158,8 +176,8 @@ function StackedAreaSection() {
       <p style={{ fontSize: 11, color: "#64748B", marginBottom: 16 }}>
         Stacked area showing how wealth is distributed within the top 10% — shaded bands mark war periods
       </p>
-      <ResponsiveContainer width="100%" height={360}>
-        <AreaChart data={wealthStackedData} margin={{ top: 20, right: 30, left: 10, bottom: 5 }}>
+      <ResponsiveContainer width="100%" height={400}>
+        <AreaChart data={wealthStackedData} margin={{ top: 20, right: 30, left: 10, bottom: 30 }}>
           <defs>
             {seriesKeys.map(key => (
               <linearGradient key={key} id={`grad-${key.replace(/[\s.%]/g, "")}`} x1="0" y1="0" x2="0" y2="1">
@@ -171,7 +189,7 @@ function StackedAreaSection() {
           <CartesianGrid strokeDasharray="3 3" stroke="#475569" opacity={0.25} />
           <XAxis
             dataKey="year" stroke="#475569"
-            tick={{ fill: "#94A3B8", fontSize: 12 }} axisLine={false} tickLine={false}
+            tick={<WarAxisTick />} axisLine={false} tickLine={false}
             type="number" domain={[1913, 2024]}
             ticks={[1913, 1920, 1930, 1940, 1950, 1960, 1970, 1980, 1990, 2000, 2010, 2020]}
           />
@@ -186,8 +204,9 @@ function StackedAreaSection() {
             <ReferenceArea
               key={w.conflict}
               x1={w.startYear} x2={w.endYear}
-              fill={w.color} fillOpacity={0.08}
-              stroke={w.color} strokeOpacity={0.2} strokeDasharray="3 3"
+              fill={w.color} fillOpacity={0.12}
+              stroke={w.color} strokeOpacity={0.3} strokeDasharray="3 3"
+              label={{ value: w.conflict, position: "insideBottom", fill: w.color, fontSize: 10, fontWeight: 600, dy: -4 }}
             />
           ))}
           {wealthMilestones.map(m => (
@@ -253,12 +272,12 @@ function DivergenceSection() {
       <p style={{ fontSize: 11, color: "#64748B", marginBottom: 16 }}>
         The great divergence — how the gap between richest and poorest widened, narrowed, then widened again
       </p>
-      <ResponsiveContainer width="100%" height={360}>
-        <LineChart data={wealthDivergenceData} margin={{ top: 20, right: 30, left: 10, bottom: 5 }}>
+      <ResponsiveContainer width="100%" height={400}>
+        <LineChart data={wealthDivergenceData} margin={{ top: 20, right: 30, left: 10, bottom: 30 }}>
           <CartesianGrid strokeDasharray="3 3" stroke="#475569" opacity={0.25} />
           <XAxis
             dataKey="year" stroke="#475569"
-            tick={{ fill: "#94A3B8", fontSize: 12 }} axisLine={false} tickLine={false}
+            tick={<WarAxisTick />} axisLine={false} tickLine={false}
             type="number" domain={[1913, 2024]}
             ticks={[1913, 1920, 1930, 1940, 1950, 1960, 1970, 1980, 1990, 2000, 2010, 2020]}
           />
@@ -273,8 +292,9 @@ function DivergenceSection() {
             <ReferenceArea
               key={w.conflict}
               x1={w.startYear} x2={w.endYear}
-              fill={w.color} fillOpacity={0.08}
-              stroke={w.color} strokeOpacity={0.2} strokeDasharray="3 3"
+              fill={w.color} fillOpacity={0.12}
+              stroke={w.color} strokeOpacity={0.3} strokeDasharray="3 3"
+              label={{ value: w.conflict, position: "insideBottom", fill: w.color, fontSize: 10, fontWeight: 600, dy: -4 }}
             />
           ))}
           {Object.entries(divergenceColors).map(([key, color]) => {
