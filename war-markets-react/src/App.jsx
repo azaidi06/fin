@@ -11,6 +11,7 @@ import FiscalImpactPanel from "./components/FiscalImpactPanel";
 import CostOfLivingPanel from "./components/CostOfLivingPanel";
 import WealthDistributionPanel from "./components/WealthDistributionPanel";
 import MethodologyPage from "./components/MethodologyPage";
+import EventExplainerPanel from "./components/EventExplainerPanel";
 import { sp500Data, nasdaqData, EXTRA_EVENTS } from "./data/warData";
 import { EventToggleProvider, useEventToggle } from "./context/EventToggleContext";
 
@@ -21,6 +22,7 @@ const tabs = [
   { id: "fiscal", label: "Fiscal Impact" },
   { id: "cost", label: "Cost of Living" },
   { id: "wealth", label: "Wealth Distribution" },
+  { id: "events", label: "Event Explainer" },
   { id: "methodology", label: "Methodology" },
 ];
 
@@ -183,6 +185,9 @@ function AppInner() {
 
             {/* Wealth Distribution tab */}
             {activeTab === "wealth" && <WealthDistributionPanel />}
+
+            {/* Event Explainer tab */}
+            {activeTab === "events" && <EventExplainerPanel />}
 
             {/* Methodology tab */}
             {activeTab === "methodology" && <MethodologyPage onClose={goHome} />}

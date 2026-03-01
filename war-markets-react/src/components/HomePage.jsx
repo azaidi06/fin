@@ -475,6 +475,15 @@ const cards = [
     tag: "Saez-Zucman / WID",
   },
   {
+    id: "events",
+    title: "Event Explainer",
+    desc: "Why each event is included and what it reveals about markets",
+    color: "#FB923C",
+    stat: "12",
+    statLabel: "Events analyzed",
+    tag: "Context & analysis",
+  },
+  {
     id: "methodology",
     title: "Methodology",
     desc: "Formulas, data sources, CPI adjustments, and limitations",
