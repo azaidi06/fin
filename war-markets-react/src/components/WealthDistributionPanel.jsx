@@ -294,7 +294,7 @@ function DivergenceSection() {
               x1={w.startYear} x2={w.endYear}
               fill={w.color} fillOpacity={0.12}
               stroke={w.color} strokeOpacity={0.3} strokeDasharray="3 3"
-              label={{ value: w.conflict, position: "insideBottom", fill: w.color, fontSize: 10, fontWeight: 600, dy: -4 }}
+              label={{ value: w.conflict, position: "insideTop", fill: w.color, fontSize: 10, fontWeight: 600, dy: 4 }}
             />
           ))}
           {Object.entries(divergenceColors).map(([key, color]) => {
