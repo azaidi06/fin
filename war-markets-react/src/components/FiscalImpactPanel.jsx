@@ -367,7 +367,90 @@ const presidentColors = {
 
 const presColor = (name) => presidentColors[name] || "#94A3B8";
 
+const presidentialNarratives = {
+  "FDR": "Massive wartime spending for WWII drove debt from $43B to $259B. The New Deal and war mobilization transformed the federal government's fiscal role permanently.",
+  "Truman": "Post-war demobilization and the Korean War. Debt barely grew as strong GDP growth and high tax rates from the war era shrank the debt-to-GDP ratio dramatically.",
+  "Eisenhower": "Fiscal conservative who prioritized balanced budgets. Debt grew only $13B over eight years despite Cold War defense spending and the Interstate Highway System.",
+  "JFK": "Brief tenure saw modest debt growth. Tax cut proposals and space race spending were in early stages before his assassination in 1963.",
+  "LBJ": "Great Society programs and Vietnam War escalation. Attempted \"guns and butter\" — funding both a war and massive domestic expansion simultaneously.",
+  "Nixon": "Ended the gold standard (1971) and imposed wage-price controls. Vietnam drawdown offset by oil shocks and the beginning of stagflation.",
+  "Ford": "Short post-Watergate presidency during severe recession. Debt grew modestly as the economy struggled with inflation and unemployment simultaneously.",
+  "Carter": "Inherited stagflation and faced the 1979 oil crisis. Debt grew at a moderate pace, but double-digit inflation eroded real debt burden.",
+  "Reagan": "Supply-side tax cuts combined with a defense buildup tripled the national debt. The peacetime debt explosion was historically unprecedented.",
+  "H.W. Bush": "S&L crisis bailout and 1990–91 recession drove deficits higher. Signed a deficit-reduction deal that raised taxes, breaking his \"read my lips\" pledge.",
+  "Clinton": "1990s tech boom, welfare reform, and the 1997 budget deal produced four consecutive surpluses — the only modern president to shrink annual deficits to zero.",
+  "W. Bush": "Two wars (Afghanistan, Iraq), two tax cuts, and the 2008 financial crisis. Debt nearly doubled, with TARP and stimulus adding ~$1T in his final year alone.",
+  "Obama": "Inherited the Great Recession; stimulus and slow recovery kept deficits above $1T early on. Debt doubled in absolute terms but velocity actually decelerated from the crisis peak.",
+  "Trump": "Tax Cuts and Jobs Act (2017) widened deficits in a strong economy. COVID-19 relief in 2020 drove the largest single-year debt increase in history (~$4.2T added).",
+  "Biden": "Signed the American Rescue Plan, Infrastructure Act, and Inflation Reduction Act. Debt velocity remained elevated post-COVID as interest costs surged past $1T/yr.",
+};
+
 const fmtDebt = (v) => v >= 1000 ? `$${(v / 1000).toFixed(1)}T` : `$${v.toFixed(0)}B`;
+
+function PresidentSummaryCard({ d }) {
+  const color = presColor(d.president);
+  const partyLabel = d.party === "D" ? "Dem" : "Rep";
+  const partyColor = d.party === "D" ? "#60A5FA" : "#F87171";
+  const accel = d.acceleration;
+
+  return (
+    <div style={{ background: "#0F172A", border: "1px solid #334155", borderRadius: 10, padding: 20 }}>
+      {/* Header */}
+      <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 14 }}>
+        <span style={{ width: 12, height: 12, borderRadius: 3, background: color, flexShrink: 0 }} />
+        <h3 style={{ fontWeight: 600, color: "#E2E8F0", fontSize: 14, margin: 0 }}>{d.president}</h3>
+        <span style={{
+          fontSize: 10, fontWeight: 600, color: partyColor,
+          background: `${partyColor}18`, padding: "2px 7px", borderRadius: 4,
+        }}>{partyLabel}</span>
+        <span style={{ fontSize: 11, color: "#64748B", marginLeft: "auto" }}>{d.start}–{d.end}</span>
+      </div>
+
+      {/* Primary stats row */}
+      <div style={{ display: "flex", gap: 12, marginBottom: 12 }}>
+        <div style={{ flex: 1 }}>
+          <p style={{ fontSize: 10, color: "#64748B", textTransform: "uppercase", letterSpacing: "0.05em", marginBottom: 2 }}>Debt Added</p>
+          <p style={{ fontSize: 18, fontWeight: 700, color: "#FBBF24" }}>{fmtDebt(d.debtAdded)}</p>
+        </div>
+        <div style={{ flex: 1 }}>
+          <p style={{ fontSize: 10, color: "#64748B", textTransform: "uppercase", letterSpacing: "0.05em", marginBottom: 2 }}>Avg Velocity</p>
+          <p style={{ fontSize: 18, fontWeight: 700, color: "#06B6D4" }}>{fmtDebt(d.velocity)}/yr</p>
+        </div>
+        <div style={{ flex: 1 }}>
+          <p style={{ fontSize: 10, color: "#64748B", textTransform: "uppercase", letterSpacing: "0.05em", marginBottom: 2 }}>CAGR</p>
+          <p style={{ fontSize: 18, fontWeight: 700, color: "#F8FAFC" }}>{d.cagr.toFixed(1)}%</p>
+        </div>
+      </div>
+
+      {/* Secondary stats row */}
+      <div style={{ display: "flex", gap: 12, marginBottom: 14 }}>
+        <div style={{ flex: 1 }}>
+          <p style={{ fontSize: 10, color: "#64748B", textTransform: "uppercase", letterSpacing: "0.05em", marginBottom: 2 }}>Start → End Debt</p>
+          <p style={{ fontSize: 13, fontWeight: 600, color: "#CBD5E1" }}>{fmtDebt(d.startDebt)} → {fmtDebt(d.endDebt)}</p>
+        </div>
+        {accel != null && (
+          <div style={{ flex: 1 }}>
+            <p style={{ fontSize: 10, color: "#64748B", textTransform: "uppercase", letterSpacing: "0.05em", marginBottom: 2 }}>Acceleration</p>
+            <p style={{ fontSize: 13, fontWeight: 600, color: accel > 0 ? "#EF4444" : "#10B981" }}>
+              {accel > 0 ? "+" : ""}{fmtDebt(Math.abs(accel))}/yr
+              <span style={{ fontSize: 10, color: "#64748B", marginLeft: 4 }}>
+                {accel > 0 ? "▲ faster" : "▼ slower"}
+              </span>
+            </p>
+          </div>
+        )}
+      </div>
+
+      {/* Narrative */}
+      <p style={{ fontSize: 11, color: "#94A3B8", lineHeight: 1.6, borderTop: "1px solid #334155", paddingTop: 12, margin: 0 }}>
+        {presidentialNarratives[d.president] || ""}
+      </p>
+      <div style={{ marginTop: 8 }}>
+        <SourceLink sourceKey="totalDebt" />
+      </div>
+    </div>
+  );
+}
 
 function VelocityTooltip({ active, payload }) {
   if (!active || !payload?.length) return null;
@@ -525,6 +608,21 @@ function DebtVelocitySection() {
   );
 }
 
+function PresidentSummarySection() {
+  const stats = useMemo(() => computePresidentialDebtStats(), []);
+  return (
+    <div style={{ marginTop: 32 }}>
+      <h3 style={{ fontSize: 17, fontWeight: 600, color: "#E2E8F0", marginBottom: 4 }}>Presidential Fiscal Summary</h3>
+      <p style={{ fontSize: 12, color: "#94A3B8", marginBottom: 16 }}>Key debt metrics and economic context for each administration</p>
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))", gap: 16 }}>
+        {stats.map(d => (
+          <PresidentSummaryCard key={`${d.president}-${d.start}`} d={d} />
+        ))}
+      </div>
+    </div>
+  );
+}
+
 export default function FiscalImpactPanel() {
   const { activeConflicts, filterData } = useEventToggle();
 
@@ -575,6 +673,9 @@ export default function FiscalImpactPanel() {
       <p style={{ fontSize: 11, color: "#64748B", textAlign: "center", marginTop: 16, fontStyle: "italic" }}>
         CPI data: BLS / FRED CPIAUCSL (post-1947), Minneapolis Fed historical tables (pre-1947). Debt/GDP: FRED GFDGDPA188S.
       </p>
+
+      {/* Presidential Fiscal Summary */}
+      <PresidentSummarySection />
     </section>
   );
 }
