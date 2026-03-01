@@ -31,12 +31,12 @@ export default function Header({ compact }) {
       </h1>
       {compact ? (
         <p className="text-lg sm:text-xl" style={{ color: "#CBD5E1" }}>
-          How Wealth, Money and Markets React to the Onset of Chaos
+          Chaos and it's Impact on Our Wealth, Money and Markets
         </p>
       ) : (
         <>
           <p className="text-lg sm:text-xl mb-3" style={{ color: "#CBD5E1" }}>
-            How Wealth, Money and Markets React to the Onset of Chaos
+            Chaos and it's Impact on Our Wealth, Money and Markets
           </p>
           {/* Rotating stat ticker */}
           <p
