@@ -65,7 +65,7 @@ function DebtTimelineChart({ filteredMarkers }) {
   return (
     <div style={innerCard}>
       <h3 style={{ fontSize: 15, fontWeight: 600, color: "#E2E8F0", marginBottom: 4 }}>US Total Federal Debt (1940–2025)</h3>
-      <p style={{ fontSize: 11, color: "#64748B", marginBottom: 16 }}>Nominal USD — background shading by presidential party (blue = Democrat, red = Republican)</p>
+      <p style={{ fontSize: 11, color: "#64748B", marginBottom: 16 }}>Nominal USD — background shading by president</p>
       <ResponsiveContainer width="100%" height={440}>
         <AreaChart data={totalDebtData} margin={{ top: 40, right: 30, left: 10, bottom: 5 }}>
           <defs>
@@ -97,12 +97,12 @@ function DebtTimelineChart({ filteredMarkers }) {
                 key={`${term.president}-${term.start}`}
                 x1={term.start}
                 x2={term.end}
-                fill={term.party === "D" ? "#3B82F6" : "#EF4444"}
-                fillOpacity={0.08}
+                fill={presColor(term.president)}
+                fillOpacity={0.10}
                 label={duration >= 4 ? {
                   value: term.president,
                   position: "insideTop",
-                  fill: term.party === "D" ? "#60A5FA" : "#F87171",
+                  fill: presColor(term.president),
                   fontSize: 9,
                   fontWeight: 500,
                   offset: 5,
@@ -160,18 +160,16 @@ function DebtTimelineChart({ filteredMarkers }) {
       </ResponsiveContainer>
 
       {/* Legend */}
-      <div style={{ display: "flex", justifyContent: "center", flexWrap: "wrap", gap: 16, marginTop: 8, marginBottom: 4 }}>
-        <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
-          <div style={{ width: 14, height: 10, borderRadius: 2, background: "rgba(59, 130, 246, 0.3)", border: "1px solid rgba(59, 130, 246, 0.5)" }} />
-          <span style={{ fontSize: 11, color: "#94A3B8" }}>Democrat</span>
-        </div>
-        <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
-          <div style={{ width: 14, height: 10, borderRadius: 2, background: "rgba(239, 68, 68, 0.3)", border: "1px solid rgba(239, 68, 68, 0.5)" }} />
-          <span style={{ fontSize: 11, color: "#94A3B8" }}>Republican</span>
-        </div>
-        <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
+      <div style={{ display: "flex", justifyContent: "center", flexWrap: "wrap", gap: 10, marginTop: 8, marginBottom: 4 }}>
+        {presidentialTerms.map((term) => (
+          <div key={`${term.president}-${term.start}`} style={{ display: "flex", alignItems: "center", gap: 5 }}>
+            <div style={{ width: 12, height: 8, borderRadius: 2, background: presColor(term.president), opacity: 0.5 }} />
+            <span style={{ fontSize: 10, color: "#94A3B8" }}>{term.president}</span>
+          </div>
+        ))}
+        <div style={{ display: "flex", alignItems: "center", gap: 5 }}>
           <div style={{ width: 8, height: 8, borderRadius: "50%", background: "#FBBF24", border: "2px solid #0F172A" }} />
-          <span style={{ fontSize: 11, color: "#94A3B8" }}>Event</span>
+          <span style={{ fontSize: 10, color: "#94A3B8" }}>Event</span>
         </div>
       </div>
       <div style={{ marginTop: 4 }}>
@@ -376,7 +374,7 @@ function VelocityTooltip({ active, payload }) {
   const d = payload[0].payload;
   return (
     <div style={{ background: "#334155", border: "1px solid #475569", borderRadius: 8, padding: "10px 14px", fontSize: 12, color: "#F8FAFC", boxShadow: "0 8px 24px rgba(0,0,0,0.4)", maxWidth: 280 }}>
-      <p style={{ fontWeight: 600, marginBottom: 6, color: presColor(d.president) }}>
+      <p style={{ fontWeight: 600, marginBottom: 6, color: d.party === "D" ? "#60A5FA" : "#F87171" }}>
         {d.president} ({d.party === "D" ? "Dem" : "Rep"})
       </p>
       <p style={{ color: "#94A3B8", margin: "2px 0" }}>Term: {d.start}–{d.end} ({d.years} yr{d.years > 1 ? "s" : ""})</p>
@@ -446,7 +444,7 @@ function DebtVelocitySection() {
           <Tooltip content={<VelocityTooltip />} cursor={{ fill: "rgba(255,255,255,0.04)" }} />
           <Bar dataKey="velocity" radius={[4, 4, 0, 0]} maxBarSize={44}>
             {stats.map((d, i) => (
-              <Cell key={i} fill={presColor(d.president)} />
+              <Cell key={i} fill={d.party === "D" ? "#3B82F6" : "#EF4444"} />
             ))}
           </Bar>
         </BarChart>
@@ -508,14 +506,16 @@ function DebtVelocitySection() {
         </ul>
       </div>
 
-      {/* President Legend */}
-      <div style={{ display: "flex", justifyContent: "center", flexWrap: "wrap", gap: 10, marginTop: 16 }}>
-        {stats.map(d => (
-          <div key={`${d.president}-${d.start}`} style={{ display: "flex", alignItems: "center", gap: 5 }}>
-            <div style={{ width: 10, height: 10, borderRadius: 2, background: presColor(d.president) }} />
-            <span style={{ fontSize: 10, color: "#94A3B8" }}>{d.president}</span>
-          </div>
-        ))}
+      {/* Party Legend */}
+      <div style={{ display: "flex", justifyContent: "center", gap: 20, marginTop: 16 }}>
+        <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
+          <div style={{ width: 12, height: 12, borderRadius: 3, background: "#3B82F6" }} />
+          <span style={{ fontSize: 11, color: "#94A3B8" }}>Democrat</span>
+        </div>
+        <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
+          <div style={{ width: 12, height: 12, borderRadius: 3, background: "#EF4444" }} />
+          <span style={{ fontSize: 11, color: "#94A3B8" }}>Republican</span>
+        </div>
       </div>
 
       <div style={{ marginTop: 8 }}>
