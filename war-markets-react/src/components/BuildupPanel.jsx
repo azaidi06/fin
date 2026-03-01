@@ -203,12 +203,14 @@ export default function BuildupPanel() {
           <ReferenceLine x={0} stroke="#64748B" strokeWidth={1.5} />
           <Bar dataKey="spChange" name="S&P 500" radius={4} barSize={14} filter="url(#glow-sp)">
             {chartData.map((d, i) => (
-              <Cell key={i} fill={d.spChange < 0 ? "url(#grad-sp-neg)" : "url(#grad-sp-pos)"} fillOpacity={d.surprise ? 0.45 : 1} />
+              <Cell key={i} fill={d.spChange < 0 ? "url(#grad-sp-neg)" : "url(#grad-sp-pos)"} fillOpacity={d.surprise ? 0.45 : 1}
+                stroke={d.spChange < 0 ? "#EF4444" : "#10B981"} strokeWidth={2} strokeOpacity={d.surprise ? 0.5 : 0.85} />
             ))}
           </Bar>
           <Bar dataKey="nqChange" name="NASDAQ" radius={4} barSize={14} filter="url(#glow-nq)">
             {chartData.map((d, i) => (
-              <Cell key={i} fill={d.nqChange != null ? (d.nqChange < 0 ? "url(#grad-nq-neg)" : "url(#grad-nq-pos)") : "transparent"} fillOpacity={d.surprise ? 0.45 : 1} />
+              <Cell key={i} fill={d.nqChange != null ? (d.nqChange < 0 ? "url(#grad-nq-neg)" : "url(#grad-nq-pos)") : "transparent"} fillOpacity={d.surprise ? 0.45 : 1}
+                stroke={d.nqChange != null ? (d.nqChange < 0 ? "#EF4444" : "#10B981") : "transparent"} strokeWidth={2} strokeOpacity={d.surprise ? 0.5 : 0.85} />
             ))}
           </Bar>
         </BarChart>
@@ -216,7 +218,7 @@ export default function BuildupPanel() {
       <PillLegend />
 
       <p style={{ fontSize: 11, color: "#64748B", textAlign: "center", marginTop: 8, marginBottom: 24, fontStyle: "italic" }}>
-        Faded bars = surprise events (context only, not anticipatory). Positive values = market was rising before the conflict.
+        Faded bars = surprise events (context only, not anticipatory). <span style={{ color: "#EF4444" }}>Red border</span> = market declined. <span style={{ color: "#10B981" }}>Green border</span> = market rose.
       </p>
 
       {/* Detail cards */}
