@@ -883,25 +883,35 @@ export const totalDebtData = [
   { year: 1953, debt: 265.96 },
   { year: 1955, debt: 272.75 },
   { year: 1960, debt: 286.33 },
+  { year: 1961, debt: 288.97 },
   { year: 1962, debt: 302.93 },
+  { year: 1963, debt: 305.86 },
   { year: 1964, debt: 311.71 },
   { year: 1968, debt: 347.58 },
+  { year: 1969, debt: 353.72 },
   { year: 1970, debt: 370.92 },
   { year: 1973, debt: 458.14 },
+  { year: 1974, debt: 475.06 },
   { year: 1975, debt: 533.19 },
+  { year: 1977, debt: 698.84 },
   { year: 1980, debt: 907.70 },
+  { year: 1981, debt: 997.86 },
   { year: 1985, debt: 1823.10 },
   { year: 1987, debt: 2350.28 },
+  { year: 1989, debt: 2857.43 },
   { year: 1990, debt: 3233.31 },
+  { year: 1993, debt: 4351.04 },
   { year: 1995, debt: 4974.00 },
   { year: 2000, debt: 5674.18 },
   { year: 2001, debt: 5807.46 },
   { year: 2003, debt: 6783.23 },
   { year: 2005, debt: 7932.71 },
   { year: 2008, debt: 10024.72 },
+  { year: 2009, debt: 11909.83 },
   { year: 2010, debt: 13561.62 },
   { year: 2013, debt: 16738.18 },
   { year: 2016, debt: 19573.45 },
+  { year: 2017, debt: 20244.90 },
   { year: 2019, debt: 22719.40 },
   { year: 2020, debt: 27747.78 },
   { year: 2021, debt: 28428.92 },
@@ -946,6 +956,66 @@ export const presidentialTerms = [
   { president: "Biden", start: 2021, end: 2025, party: "D" },
   { president: "Trump", start: 2025, end: 2029, party: "R" },
 ];
+
+// ── DEBT VELOCITY HELPER ──────────────────────────────────
+// Compute per-president debt stats: velocity (avg $/yr), CAGR, and acceleration vs predecessor
+export function computePresidentialDebtStats() {
+  // Build year→debt lookup from totalDebtData
+  const debtByYear = {};
+  totalDebtData.forEach(d => { debtByYear[d.year] = d.debt; });
+
+  // Linear interpolation fallback for missing years
+  function getDebt(year) {
+    if (debtByYear[year] != null) return debtByYear[year];
+    const sorted = totalDebtData.map(d => d.year).sort((a, b) => a - b);
+    let lo = null, hi = null;
+    for (const y of sorted) {
+      if (y < year) lo = y;
+      if (y > year && hi == null) hi = y;
+    }
+    if (lo != null && hi != null) {
+      const t = (year - lo) / (hi - lo);
+      return debtByYear[lo] + t * (debtByYear[hi] - debtByYear[lo]);
+    }
+    return null;
+  }
+
+  const stats = [];
+  for (const term of presidentialTerms) {
+    // Skip incomplete terms (end beyond latest data)
+    if (term.end > 2025) continue;
+
+    const startDebt = getDebt(term.start);
+    const endDebt = getDebt(term.end);
+    if (startDebt == null || endDebt == null) continue;
+
+    const years = term.end - term.start;
+    const debtAdded = endDebt - startDebt;
+    const velocity = debtAdded / years; // $B per year
+    const cagr = (Math.pow(endDebt / startDebt, 1 / years) - 1) * 100; // annualized % growth
+
+    stats.push({
+      president: term.president,
+      party: term.party,
+      start: term.start,
+      end: term.end,
+      years,
+      startDebt,
+      endDebt,
+      debtAdded,
+      velocity,
+      cagr,
+      acceleration: null, // filled below
+    });
+  }
+
+  // Compute acceleration: velocity delta vs predecessor
+  for (let i = 1; i < stats.length; i++) {
+    stats[i].acceleration = stats[i].velocity - stats[i - 1].velocity;
+  }
+
+  return stats;
+}
 
 // ── SOURCE URLS ──────────────────────────────────────────
 // Direct links to the original data source for every data point

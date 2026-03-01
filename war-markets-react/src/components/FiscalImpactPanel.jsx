@@ -1,12 +1,14 @@
 import { useState, useMemo } from "react";
 import {
-  LineChart, Line, AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, Legend,
+  LineChart, Line, AreaChart, Area, BarChart, Bar, Cell,
+  XAxis, YAxis, CartesianGrid, Tooltip, Legend,
   ResponsiveContainer, ReferenceLine, ReferenceArea, ReferenceDot,
 } from "recharts";
 import {
   fiscalConflictColors, cpiData, debtGdpData, fiscalSummary,
   totalDebtData, conflictMarkers, presidentialTerms,
   buildCpiChartData, buildDebtGdpChartData,
+  computePresidentialDebtStats,
 } from "../data/warData";
 import { TooltipSourceLink } from "./SourceLink";
 import SourceLink from "./SourceLink";
@@ -347,6 +349,162 @@ function FiscalCard({ d }) {
   );
 }
 
+const partyColor = (party) => party === "D" ? "#3B82F6" : "#EF4444";
+
+const fmtDebt = (v) => v >= 1000 ? `$${(v / 1000).toFixed(1)}T` : `$${v.toFixed(0)}B`;
+
+function VelocityTooltip({ active, payload }) {
+  if (!active || !payload?.length) return null;
+  const d = payload[0].payload;
+  return (
+    <div style={{ background: "#334155", border: "1px solid #475569", borderRadius: 8, padding: "10px 14px", fontSize: 12, color: "#F8FAFC", boxShadow: "0 8px 24px rgba(0,0,0,0.4)", maxWidth: 280 }}>
+      <p style={{ fontWeight: 600, marginBottom: 6, color: partyColor(d.party) }}>
+        {d.president} ({d.party === "D" ? "Dem" : "Rep"})
+      </p>
+      <p style={{ color: "#94A3B8", margin: "2px 0" }}>Term: {d.start}–{d.end} ({d.years} yr{d.years > 1 ? "s" : ""})</p>
+      <p style={{ color: "#94A3B8", margin: "2px 0" }}>Start debt: <strong style={{ color: "#CBD5E1" }}>{fmtDebt(d.startDebt)}</strong></p>
+      <p style={{ color: "#94A3B8", margin: "2px 0" }}>End debt: <strong style={{ color: "#CBD5E1" }}>{fmtDebt(d.endDebt)}</strong></p>
+      <p style={{ color: "#94A3B8", margin: "2px 0" }}>Debt added: <strong style={{ color: "#FBBF24" }}>{fmtDebt(d.debtAdded)}</strong></p>
+      <p style={{ color: "#94A3B8", margin: "2px 0" }}>Avg velocity: <strong style={{ color: "#06B6D4" }}>{fmtDebt(d.velocity)}/yr</strong></p>
+      <p style={{ color: "#94A3B8", margin: "2px 0" }}>CAGR: <strong style={{ color: "#CBD5E1" }}>{d.cagr.toFixed(1)}%</strong></p>
+    </div>
+  );
+}
+
+function AccelerationTooltip({ active, payload }) {
+  if (!active || !payload?.length) return null;
+  const d = payload[0].payload;
+  const val = d.acceleration;
+  const sign = val > 0 ? "+" : "";
+  return (
+    <div style={{ background: "#334155", border: "1px solid #475569", borderRadius: 8, padding: "10px 14px", fontSize: 12, color: "#F8FAFC", boxShadow: "0 8px 24px rgba(0,0,0,0.4)", maxWidth: 260 }}>
+      <p style={{ fontWeight: 600, marginBottom: 6, color: partyColor(d.party) }}>
+        {d.president} ({d.party === "D" ? "Dem" : "Rep"})
+      </p>
+      <p style={{ color: "#94A3B8", margin: "2px 0" }}>Term: {d.start}–{d.end}</p>
+      <p style={{ color: "#94A3B8", margin: "2px 0" }}>
+        Change vs predecessor: <strong style={{ color: val > 0 ? "#EF4444" : "#10B981" }}>{sign}{fmtDebt(Math.abs(val))}/yr</strong>
+      </p>
+      <p style={{ color: "#64748B", fontSize: 11, marginTop: 4 }}>
+        {val > 0 ? "Accelerated borrowing" : "Decelerated borrowing"}
+      </p>
+    </div>
+  );
+}
+
+function DebtVelocitySection() {
+  const stats = useMemo(() => computePresidentialDebtStats(), []);
+  const accelData = useMemo(() => stats.filter(d => d.acceleration != null), [stats]);
+
+  return (
+    <div style={innerCard}>
+      <h3 style={{ fontSize: 15, fontWeight: 600, color: "#E2E8F0", marginBottom: 4 }}>
+        Debt Velocity & Acceleration by President
+      </h3>
+      <p style={{ fontSize: 11, color: "#64748B", marginBottom: 20 }}>
+        Average annual debt added ($B/yr) and change in pace vs predecessor — how fast each administration borrowed, and whether they sped up or slowed down
+      </p>
+
+      {/* Velocity Bar Chart */}
+      <h4 style={{ fontSize: 13, fontWeight: 600, color: "#CBD5E1", marginBottom: 8 }}>
+        Avg Annual Debt Added ($B/yr)
+      </h4>
+      <ResponsiveContainer width="100%" height={400}>
+        <BarChart data={stats} margin={{ top: 5, right: 20, left: 10, bottom: 60 }}>
+          <CartesianGrid strokeDasharray="3 3" stroke="#475569" opacity={0.25} />
+          <XAxis
+            dataKey="president" stroke="#475569"
+            tick={{ fill: "#94A3B8", fontSize: 11 }}
+            axisLine={false} tickLine={false}
+            interval={0} tickMargin={4}
+            angle={-35} textAnchor="end"
+          />
+          <YAxis
+            stroke="#475569"
+            tickFormatter={(v) => v >= 1000 ? `$${(v / 1000).toFixed(0)}T` : `$${v.toFixed(0)}B`}
+            tick={{ fill: "#94A3B8", fontSize: 11 }} axisLine={false} tickLine={false}
+            label={{ value: "$B / year", angle: -90, position: "insideLeft", offset: -2, style: { fill: "#64748B", fontSize: 11 } }}
+          />
+          <Tooltip content={<VelocityTooltip />} cursor={{ fill: "rgba(255,255,255,0.04)" }} />
+          <Bar dataKey="velocity" radius={[4, 4, 0, 0]} maxBarSize={44}>
+            {stats.map((d, i) => (
+              <Cell key={i} fill={partyColor(d.party)} />
+            ))}
+          </Bar>
+        </BarChart>
+      </ResponsiveContainer>
+
+      {/* Acceleration Bar Chart */}
+      <h4 style={{ fontSize: 13, fontWeight: 600, color: "#CBD5E1", marginTop: 28, marginBottom: 8 }}>
+        Acceleration vs Predecessor ($B/yr change)
+      </h4>
+      <ResponsiveContainer width="100%" height={320}>
+        <BarChart data={accelData} margin={{ top: 5, right: 20, left: 10, bottom: 60 }}>
+          <CartesianGrid strokeDasharray="3 3" stroke="#475569" opacity={0.25} />
+          <XAxis
+            dataKey="president" stroke="#475569"
+            tick={{ fill: "#94A3B8", fontSize: 11 }}
+            axisLine={false} tickLine={false}
+            interval={0} tickMargin={4}
+            angle={-35} textAnchor="end"
+          />
+          <YAxis
+            stroke="#475569"
+            tickFormatter={(v) => {
+              const abs = Math.abs(v);
+              const s = v < 0 ? "-" : "";
+              return abs >= 1000 ? `${s}$${(abs / 1000).toFixed(0)}T` : `${s}$${abs.toFixed(0)}B`;
+            }}
+            tick={{ fill: "#94A3B8", fontSize: 11 }} axisLine={false} tickLine={false}
+            label={{ value: "\u0394 $B / year", angle: -90, position: "insideLeft", offset: -2, style: { fill: "#64748B", fontSize: 11 } }}
+          />
+          <Tooltip content={<AccelerationTooltip />} cursor={{ fill: "rgba(255,255,255,0.04)" }} />
+          <ReferenceLine y={0} stroke="#64748B" strokeDasharray="4 4" />
+          <Bar dataKey="acceleration" radius={[4, 4, 0, 0]} maxBarSize={44}>
+            {accelData.map((d, i) => (
+              <Cell key={i} fill={partyColor(d.party)} />
+            ))}
+          </Bar>
+        </BarChart>
+      </ResponsiveContainer>
+
+      {/* Insight Callout */}
+      <div style={{
+        background: "rgba(245, 158, 11, 0.06)",
+        border: "1px solid rgba(245, 158, 11, 0.3)",
+        borderRadius: 10, padding: 20, marginTop: 20,
+      }}>
+        <h4 style={{ fontSize: 13, fontWeight: 600, color: "#FBBF24", marginBottom: 10 }}>
+          Key Takeaways
+        </h4>
+        <ul style={{ fontSize: 12, color: "#CBD5E1", lineHeight: 1.8, margin: 0, paddingLeft: 18 }}>
+          <li><strong style={{ color: "#F8FAFC" }}>Reagan</strong> tripled the borrowing pace to ~$232B/yr — the first peacetime debt explosion.</li>
+          <li><strong style={{ color: "#F8FAFC" }}>W. Bush</strong> doubled it again to ~$780B/yr with two wars + the 2008 financial crisis.</li>
+          <li><strong style={{ color: "#F8FAFC" }}>Obama{"'"}s</strong> ~$1T/yr looks massive in absolute terms, but was actually a <em>deceleration</em> from the 2008 crisis trajectory he inherited.</li>
+          <li><strong style={{ color: "#F8FAFC" }}>Trump</strong> (1st term) pushed past $2T/yr — COVID relief drove the largest single-term velocity in history.</li>
+          <li><strong style={{ color: "#F8FAFC" }}>Clinton</strong> is the only modern president who meaningfully slowed the velocity, riding the 1990s boom to near-surplus budgets.</li>
+        </ul>
+      </div>
+
+      {/* Party Legend */}
+      <div style={{ display: "flex", justifyContent: "center", gap: 20, marginTop: 16 }}>
+        <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
+          <div style={{ width: 12, height: 12, borderRadius: 3, background: "#3B82F6" }} />
+          <span style={{ fontSize: 11, color: "#94A3B8" }}>Democrat</span>
+        </div>
+        <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
+          <div style={{ width: 12, height: 12, borderRadius: 3, background: "#EF4444" }} />
+          <span style={{ fontSize: 11, color: "#94A3B8" }}>Republican</span>
+        </div>
+      </div>
+
+      <div style={{ marginTop: 8 }}>
+        <SourceLink sourceKey="totalDebt" />
+      </div>
+    </div>
+  );
+}
+
 export default function FiscalImpactPanel() {
   const { activeConflicts, filterData } = useEventToggle();
 
@@ -365,6 +523,8 @@ export default function FiscalImpactPanel() {
       </p>
 
       <DebtTimelineChart filteredMarkers={filteredMarkers} />
+
+      <DebtVelocitySection />
 
       <FiscalChart
         title="CPI Inflation Trajectory"
