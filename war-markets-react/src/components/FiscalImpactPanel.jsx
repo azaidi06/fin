@@ -34,7 +34,7 @@ function DebtTimelineChart({ filteredMarkers }) {
   return (
     <div style={innerCard}>
       <h3 style={{ fontSize: 15, fontWeight: 600, color: "#E2E8F0", marginBottom: 4 }}>US Total Federal Debt (1940–2025)</h3>
-      <p style={{ fontSize: 11, color: "#64748B", marginBottom: 16 }}>Nominal USD — vertical lines mark conflict start years</p>
+      <p style={{ fontSize: 11, color: "#64748B", marginBottom: 16 }}>Nominal USD — vertical lines mark event start years</p>
       <ResponsiveContainer width="100%" height={360}>
         <AreaChart data={totalDebtData} margin={{ top: 20, right: 30, left: 10, bottom: 5 }}>
           <defs>
@@ -47,7 +47,7 @@ function DebtTimelineChart({ filteredMarkers }) {
           <XAxis
             dataKey="year" stroke="#475569"
             tick={{ fill: "#94A3B8", fontSize: 12 }} axisLine={false} tickLine={false}
-            type="number" domain={[1940, 2025]}
+            type="number" domain={[1940, 2026]}
             ticks={[1940, 1950, 1960, 1970, 1980, 1990, 2000, 2010, 2020]}
           />
           <YAxis

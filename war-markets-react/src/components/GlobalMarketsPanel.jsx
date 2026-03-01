@@ -150,9 +150,15 @@ export default function GlobalMarketsPanel() {
 
   // Dynamic legend colors for comparison chart
   const conflictColors = {
+    "Cuban Missile": "#84CC16",
+    "Oil Embargo": "#F97316",
+    "Black Monday": "#A855F7",
     "Gulf War": "#6366F1",
     "9/11": "#F59E0B",
+    Iraq: "#3B82F6",
+    "2008 Crisis": "#14B8A6",
     "COVID": "#06B6D4",
+    "Russia-Ukraine": "#E11D48",
   };
 
   return (

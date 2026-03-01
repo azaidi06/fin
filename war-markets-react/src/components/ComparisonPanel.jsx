@@ -48,8 +48,8 @@ export default function ComparisonPanel() {
                   <span style={{ color: "#34D399" }}>NQ: -{d.nqDecline}%</span>
                 </div>
                 <div style={{ display: "flex", gap: 3, height: 6, borderRadius: 3, overflow: "hidden" }}>
-                  <div style={{ background: "#6366F1", borderRadius: 3, width: `${(d.spDecline / 36) * 100}%` }} />
-                  <div style={{ background: "#10B981", borderRadius: 3, width: `${(d.nqDecline / 36) * 100}%` }} />
+                  <div style={{ background: "#6366F1", borderRadius: 3, width: `${(d.spDecline / 50) * 100}%` }} />
+                  <div style={{ background: "#10B981", borderRadius: 3, width: `${(d.nqDecline / 50) * 100}%` }} />
                 </div>
               </div>
 

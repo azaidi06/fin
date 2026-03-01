@@ -828,6 +828,19 @@ export const costOfLivingData = [
     },
   },
   {
+    era: "Russia-Ukraine", year: 2022, cpiMultiplier: 1.10,
+    items: {
+      home:    { nominal: 391700, adjusted: 430870 },
+      car:     { nominal: 48681, adjusted: 53549 },
+      tuition: { nominal: 10940, adjusted: 12034 },
+      income:  { nominal: 74580, adjusted: 82038 },
+      milk:    { nominal: 4.21, adjusted: 4.63 },
+      eggs:    { nominal: 2.86, adjusted: 3.15 },
+      gas:     { nominal: 3.97, adjusted: 4.37 },
+      bread:   { nominal: 1.80, adjusted: 1.98 },
+    },
+  },
+  {
     era: "Today", year: 2024, cpiMultiplier: 1.00,
     items: {
       home:    { nominal: 420800, adjusted: 420800 },
@@ -870,12 +883,15 @@ export const totalDebtData = [
   { year: 1953, debt: 265.96 },
   { year: 1955, debt: 272.75 },
   { year: 1960, debt: 286.33 },
+  { year: 1962, debt: 302.93 },
   { year: 1964, debt: 311.71 },
   { year: 1968, debt: 347.58 },
   { year: 1970, debt: 370.92 },
+  { year: 1973, debt: 458.14 },
   { year: 1975, debt: 533.19 },
   { year: 1980, debt: 907.70 },
   { year: 1985, debt: 1823.10 },
+  { year: 1987, debt: 2350.28 },
   { year: 1990, debt: 3233.31 },
   { year: 1995, debt: 4974.00 },
   { year: 2000, debt: 5674.18 },
@@ -899,11 +915,16 @@ export const totalDebtData = [
 export const conflictMarkers = [
   { year: 1941, label: "WWII" },
   { year: 1950, label: "Korea" },
+  { year: 1962, label: "Cuban Missile" },
   { year: 1964, label: "Vietnam" },
+  { year: 1973, label: "Oil Embargo" },
+  { year: 1987, label: "Black Monday" },
   { year: 1990, label: "Gulf War" },
   { year: 2001, label: "9/11" },
   { year: 2003, label: "Iraq" },
+  { year: 2008, label: "2008 Crisis" },
   { year: 2020, label: "COVID" },
+  { year: 2022, label: "Russia-Ukraine" },
 ];
 
 // ── SOURCE URLS ──────────────────────────────────────────

@@ -12,8 +12,10 @@ const innerCard = { background: "#0F172A", border: "1px solid #334155", borderRa
 
 const eraColors = {
   WWII: "#EF4444", Korea: "#F59E0B", Vietnam: "#10B981",
+  "Oil Embargo": "#F97316", "Black Monday": "#A855F7",
   "Gulf War": "#6366F1", "9/11": "#EC4899", Iraq: "#3B82F6",
-  COVID: "#06B6D4", Today: "#8B5CF6",
+  "2008 Crisis": "#14B8A6", COVID: "#06B6D4",
+  "Russia-Ukraine": "#E11D48", Today: "#8B5CF6",
 };
 
 const itemLabels = {
@@ -30,7 +32,7 @@ const fmtUsd = (v) => v >= 1000 ? `$${(v / 1000).toFixed(0)}K` : `$${v.toFixed(2
 const fmtNominal = (v) => v >= 100 ? `$${v.toLocaleString()}` : `$${v.toFixed(2)}`;
 
 // Short era labels for compact charts
-const eraShort = { WWII: "WW2", Korea: "Korea", Vietnam: "Viet.", "Gulf War": "Gulf", "9/11": "9/11", Iraq: "Iraq", COVID: "COVID", Today: "Today" };
+const eraShort = { WWII: "WW2", Korea: "Korea", "Cuban Missile": "Cuba", Vietnam: "Viet.", "Oil Embargo": "Oil '73", "Black Monday": "Blk Mon", "Gulf War": "Gulf", "9/11": "9/11", Iraq: "Iraq", "2008 Crisis": "'08", COVID: "COVID", "Russia-Ukraine": "Russ.", Today: "Today" };
 
 function ItemTooltip({ active, payload, itemKey }) {
   if (!active || !payload?.length) return null;
