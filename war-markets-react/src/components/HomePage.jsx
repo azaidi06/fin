@@ -521,6 +521,22 @@ export default function HomePage({ onSelect }) {
       {/* Ticker strip — compact market glance */}
       <TickerStrip assets={assets} updatedAt={updatedAt} loading={loading} />
 
+      {/* Intro paragraph */}
+      <p style={{
+        fontSize: 14,
+        color: "#94A3B8",
+        lineHeight: 1.75,
+        maxWidth: 720,
+        margin: "0 auto 28px",
+        textAlign: "center",
+      }}>
+        Since 1941, the S&P 500 has recovered from every war, every crisis, and every crash in
+        this dataset — no exceptions. But recovery on Wall Street masks deeper damage: the inflation
+        that erodes purchasing power for decades, the debt that reshapes government priorities, and
+        the wealth concentration that accelerates with every conflict funded by borrowing instead
+        of taxation.
+      </p>
+
       <div className="bento-grid">
         {/* Content cards */}
         {cards.map((c, i) => (
@@ -583,6 +599,26 @@ export default function HomePage({ onSelect }) {
             </div>
           </button>
         ))}
+      </div>
+
+      {/* Conclusion */}
+      <div style={{
+        maxWidth: 720,
+        margin: "36px auto 0",
+        textAlign: "center",
+      }}>
+        <p style={{
+          fontSize: 14,
+          color: "#94A3B8",
+          lineHeight: 1.75,
+        }}>
+          The data tells a consistent story: total wars fought with taxation and sacrifice compress
+          wealth inequality. Limited wars, financial crises, and pandemics — fought with debt and
+          central bank intervention — leave inequality untouched or accelerate it. In 1978, the top
+          0.1% held 7% of American wealth, the most equal the country has ever been. By 2024,
+          they're back to 20%, approaching 1929 levels. The market recovered every time. The
+          distribution of who benefits from that recovery changed completely.
+        </p>
       </div>
 
       {/* Compact live market preview — click to expand */}
