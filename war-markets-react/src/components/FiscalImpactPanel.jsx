@@ -1,19 +1,19 @@
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import {
   LineChart, Line, AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, Legend,
   ResponsiveContainer, ReferenceLine,
 } from "recharts";
 import {
-  fiscalConflictColors, cpiChartData, debtGdpChartData, fiscalSummary,
+  fiscalConflictColors, cpiData, debtGdpData, fiscalSummary,
   totalDebtData, conflictMarkers,
+  buildCpiChartData, buildDebtGdpChartData,
 } from "../data/warData";
 import { TooltipSourceLink } from "./SourceLink";
 import SourceLink from "./SourceLink";
+import { useEventToggle } from "../context/EventToggleContext";
 
 const card = { background: "#1E293B", border: "1px solid #334155", borderRadius: 12, padding: 24, marginBottom: 32 };
 const innerCard = { background: "#0F172A", border: "1px solid #334155", borderRadius: 10, padding: 20, marginBottom: 24 };
-
-const conflicts = ["WWII", "Korea", "Vietnam", "Gulf War", "9/11", "Iraq"];
 
 function DebtTimelineTooltip({ active, payload, label }) {
   if (!active || !payload?.length) return null;
@@ -30,10 +30,10 @@ function DebtTimelineTooltip({ active, payload, label }) {
   );
 }
 
-function DebtTimelineChart() {
+function DebtTimelineChart({ filteredMarkers }) {
   return (
     <div style={innerCard}>
-      <h3 style={{ fontSize: 15, fontWeight: 600, color: "#E2E8F0", marginBottom: 4 }}>US Total Federal Debt (1940–2024)</h3>
+      <h3 style={{ fontSize: 15, fontWeight: 600, color: "#E2E8F0", marginBottom: 4 }}>US Total Federal Debt (1940–2025)</h3>
       <p style={{ fontSize: 11, color: "#64748B", marginBottom: 16 }}>Nominal USD — vertical lines mark conflict start years</p>
       <ResponsiveContainer width="100%" height={360}>
         <AreaChart data={totalDebtData} margin={{ top: 20, right: 30, left: 10, bottom: 5 }}>
@@ -47,7 +47,7 @@ function DebtTimelineChart() {
           <XAxis
             dataKey="year" stroke="#475569"
             tick={{ fill: "#94A3B8", fontSize: 12 }} axisLine={false} tickLine={false}
-            type="number" domain={[1940, 2024]}
+            type="number" domain={[1940, 2025]}
             ticks={[1940, 1950, 1960, 1970, 1980, 1990, 2000, 2010, 2020]}
           />
           <YAxis
@@ -57,7 +57,7 @@ function DebtTimelineChart() {
             label={{ value: "Total Debt", angle: -90, position: "insideLeft", offset: -2, style: { fill: "#64748B", fontSize: 11 } }}
           />
           <Tooltip content={<DebtTimelineTooltip />} />
-          {conflictMarkers.map((m) => (
+          {filteredMarkers.map((m) => (
             <ReferenceLine
               key={m.year}
               x={m.year}
@@ -108,14 +108,14 @@ function CustomTooltip({ active, payload, label, hoveredConflict, sourceKey }) {
   );
 }
 
-function FiscalChart({ title, subtitle, data, yLabel, yDomain, yTickFormatter, sourceKey }) {
+function FiscalChart({ title, subtitle, data, conflicts, yLabel, yDomain, yTickFormatter, sourceKey }) {
   const [hoveredConflict, setHoveredConflict] = useState(null);
   const [hiddenConflicts, setHiddenConflicts] = useState([]);
 
   const toggleConflict = (conflict) => {
-    setHiddenConflicts(prev => 
-      prev.includes(conflict) 
-        ? prev.filter(c => c !== conflict) 
+    setHiddenConflicts(prev =>
+      prev.includes(conflict)
+        ? prev.filter(c => c !== conflict)
         : [...prev, conflict]
     );
   };
@@ -146,8 +146,8 @@ function FiscalChart({ title, subtitle, data, yLabel, yDomain, yTickFormatter, s
               onMouseLeave={() => setHoveredConflict(null)}
             >
               <div style={{ width: 10, height: 10, borderRadius: 2, background: entry.color }} />
-              <span style={{ 
-                fontSize: 12, 
+              <span style={{
+                fontSize: 12,
                 color: isHovered ? "#F8FAFC" : "#CBD5E1",
                 fontWeight: isHovered ? 600 : 400,
                 textDecoration: isHidden ? "line-through" : "none"
@@ -199,11 +199,11 @@ function FiscalChart({ title, subtitle, data, yLabel, yDomain, yTickFormatter, s
                 stroke={fiscalConflictColors[c]}
                 strokeWidth={isHovered ? 4 : 2}
                 strokeOpacity={!isAnyHovered || isHovered ? 1 : 0.15}
-                dot={{ 
-                  r: isHovered ? 4 : 3, 
-                  fill: fiscalConflictColors[c], 
+                dot={{
+                  r: isHovered ? 4 : 3,
+                  fill: fiscalConflictColors[c],
                   strokeWidth: 0,
-                  fillOpacity: !isAnyHovered || isHovered ? 1 : 0.15 
+                  fillOpacity: !isAnyHovered || isHovered ? 1 : 0.15
                 }}
                 activeDot={{ r: 6, strokeWidth: 0 }}
                 connectNulls
@@ -254,6 +254,15 @@ function FiscalCard({ d }) {
 }
 
 export default function FiscalImpactPanel() {
+  const { activeConflicts, filterData } = useEventToggle();
+
+  const cpiChart = useMemo(() => buildCpiChartData(activeConflicts), [activeConflicts]);
+  const debtGdpChart = useMemo(() => buildDebtGdpChartData(activeConflicts), [activeConflicts]);
+  const filteredSummary = useMemo(() => filterData(fiscalSummary), [filterData]);
+  const filteredMarkers = useMemo(() => {
+    return conflictMarkers.filter(m => activeConflicts.includes(m.label));
+  }, [activeConflicts]);
+
   return (
     <section style={card}>
       <h2 style={{ fontSize: 20, fontWeight: 600, color: "#F8FAFC", marginBottom: 4 }}>Fiscal Impact</h2>
@@ -261,12 +270,13 @@ export default function FiscalImpactPanel() {
         How inflation and federal debt responded in the years surrounding each conflict (T=0 is the war start year)
       </p>
 
-      <DebtTimelineChart />
+      <DebtTimelineChart filteredMarkers={filteredMarkers} />
 
       <FiscalChart
         title="CPI Inflation Trajectory"
         subtitle="Year-over-year CPI change (%) — T-2 through T+5 relative to conflict start"
-        data={cpiChartData}
+        data={cpiChart}
+        conflicts={activeConflicts}
         yLabel="CPI YoY %"
         yDomain={["auto", "auto"]}
         sourceKey="cpi"
@@ -275,14 +285,15 @@ export default function FiscalImpactPanel() {
       <FiscalChart
         title="Federal Debt / GDP Trajectory"
         subtitle="US federal debt as % of GDP — T-2 through T+5 relative to conflict start"
-        data={debtGdpChartData}
+        data={debtGdpChart}
+        conflicts={activeConflicts}
         yLabel="Debt / GDP %"
         yDomain={["auto", "auto"]}
         sourceKey="debtGdp"
       />
 
       <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", gap: 16 }}>
-        {fiscalSummary.map(d => (
+        {filteredSummary.map(d => (
           <FiscalCard key={d.conflict} d={d} />
         ))}
       </div>

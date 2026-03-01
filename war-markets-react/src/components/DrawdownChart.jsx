@@ -1,9 +1,11 @@
+import { useMemo } from "react";
 import {
   BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend,
   ResponsiveContainer,
 } from "recharts";
-import { combinedData } from "../data/warData";
+import { sp500Data, nasdaqData } from "../data/warData";
 import { MultiSourceTooltip } from "./SourceLink";
+import { useEventToggle } from "../context/EventToggleContext";
 
 const card = { background: "#1E293B", border: "1px solid #334155", borderRadius: 12, padding: 24, marginBottom: 32 };
 
@@ -23,11 +25,32 @@ function CustomTooltip({ active, payload, label }) {
 }
 
 export default function DrawdownChart() {
+  const { filterData } = useEventToggle();
+
+  const combinedData = useMemo(() => {
+    const filtered500 = filterData(sp500Data);
+    const filteredNQ = filterData(nasdaqData);
+    return filtered500.map(sp => {
+      const nq = filteredNQ.find(n => n.conflict === sp.conflict);
+      return {
+        conflict: sp.conflict,
+        label: sp.label,
+        date: sp.date,
+        spDecline: sp.decline,
+        nqDecline: nq ? nq.decline : null,
+        spDaysToBottom: sp.daysToBottom,
+        nqDaysToBottom: nq ? nq.daysToBottom : null,
+        spDaysToRecover: sp.daysToRecover,
+        nqDaysToRecover: nq ? nq.daysToRecover : null,
+      };
+    });
+  }, [filterData]);
+
   return (
     <section style={card}>
       <h2 style={{ fontSize: 20, fontWeight: 600, color: "#F8FAFC", marginBottom: 4 }}>Maximum Drawdown by Conflict</h2>
       <p style={{ fontSize: 13, color: "#94A3B8", marginBottom: 20 }}>Peak-to-trough decline from the pre-war close</p>
-      <ResponsiveContainer width="100%" height={400}>
+      <ResponsiveContainer width="100%" height={Math.max(combinedData.length * 55, 300)}>
         <BarChart data={combinedData} layout="vertical" margin={{ top: 5, right: 50, left: 10, bottom: 5 }}>
           <CartesianGrid strokeDasharray="3 3" stroke="#475569" opacity={0.25} horizontal={false} />
           <XAxis type="number" tickFormatter={(v) => `${v}%`} stroke="#475569"

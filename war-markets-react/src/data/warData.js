@@ -5,12 +5,14 @@ export const sp500Data = [
   { conflict: "Gulf War", label: "Gulf War (Kuwait, 1990)", date: "Aug 2, 1990", decline: 16.9, daysToBottom: 71, daysToRecover: 189 },
   { conflict: "9/11", label: "9/11 / Afghanistan (2001)", date: "Sep 11, 2001", decline: 11.6, daysToBottom: 10, daysToRecover: 31 },
   { conflict: "Iraq", label: "Iraq War (2003)", date: "Mar 19, 2003", decline: 5.3, daysToBottom: 10, daysToRecover: 16 },
+  { conflict: "COVID", label: "COVID-19 Pandemic (2020)", date: "Feb 19, 2020", decline: 33.9, daysToBottom: 23, daysToRecover: 105 },
 ];
 
 export const nasdaqData = [
   { conflict: "Gulf War", label: "Gulf War (Kuwait, 1990)", date: "Aug 2, 1990", decline: 24.1, daysToBottom: 75, daysToRecover: 187, preClose: 428.90, bottomClose: 325.40 },
   { conflict: "9/11", label: "9/11 / Afghanistan (2001)", date: "Sep 11, 2001", decline: 16.1, daysToBottom: 11, daysToRecover: 31, preClose: 1695.38, bottomClose: 1423.19 },
   { conflict: "Iraq", label: "Iraq War (2003)", date: "Mar 19, 2003", decline: 4.0, daysToBottom: 12, daysToRecover: 29, preClose: 1397.07, bottomClose: 1341.17 },
+  { conflict: "COVID", label: "COVID-19 Pandemic (2020)", date: "Feb 19, 2020", decline: 30.1, daysToBottom: 23, daysToRecover: 54, preClose: 9817.18, bottomClose: 6860.67 },
 ];
 
 // Pre-war buildup data — market performance in the lead-up to each conflict
@@ -75,6 +77,16 @@ export const preWarData = [
     nqStart: 1487.94, nqEnd: 1400.55,
     catalyst: "UN Resolution 1441 → Powell UN speech → Bush ultimatum",
     narrative: "The textbook 'sell the buildup, buy the invasion.' S&P fell 14.7% as war certainty grew. Once the invasion began, markets immediately rallied — the uncertainty discount lifted.",
+  },
+  {
+    conflict: "COVID", label: "COVID-19 Pandemic (2020)",
+    period: "Jan 30 – Feb 19, 2020", days: 15,
+    spChange: 3.1, nqChange: 5.2,
+    surprise: true,
+    spStart: 3283.66, spEnd: 3386.15,
+    nqStart: 9298.93, nqEnd: 9817.18,
+    catalyst: "WHO PHEIC (Jan 30) → first deaths outside China → Italy outbreak (Feb 21)",
+    narrative: "The most dramatic instance of markets ignoring a looming crisis. COVID was known for weeks, yet the S&P hit an all-time high on Feb 19. The crash began Feb 20 after Italy's outbreak exploded, triggering the fastest 30%+ decline in history — just 22 trading days. Three circuit breakers were triggered in March (Mar 9, 12, 16).",
   },
 ];
 
@@ -204,6 +216,22 @@ export const globalMarketsData = [
       { id: "Nikkei 225", decline: null, daysToBottom: null, daysToRecover: null, confidence: "narrative", note: "Rose +55.4% from Mar 2003 low by year-end", isPositive: true, caveat: null },
     ],
   },
+  {
+    conflict: "COVID",
+    label: "COVID-19 Pandemic (2020)",
+    dataQuality: "high",
+    marketCapRanking: ["NYSE", "NASDAQ", "TSE", "LSE", "Euronext", "Frankfurt", "HKEX", "SSE"],
+    narrative: "The most globally synchronized crash in market history. Every major index fell 25–40% within four weeks. Unlike war-driven selloffs, the trigger was a universal economic shutdown — borders closed, supply chains froze, and demand collapsed simultaneously across all economies. Three S&P 500 circuit breakers triggered in a single week (Mar 9, 12, 16). Recovery was equally remarkable: massive central bank intervention (Fed cut rates to 0%, launched unlimited QE on Mar 23 — the exact day of the bottom) and $2.2T in fiscal stimulus (CARES Act, Mar 27) powered the fastest bear-to-bull reversal ever.",
+    indices: [
+      { id: "S&P 500", decline: 33.9, daysToBottom: 23, daysToRecover: 105, confidence: "exact", note: null, isPositive: false, caveat: null },
+      { id: "DJIA", decline: 37.1, daysToBottom: 27, daysToRecover: 150, confidence: "exact", note: null, isPositive: false, caveat: "DJIA peak was Feb 12, slightly earlier than S&P" },
+      { id: "FTSE 100", decline: 34.7, daysToBottom: 46, daysToRecover: null, confidence: "exact", note: "Did not fully recover to pre-COVID levels until early 2023", isPositive: false, caveat: "UK recovery was much slower than US due to weaker fiscal response and Brexit drag" },
+      { id: "DAX", decline: 38.8, daysToBottom: 20, daysToRecover: 170, confidence: "exact", note: null, isPositive: false, caveat: null },
+      { id: "CAC 40", decline: 38.6, daysToBottom: 20, daysToRecover: 230, confidence: "exact", note: null, isPositive: false, caveat: "French economy hit hard by extended lockdowns" },
+      { id: "Nikkei 225", decline: 29.5, daysToBottom: 19, daysToRecover: 170, confidence: "exact", note: null, isPositive: false, caveat: null },
+      { id: "Hang Seng", decline: 25.6, daysToBottom: 43, daysToRecover: null, confidence: "exact", note: "Still well below Jan 2020 levels years later", isPositive: false, caveat: "Pre-existing drag from 2019 Hong Kong protests + China tech crackdown prevented recovery" },
+    ],
+  },
 ];
 
 // ── FISCAL IMPACT DATA ─────────────────────────────────────
@@ -217,6 +245,7 @@ export const fiscalConflictColors = {
   "Gulf War": "#6366F1",
   "9/11": "#EC4899",
   Iraq: "#3B82F6",
+  COVID: "#06B6D4",
 };
 
 export const cpiData = [
@@ -279,6 +308,16 @@ export const cpiData = [
       { t: 6, year: 2009, value: -0.4 }, { t: 7, year: 2010, value: 1.6 },
       { t: 8, year: 2011, value: 3.2 },  { t: 9, year: 2012, value: 2.1 },
       { t: 10, year: 2013, value: 1.5 },
+    ] },
+  { conflict: "COVID", label: "COVID-19 (2020)", startYear: 2020,
+    series: [
+      { t: -2, year: 2018, value: 2.4 }, { t: -1, year: 2019, value: 1.8 },
+      { t: 0, year: 2020, value: 1.2 },  { t: 1, year: 2021, value: 4.7 },
+      { t: 2, year: 2022, value: 8.0 },  { t: 3, year: 2023, value: 4.1 },
+      { t: 4, year: 2024, value: 2.9 },  { t: 5, year: 2025, value: 2.8 },
+      { t: 6, year: 2026, value: 2.4 },  { t: 7, year: 2027, value: 2.2 },
+      { t: 8, year: 2028, value: 2.1 },  { t: 9, year: 2029, value: 2.0 },
+      { t: 10, year: 2030, value: 2.0 },
     ] },
 ];
 
@@ -343,32 +382,61 @@ export const debtGdpData = [
       { t: 8, year: 2011, value: 95.6 },  { t: 9, year: 2012, value: 99.7 },
       { t: 10, year: 2013, value: 100.2 },
     ] },
+  { conflict: "COVID", label: "COVID-19 (2020)", startYear: 2020,
+    series: [
+      { t: -2, year: 2018, value: 104.0 }, { t: -1, year: 2019, value: 106.8 },
+      { t: 0, year: 2020, value: 128.1 },  { t: 1, year: 2021, value: 124.0 },
+      { t: 2, year: 2022, value: 119.7 },  { t: 3, year: 2023, value: 120.0 },
+      { t: 4, year: 2024, value: 122.3 },  { t: 5, year: 2025, value: 124.0 },
+      { t: 6, year: 2026, value: 126.0 },  { t: 7, year: 2027, value: 128.0 },
+      { t: 8, year: 2028, value: 130.0 },  { t: 9, year: 2029, value: 132.0 },
+      { t: 10, year: 2030, value: 134.0 },
+    ] },
 ];
 
 // Flattened for Recharts — one row per time point, column per conflict
-const conflicts = ["WWII", "Korea", "Vietnam", "Gulf War", "9/11", "Iraq"];
+export const BASE_CONFLICTS = ["WWII", "Korea", "Vietnam", "Gulf War", "9/11", "Iraq"];
+export const EXTRA_EVENTS = { COVID: "COVID-19 (2020)" };
+
+const conflicts = BASE_CONFLICTS;
 const tValues = [-2, -1, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
 const tLabels = ["T-2", "T-1", "T=0", "T+1", "T+2", "T+3", "T+4", "T+5", "T+6", "T+7", "T+8", "T+9", "T+10"];
 
-export const cpiChartData = tValues.map((t, i) => {
-  const row = { t, tLabel: tLabels[i] };
-  conflicts.forEach(c => {
-    const cd = cpiData.find(d => d.conflict === c);
-    const pt = cd.series.find(s => s.t === t);
-    row[c] = pt ? pt.value : null;
+// Builder functions for dynamic conflict list
+export function buildCpiChartData(conflictList) {
+  return tValues.map((t, i) => {
+    const row = { t, tLabel: tLabels[i] };
+    conflictList.forEach(c => {
+      const cd = cpiData.find(d => d.conflict === c);
+      if (cd) {
+        const pt = cd.series.find(s => s.t === t);
+        row[c] = pt ? pt.value : null;
+      }
+    });
+    return row;
   });
-  return row;
-});
+}
 
-export const debtGdpChartData = tValues.map((t, i) => {
-  const row = { t, tLabel: tLabels[i] };
-  conflicts.forEach(c => {
-    const dd = debtGdpData.find(d => d.conflict === c);
-    const pt = dd.series.find(s => s.t === t);
-    row[c] = pt ? pt.value : null;
+export function buildDebtGdpChartData(conflictList) {
+  return tValues.map((t, i) => {
+    const row = { t, tLabel: tLabels[i] };
+    conflictList.forEach(c => {
+      const dd = debtGdpData.find(d => d.conflict === c);
+      if (dd) {
+        const pt = dd.series.find(s => s.t === t);
+        row[c] = pt ? pt.value : null;
+      }
+    });
+    return row;
   });
-  return row;
-});
+}
+
+// Static exports include all conflicts (backward compat)
+const allConflicts = [...BASE_CONFLICTS, ...Object.keys(EXTRA_EVENTS)];
+
+export const cpiChartData = buildCpiChartData(allConflicts);
+
+export const debtGdpChartData = buildDebtGdpChartData(allConflicts);
 
 export const fiscalSummary = [
   { conflict: "WWII", peakCpi: 14.4, debtGdpDelta: 76.1,
@@ -383,6 +451,8 @@ export const fiscalSummary = [
     narrative: "Moderate inflation masked a fiscal time bomb. Debt/GDP barely moved for 6 years, then the 2008 financial crisis sent it from 62% to 96% in just 4 years — the sharpest peacetime surge in U.S. history." },
   { conflict: "Iraq", peakCpi: 3.8, debtGdpDelta: 40.6,
     narrative: "War costs and the financial crisis combined to push debt from 60% to 100% of GDP in a decade. CPI briefly went negative in 2009 (-0.4%) before stabilizing — the only deflationary year since WWII." },
+  { conflict: "COVID", peakCpi: 8.0, debtGdpDelta: 21.3,
+    narrative: "COVID triggered the largest single-year debt spike since WWII — debt/GDP jumped 21 points in 2020 alone as the government spent over $5 trillion on pandemic relief (CARES Act, PPP, enhanced unemployment, stimulus checks). Inflation was initially suppressed by demand collapse (1.2% in 2020), but exploded to 8.0% by 2022 — the highest since 1981 — driven by supply chain disruptions, labor shortages, and the lagged effect of massive monetary expansion. The Fed's response (rate hikes from 0% to 5.5%) was the most aggressive tightening cycle since Volcker." },
 ];
 
 // ── COST OF LIVING DATA ────────────────────────────────────
@@ -480,6 +550,19 @@ export const costOfLivingData = [
     },
   },
   {
+    era: "COVID", year: 2020, cpiMultiplier: 1.21,
+    items: {
+      home:    { nominal: 329000,  adjusted: 398090 },
+      car:     { nominal: 37876,   adjusted: 45830 },
+      tuition: { nominal: 10560,   adjusted: 12778 },
+      income:  { nominal: 67521,   adjusted: 81700 },
+      milk:    { nominal: 3.54,    adjusted: 4.28 },
+      eggs:    { nominal: 1.48,    adjusted: 1.79 },
+      gas:     { nominal: 2.17,    adjusted: 2.63 },
+      bread:   { nominal: 1.44,    adjusted: 1.74 },
+    },
+  },
+  {
     era: "Today", year: 2024, cpiMultiplier: 1.00,
     items: {
       home:    { nominal: 420800, adjusted: 420800 },
@@ -540,8 +623,11 @@ export const totalDebtData = [
   { year: 2016, debt: 19573.45 },
   { year: 2019, debt: 22719.40 },
   { year: 2020, debt: 27747.78 },
+  { year: 2021, debt: 28428.92 },
   { year: 2022, debt: 30928.91 },
+  { year: 2023, debt: 33167.00 },
   { year: 2024, debt: 35464.00 },
+  { year: 2025, debt: 36200.00 },
 ];
 
 // Conflict start-year markers for vertical reference lines on the timeline
@@ -552,6 +638,7 @@ export const conflictMarkers = [
   { year: 1990, label: "Gulf War" },
   { year: 2001, label: "9/11" },
   { year: 2003, label: "Iraq" },
+  { year: 2020, label: "COVID" },
 ];
 
 // ── SOURCE URLS ──────────────────────────────────────────

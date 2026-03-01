@@ -10,7 +10,8 @@ import GlobalMarketsPanel from "./components/GlobalMarketsPanel";
 import FiscalImpactPanel from "./components/FiscalImpactPanel";
 import CostOfLivingPanel from "./components/CostOfLivingPanel";
 import MethodologyPage from "./components/MethodologyPage";
-import { sp500Data, nasdaqData } from "./data/warData";
+import { sp500Data, nasdaqData, EXTRA_EVENTS } from "./data/warData";
+import { EventToggleProvider, useEventToggle } from "./context/EventToggleContext";
 
 const tabs = [
   { id: "reaction", label: "Post-Conflict Reaction" },
@@ -38,18 +39,84 @@ const sourceCategory = { marginBottom: 12 };
 const sourceCatLabel = { fontSize: 11, fontWeight: 600, color: "#94A3B8", textTransform: "uppercase", letterSpacing: "0.05em", marginBottom: 4 };
 const sourceList = { fontSize: 11, color: "#64748B", lineHeight: 1.6, margin: 0 };
 
-export default function App() {
+function ToggleRow() {
+  const { toggles, toggle } = useEventToggle();
+  const entries = Object.entries(EXTRA_EVENTS);
+  if (entries.length === 0) return null;
+
+  return (
+    <div style={{ display: "flex", justifyContent: "center", gap: 8, marginBottom: 16 }}>
+      {entries.map(([key, label]) => {
+        const on = toggles[key];
+        return (
+          <button
+            key={key}
+            onClick={() => toggle(key)}
+            style={{
+              display: "flex",
+              alignItems: "center",
+              gap: 8,
+              padding: "6px 14px",
+              fontSize: 12,
+              fontWeight: 500,
+              color: on ? "#06B6D4" : "#64748B",
+              background: on ? "rgba(6,182,212,0.10)" : "rgba(255,255,255,0.03)",
+              border: `1px solid ${on ? "rgba(6,182,212,0.3)" : "#334155"}`,
+              borderRadius: 20,
+              cursor: "pointer",
+              transition: "all 0.2s ease",
+            }}
+          >
+            <span
+              style={{
+                width: 28,
+                height: 16,
+                borderRadius: 8,
+                background: on ? "#06B6D4" : "#475569",
+                position: "relative",
+                transition: "background 0.2s ease",
+                flexShrink: 0,
+              }}
+            >
+              <span
+                style={{
+                  position: "absolute",
+                  top: 2,
+                  left: on ? 14 : 2,
+                  width: 12,
+                  height: 12,
+                  borderRadius: "50%",
+                  background: "#F8FAFC",
+                  transition: "left 0.2s ease",
+                }}
+              />
+            </span>
+            {label}
+          </button>
+        );
+      })}
+    </div>
+  );
+}
+
+function AppInner() {
   const [activeTab, setActiveTab] = useState("home");
+  const { filterData } = useEventToggle();
 
   const goHome = () => {
     setActiveTab("home");
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
+  const filteredSp500 = filterData(sp500Data);
+  const filteredNasdaq = filterData(nasdaqData);
+
   return (
     <div className="min-h-screen px-4 py-10 sm:px-6 lg:px-8" style={{ color: "#F8FAFC" }}>
       <div className="max-w-[960px] mx-auto">
         <Header compact={activeTab === "home"} />
+
+        <ToggleRow />
 
         {activeTab === "home" ? (
           <HomePage onSelect={setActiveTab} />
@@ -82,8 +149,8 @@ export default function App() {
                 <TimelineChart />
                 <ComparisonPanel />
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-10">
-                  <DataTable title="S&P 500" color="#6366F1" data={sp500Data} sourceKey="sp500" />
-                  <DataTable title="NASDAQ" color="#10B981" data={nasdaqData} sourceKey="nasdaq" />
+                  <DataTable title="S&P 500" color="#6366F1" data={filteredSp500} sourceKey="sp500" />
+                  <DataTable title="NASDAQ" color="#10B981" data={filteredNasdaq} sourceKey="nasdaq" />
                 </div>
               </>
             )}
@@ -139,5 +206,13 @@ export default function App() {
         )}
       </div>
     </div>
+  );
+}
+
+export default function App() {
+  return (
+    <EventToggleProvider>
+      <AppInner />
+    </EventToggleProvider>
   );
 }

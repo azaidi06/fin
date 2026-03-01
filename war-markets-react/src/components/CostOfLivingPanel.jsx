@@ -1,3 +1,4 @@
+import { useMemo } from "react";
 import {
   BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip,
   ResponsiveContainer, Cell,
@@ -5,13 +6,15 @@ import {
 import { costOfLivingData } from "../data/warData";
 import { TooltipSourceLink } from "./SourceLink";
 import SourceLink from "./SourceLink";
+import { useEventToggle } from "../context/EventToggleContext";
 
 const card = { background: "#1E293B", border: "1px solid #334155", borderRadius: 12, padding: 24, marginBottom: 32 };
 const innerCard = { background: "#0F172A", border: "1px solid #334155", borderRadius: 10, padding: 20 };
 
 const eraColors = {
   WWII: "#EF4444", Korea: "#F59E0B", Vietnam: "#10B981",
-  "Gulf War": "#6366F1", "9/11": "#EC4899", Iraq: "#3B82F6", Today: "#8B5CF6",
+  "Gulf War": "#6366F1", "9/11": "#EC4899", Iraq: "#3B82F6",
+  COVID: "#06B6D4", Today: "#8B5CF6",
 };
 
 const itemLabels = {
@@ -28,17 +31,7 @@ const fmtUsd = (v) => v >= 1000 ? `$${(v / 1000).toFixed(0)}K` : `$${v.toFixed(2
 const fmtNominal = (v) => v >= 100 ? `$${v.toLocaleString()}` : `$${v.toFixed(2)}`;
 
 // Short era labels for compact charts
-const eraShort = { WWII: "WW2", Korea: "Korea", Vietnam: "Viet.", "Gulf War": "Gulf", "9/11": "9/11", Iraq: "Iraq", Today: "Today" };
-
-function getItemData(itemKey) {
-  return costOfLivingData.map(d => ({
-    era: d.era,
-    eraShort: eraShort[d.era],
-    year: d.year,
-    value: d.items[itemKey].adjusted,
-    nominal: d.items[itemKey].nominal,
-  }));
-}
+const eraShort = { WWII: "WW2", Korea: "Korea", Vietnam: "Viet.", "Gulf War": "Gulf", "9/11": "9/11", Iraq: "Iraq", COVID: "COVID", Today: "Today" };
 
 function ItemTooltip({ active, payload, itemKey }) {
   if (!active || !payload?.length) return null;
@@ -53,8 +46,15 @@ function ItemTooltip({ active, payload, itemKey }) {
   );
 }
 
-function ItemChart({ itemKey, height = 240, yFormatter, big = false }) {
-  const data = getItemData(itemKey);
+function ItemChart({ itemKey, filteredData, height = 240, yFormatter, big = false }) {
+  const data = useMemo(() => filteredData.map(d => ({
+    era: d.era,
+    eraShort: eraShort[d.era] || d.era,
+    year: d.year,
+    value: d.items[itemKey].adjusted,
+    nominal: d.items[itemKey].nominal,
+  })), [filteredData, itemKey]);
+
   const title = itemLabels[itemKey];
   return (
     <div style={{ ...innerCard, marginBottom: 0 }}>
@@ -77,7 +77,7 @@ function ItemChart({ itemKey, height = 240, yFormatter, big = false }) {
           <Tooltip content={<ItemTooltip itemKey={itemKey} />} cursor={{ fill: "rgba(255,255,255,0.04)" }} wrapperStyle={{ pointerEvents: "auto" }} />
           <Bar dataKey="value" radius={[4, 4, 0, 0]} maxBarSize={big ? 50 : 32}>
             {data.map(d => (
-              <Cell key={d.era} fill={eraColors[d.era]} />
+              <Cell key={d.era} fill={eraColors[d.era] || "#94A3B8"} />
             ))}
           </Bar>
         </BarChart>
@@ -126,6 +126,16 @@ function EraCard({ d }) {
 }
 
 export default function CostOfLivingPanel() {
+  const { filterData } = useEventToggle();
+
+  const filteredData = useMemo(() => filterData(costOfLivingData), [filterData]);
+
+  // Active era colors for legend
+  const activeEraColors = useMemo(() =>
+    Object.fromEntries(filteredData.map(d => [d.era, eraColors[d.era] || "#94A3B8"])),
+    [filteredData]
+  );
+
   const fmtK = v => `$${(v / 1000).toFixed(0)}K`;
   const fmtDollar = v => `$${v.toFixed(0)}`;
 
@@ -138,7 +148,7 @@ export default function CostOfLivingPanel() {
 
       {/* Era color legend */}
       <div style={{ display: "flex", flexWrap: "wrap", gap: 12, marginBottom: 20, justifyContent: "center" }}>
-        {Object.entries(eraColors).map(([era, color]) => (
+        {Object.entries(activeEraColors).map(([era, color]) => (
           <div key={era} style={{ display: "flex", alignItems: "center", gap: 5 }}>
             <span style={{ width: 10, height: 10, borderRadius: 2, background: color }} />
             <span style={{ fontSize: 11, color: "#94A3B8" }}>{era}</span>
@@ -152,14 +162,14 @@ export default function CostOfLivingPanel() {
 
       {/* Median Home — solo full-width chart */}
       <div style={{ marginBottom: 12 }}>
-        <ItemChart itemKey="home" height={300} yFormatter={fmtK} big />
+        <ItemChart itemKey="home" filteredData={filteredData} height={300} yFormatter={fmtK} big />
       </div>
 
       {/* Car, Tuition, Income — 3-up grid */}
       <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))", gap: 12, marginBottom: 24 }}>
-        <ItemChart itemKey="car" height={220} yFormatter={fmtK} />
-        <ItemChart itemKey="tuition" height={220} yFormatter={fmtK} />
-        <ItemChart itemKey="income" height={220} yFormatter={fmtK} />
+        <ItemChart itemKey="car" filteredData={filteredData} height={220} yFormatter={fmtK} />
+        <ItemChart itemKey="tuition" filteredData={filteredData} height={220} yFormatter={fmtK} />
+        <ItemChart itemKey="income" filteredData={filteredData} height={220} yFormatter={fmtK} />
       </div>
 
       {/* ── EVERYDAY ITEMS ── */}
@@ -168,15 +178,15 @@ export default function CostOfLivingPanel() {
 
       {/* Everyday items — forced 2x2 grid */}
       <div style={{ display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gap: 12, marginBottom: 24 }}>
-        <ItemChart itemKey="milk" height={220} yFormatter={fmtDollar} />
-        <ItemChart itemKey="eggs" height={220} yFormatter={fmtDollar} />
-        <ItemChart itemKey="gas" height={220} yFormatter={fmtDollar} />
-        <ItemChart itemKey="bread" height={220} yFormatter={fmtDollar} />
+        <ItemChart itemKey="milk" filteredData={filteredData} height={220} yFormatter={fmtDollar} />
+        <ItemChart itemKey="eggs" filteredData={filteredData} height={220} yFormatter={fmtDollar} />
+        <ItemChart itemKey="gas" filteredData={filteredData} height={220} yFormatter={fmtDollar} />
+        <ItemChart itemKey="bread" filteredData={filteredData} height={220} yFormatter={fmtDollar} />
       </div>
 
       {/* Era Detail Cards */}
       <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", gap: 16 }}>
-        {costOfLivingData.map(d => (
+        {filteredData.map(d => (
           <EraCard key={d.year} d={d} />
         ))}
       </div>

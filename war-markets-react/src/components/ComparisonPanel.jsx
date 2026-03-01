@@ -1,9 +1,34 @@
-import { sharedConflicts } from "../data/warData";
+import { useMemo } from "react";
+import { sp500Data, nasdaqData } from "../data/warData";
 import SourceLink from "./SourceLink";
+import { useEventToggle } from "../context/EventToggleContext";
 
 const card = { background: "#1E293B", border: "1px solid #334155", borderRadius: 12, padding: 24, marginBottom: 32 };
 
 export default function ComparisonPanel() {
+  const { filterData } = useEventToggle();
+
+  const sharedConflicts = useMemo(() => {
+    const filtered500 = filterData(sp500Data);
+    const filteredNQ = filterData(nasdaqData);
+    return filtered500
+      .filter(sp => filteredNQ.some(nq => nq.conflict === sp.conflict))
+      .map(sp => {
+        const nq = filteredNQ.find(n => n.conflict === sp.conflict);
+        return {
+          conflict: sp.conflict,
+          label: sp.label,
+          spDecline: sp.decline,
+          nqDecline: nq.decline,
+          spDaysToBottom: sp.daysToBottom,
+          nqDaysToBottom: nq.daysToBottom,
+          spDaysToRecover: sp.daysToRecover,
+          nqDaysToRecover: nq.daysToRecover,
+          ratio: (nq.decline / sp.decline).toFixed(2),
+        };
+      });
+  }, [filterData]);
+
   return (
     <section style={card}>
       <h2 style={{ fontSize: 20, fontWeight: 600, color: "#F8FAFC", marginBottom: 4 }}>NASDAQ vs. S&P 500 Comparison</h2>
@@ -23,8 +48,8 @@ export default function ComparisonPanel() {
                   <span style={{ color: "#34D399" }}>NQ: -{d.nqDecline}%</span>
                 </div>
                 <div style={{ display: "flex", gap: 3, height: 6, borderRadius: 3, overflow: "hidden" }}>
-                  <div style={{ background: "#6366F1", borderRadius: 3, width: `${(d.spDecline / 26) * 100}%` }} />
-                  <div style={{ background: "#10B981", borderRadius: 3, width: `${(d.nqDecline / 26) * 100}%` }} />
+                  <div style={{ background: "#6366F1", borderRadius: 3, width: `${(d.spDecline / 36) * 100}%` }} />
+                  <div style={{ background: "#10B981", borderRadius: 3, width: `${(d.nqDecline / 36) * 100}%` }} />
                 </div>
               </div>
 

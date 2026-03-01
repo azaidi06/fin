@@ -1,5 +1,6 @@
-import { useState, useEffect, useRef } from "react";
-import { sp500Data, preWarData, globalMarketsData, cpiChartData, costOfLivingData, totalDebtData } from "../data/warData";
+import { useState, useEffect, useRef, useMemo } from "react";
+import { sp500Data, preWarData, globalMarketsData, costOfLivingData, totalDebtData, buildCpiChartData } from "../data/warData";
+import { useEventToggle } from "../context/EventToggleContext";
 
 /* ── AnimatedStat: counts from 0 to final value ── */
 
@@ -171,45 +172,34 @@ function GroupedBarSparkline({ groups, color, width = 120, height = 32, animated
   );
 }
 
-/* ── Build sparkline data from warData exports ── */
-
-// Post-Conflict Reaction: S&P 500 decline percentages
-const reactionValues = sp500Data.map((d) => d.decline);
-
-// Pre-War Buildup: spChange values (positive/negative)
-const buildupValues = preWarData.map((d) => d.spChange);
-
-// Global Markets: pick conflicts with multiple indices, show decline values
-const globalGroups = globalMarketsData
-  .filter((d) => d.indices.length >= 3)
-  .slice(0, 4)
-  .map((d) =>
-    d.indices
-      .filter((idx) => idx.decline != null)
-      .slice(0, 3)
-      .map((idx) => idx.decline)
-  );
-
-// Fiscal Impact: CPI line from WWII series (T-2 to T+10)
-const fiscalValues = cpiChartData.map((row) => row["WWII"]).filter((v) => v != null);
-
-// Cost of Living: CPI multipliers per era
-const costValues = costOfLivingData.map((d) => d.cpiMultiplier);
-
-// National Debt: total debt timeline (exponential curve)
-const debtTimelineValues = totalDebtData.map((d) => d.debt);
-
 /* ── Card sparkline map ── */
-function CardSparkline({ id, color }) {
+function CardSparkline({ id, color, filterData, activeConflicts }) {
   const w = 120;
   const h = 32;
+
+  const reactionValues = useMemo(() => filterData(sp500Data).map(d => d.decline), [filterData]);
+  const buildupValues = useMemo(() => filterData(preWarData).map(d => d.spChange), [filterData]);
+  const globalGroups = useMemo(() =>
+    filterData(globalMarketsData)
+      .filter(d => d.indices.length >= 3)
+      .slice(0, 4)
+      .map(d => d.indices.filter(idx => idx.decline != null).slice(0, 3).map(idx => idx.decline)),
+    [filterData]
+  );
+  const fiscalValues = useMemo(() => {
+    const chart = buildCpiChartData(activeConflicts);
+    return chart.map(row => row["WWII"]).filter(v => v != null);
+  }, [activeConflicts]);
+  const costValues = useMemo(() => filterData(costOfLivingData).map(d => d.cpiMultiplier), [filterData]);
+  const debtTimelineValues = useMemo(() => totalDebtData.map(d => d.debt), []);
+
   switch (id) {
     case "reaction":
       return <BarSparkline values={reactionValues} color={color} width={w} height={h} animated />;
     case "buildup":
       return <SignedBarSparkline values={buildupValues} color={color} width={w} height={h} animated />;
     case "global":
-      return <GroupedBarSparkline groups={globalGroups} color={color} width={w} height={h} animated />;
+      return globalGroups.length > 0 ? <GroupedBarSparkline groups={globalGroups} color={color} width={w} height={h} animated /> : null;
     case "fiscal":
       return <LineSparkline values={fiscalValues} color={color} width={w} height={h} animated />;
     case "cost":
@@ -447,6 +437,8 @@ function GlowOrb({ color, size, top, left, delay }) {
 }
 
 export default function HomePage({ onSelect }) {
+  const { filterData, activeConflicts } = useEventToggle();
+
   return (
     <div style={{ maxWidth: 900, margin: "0 auto", position: "relative", overflow: "hidden" }}>
       {/* Ambient glow orbs */}
@@ -499,7 +491,7 @@ export default function HomePage({ onSelect }) {
             {/* Sparkline */}
             {c.id !== "methodology" && (
               <div style={{ marginTop: -4, marginBottom: -4 }}>
-                <CardSparkline id={c.id} color={c.color} />
+                <CardSparkline id={c.id} color={c.color} filterData={filterData} activeConflicts={activeConflicts} />
               </div>
             )}
 

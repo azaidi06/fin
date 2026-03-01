@@ -1,3 +1,4 @@
+import { useMemo } from "react";
 import {
   BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip,
   ResponsiveContainer, ReferenceLine, Cell,
@@ -5,6 +6,7 @@ import {
 import { preWarData } from "../data/warData";
 import { MultiSourceTooltip } from "./SourceLink";
 import SourceLink from "./SourceLink";
+import { useEventToggle } from "../context/EventToggleContext";
 
 const card = { background: "#1E293B", border: "1px solid #334155", borderRadius: 12, padding: 24, marginBottom: 32 };
 const stripYear = (s) => s.replace(/, \d{4}\)/, ")").replace(/ \(\d{4}\)/, "");
@@ -95,17 +97,9 @@ function PillLegend() {
   );
 }
 
-// Chart data — show S&P for all, NASDAQ where available
-const chartData = preWarData.map(d => ({
-  label: d.label,
-  spChange: d.spChange,
-  nqChange: d.nqChange,
-  surprise: d.surprise,
-}));
-
-function CustomTooltip({ active, payload, label }) {
+function CustomTooltip({ active, payload, label, filteredPreWar }) {
   if (!active || !payload?.length) return null;
-  const row = preWarData.find(d => d.label === label);
+  const row = filteredPreWar.find(d => d.label === label);
   return (
     <div style={{ background: "#334155", border: "1px solid #475569", borderRadius: 8, padding: "12px 16px", fontSize: 13, color: "#F8FAFC", boxShadow: "0 8px 24px rgba(0,0,0,0.4)", maxWidth: 300 }}>
       <p style={{ fontWeight: 600, marginBottom: 4 }}>{label}</p>
@@ -178,6 +172,17 @@ function ConflictCard({ d }) {
 }
 
 export default function BuildupPanel() {
+  const { filterData } = useEventToggle();
+
+  const filteredPreWar = useMemo(() => filterData(preWarData), [filterData]);
+
+  const chartData = useMemo(() => filteredPreWar.map(d => ({
+    label: d.label,
+    spChange: d.spChange,
+    nqChange: d.nqChange,
+    surprise: d.surprise,
+  })), [filteredPreWar]);
+
   return (
     <section style={card}>
       <h2 style={{ fontSize: 20, fontWeight: 600, color: "#F8FAFC", marginBottom: 4 }}>Pre-War Market Buildup</h2>
@@ -186,7 +191,7 @@ export default function BuildupPanel() {
       </p>
 
       {/* Bar chart */}
-      <ResponsiveContainer width="100%" height={380}>
+      <ResponsiveContainer width="100%" height={Math.max(chartData.length * 55, 280)}>
         <BarChart data={chartData} layout="vertical" margin={{ top: 5, right: 50, left: 10, bottom: 5 }}>
           <ChartDefs />
           <CartesianGrid strokeDasharray="3 3" stroke="#475569" opacity={0.25} horizontal={false} />
@@ -194,7 +199,7 @@ export default function BuildupPanel() {
             tick={{ fill: "#94A3B8", fontSize: 12 }} axisLine={false} tickLine={false} />
           <YAxis type="category" dataKey="label" width={185} stroke="#475569"
             tick={{ fill: "#CBD5E1", fontSize: 12 }} axisLine={false} tickLine={false} />
-          <Tooltip content={<CustomTooltip />} cursor={{ fill: "rgba(99,102,241,0.06)" }} wrapperStyle={{ pointerEvents: "auto" }} />
+          <Tooltip content={<CustomTooltip filteredPreWar={filteredPreWar} />} cursor={{ fill: "rgba(99,102,241,0.06)" }} wrapperStyle={{ pointerEvents: "auto" }} />
           <ReferenceLine x={0} stroke="#64748B" strokeWidth={1.5} />
           <Bar dataKey="spChange" name="S&P 500" radius={4} barSize={14} filter="url(#glow-sp)">
             {chartData.map((d, i) => (
@@ -216,7 +221,7 @@ export default function BuildupPanel() {
 
       {/* Detail cards */}
       <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", gap: 16 }}>
-        {preWarData.map(d => <ConflictCard key={d.conflict} d={d} />)}
+        {filteredPreWar.map(d => <ConflictCard key={d.conflict} d={d} />)}
       </div>
     </section>
   );

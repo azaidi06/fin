@@ -1,3 +1,4 @@
+import { useMemo } from "react";
 import {
   BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend,
   ResponsiveContainer, Cell,
@@ -5,6 +6,7 @@ import {
 import { globalMarketsData, globalIndexColors, indexCountries, indexFlags } from "../data/warData";
 import { MultiSourceTooltip } from "./SourceLink";
 import SourceLink from "./SourceLink";
+import { useEventToggle } from "../context/EventToggleContext";
 
 const card = { background: "#1E293B", border: "1px solid #334155", borderRadius: 12, padding: 24, marginBottom: 32 };
 
@@ -14,20 +16,6 @@ const qualityColors = {
   low: { bg: "rgba(251,146,60,0.12)", text: "#FB923C" },
   minimal: { bg: "rgba(148,163,184,0.12)", text: "#94A3B8" },
 };
-
-// Build comparison chart data for Gulf War + 9/11 (the two data-rich conflicts)
-const comparisonConflicts = globalMarketsData.filter(d => d.dataQuality === "high");
-const allIndices = [...new Set(comparisonConflicts.flatMap(c => c.indices.filter(i => i.decline != null && !i.isPositive).map(i => i.id)))];
-
-const comparisonData = allIndices.map(idx => {
-  const label = `${indexFlags[idx] || ""} ${idx} (${indexCountries[idx] || ""})`;
-  const row = { index: label };
-  comparisonConflicts.forEach(c => {
-    const entry = c.indices.find(i => i.id === idx);
-    row[c.conflict] = entry?.decline ?? null;
-  });
-  return row;
-});
 
 function CustomTooltip({ active, payload, label }) {
   if (!active || !payload?.length) return null;
@@ -140,6 +128,33 @@ function ConflictCard({ d }) {
 }
 
 export default function GlobalMarketsPanel() {
+  const { filterData } = useEventToggle();
+
+  const filteredGlobal = useMemo(() => filterData(globalMarketsData), [filterData]);
+
+  // Build comparison chart data for data-rich conflicts
+  const { comparisonConflicts, comparisonData } = useMemo(() => {
+    const cc = filteredGlobal.filter(d => d.dataQuality === "high");
+    const allIndices = [...new Set(cc.flatMap(c => c.indices.filter(i => i.decline != null && !i.isPositive).map(i => i.id)))];
+    const cd = allIndices.map(idx => {
+      const label = `${indexFlags[idx] || ""} ${idx} (${indexCountries[idx] || ""})`;
+      const row = { index: label };
+      cc.forEach(c => {
+        const entry = c.indices.find(i => i.id === idx);
+        row[c.conflict] = entry?.decline ?? null;
+      });
+      return row;
+    });
+    return { comparisonConflicts: cc, comparisonData: cd };
+  }, [filteredGlobal]);
+
+  // Dynamic legend colors for comparison chart
+  const conflictColors = {
+    "Gulf War": "#6366F1",
+    "9/11": "#F59E0B",
+    "COVID": "#06B6D4",
+  };
+
   return (
     <section style={card}>
       <h2 style={{ fontSize: 20, fontWeight: 600, color: "#F8FAFC", marginBottom: 4 }}>Global Markets Reaction</h2>
@@ -147,48 +162,50 @@ export default function GlobalMarketsPanel() {
         How major world indices reacted to each conflict — data availability improves dramatically from the Gulf War onward
       </p>
 
-      {/* Comparison chart: Gulf War vs 9/11 */}
-      <div style={{ background: "#0F172A", border: "1px solid #334155", borderRadius: 10, padding: 20, marginBottom: 24 }}>
-        <h3 style={{ fontSize: 15, fontWeight: 600, color: "#E2E8F0", marginBottom: 4 }}>Gulf War vs. 9/11 — Max Decline by Index</h3>
-        <p style={{ fontSize: 11, color: "#64748B", marginBottom: 16 }}>The two conflicts with comprehensive global data</p>
+      {/* Comparison chart: high-quality data conflicts */}
+      {comparisonConflicts.length >= 2 && (
+        <div style={{ background: "#0F172A", border: "1px solid #334155", borderRadius: 10, padding: 20, marginBottom: 24 }}>
+          <h3 style={{ fontSize: 15, fontWeight: 600, color: "#E2E8F0", marginBottom: 4 }}>
+            {comparisonConflicts.map(c => c.conflict).join(" vs. ")} — Max Decline by Index
+          </h3>
+          <p style={{ fontSize: 11, color: "#64748B", marginBottom: 16 }}>
+            {comparisonConflicts.length === 2 ? "The two conflicts" : "The conflicts"} with comprehensive global data
+          </p>
 
-        <div style={{ display: "flex", gap: 16, marginBottom: 12, flexWrap: "wrap", fontSize: 12, color: "#CBD5E1" }}>
-          <span style={{ display: "flex", alignItems: "center", gap: 6 }}>
-            <span style={{ width: 12, height: 12, borderRadius: 3, background: "#6366F1", display: "inline-block" }} /> Gulf War
-          </span>
-          <span style={{ display: "flex", alignItems: "center", gap: 6 }}>
-            <span style={{ width: 12, height: 12, borderRadius: 3, background: "#F59E0B", display: "inline-block" }} /> 9/11
-          </span>
+          <div style={{ display: "flex", gap: 16, marginBottom: 12, flexWrap: "wrap", fontSize: 12, color: "#CBD5E1" }}>
+            {comparisonConflicts.map(c => (
+              <span key={c.conflict} style={{ display: "flex", alignItems: "center", gap: 6 }}>
+                <span style={{ width: 12, height: 12, borderRadius: 3, background: conflictColors[c.conflict] || "#94A3B8", display: "inline-block" }} /> {c.conflict}
+              </span>
+            ))}
+          </div>
+
+          <ResponsiveContainer width="100%" height={Math.max(comparisonData.length * 60, 200)}>
+            <BarChart data={comparisonData} layout="vertical" margin={{ top: 5, right: 50, left: 10, bottom: 5 }}>
+              <CartesianGrid strokeDasharray="3 3" stroke="#475569" opacity={0.25} horizontal={false} />
+              <XAxis type="number" tickFormatter={v => `${v}%`} stroke="#475569"
+                tick={{ fill: "#94A3B8", fontSize: 12 }} axisLine={false} tickLine={false} />
+              <YAxis type="category" dataKey="index" width={175} stroke="#475569"
+                tick={{ fill: "#CBD5E1", fontSize: 12 }} axisLine={false} tickLine={false} />
+              <Tooltip content={<CustomTooltip />} cursor={{ fill: "rgba(99,102,241,0.06)" }} wrapperStyle={{ pointerEvents: "auto" }} />
+              {comparisonConflicts.map(c => (
+                <Bar key={c.conflict} dataKey={c.conflict} name={c.conflict} fill={conflictColors[c.conflict] || "#94A3B8"} radius={4} barSize={14}>
+                  {comparisonData.map((d, i) => (
+                    <Cell key={i} fill={conflictColors[c.conflict] || "#94A3B8"} fillOpacity={d[c.conflict] == null ? 0 : 1} />
+                  ))}
+                </Bar>
+              ))}
+            </BarChart>
+          </ResponsiveContainer>
+          <p style={{ fontSize: 10, color: "#64748B", textAlign: "center", marginTop: 8, fontStyle: "italic" }}>
+            Nikkei 225 Gulf War decline (35%) includes the Japanese bubble burst — war-specific impact was likely 5–8%.
+          </p>
         </div>
-
-        <ResponsiveContainer width="100%" height={Math.max(comparisonData.length * 60, 200)}>
-          <BarChart data={comparisonData} layout="vertical" margin={{ top: 5, right: 50, left: 10, bottom: 5 }}>
-            <CartesianGrid strokeDasharray="3 3" stroke="#475569" opacity={0.25} horizontal={false} />
-            <XAxis type="number" tickFormatter={v => `${v}%`} stroke="#475569"
-              tick={{ fill: "#94A3B8", fontSize: 12 }} axisLine={false} tickLine={false} />
-            <YAxis type="category" dataKey="index" width={175} stroke="#475569"
-              tick={{ fill: "#CBD5E1", fontSize: 12 }} axisLine={false} tickLine={false} />
-            <Tooltip content={<CustomTooltip />} cursor={{ fill: "rgba(99,102,241,0.06)" }} wrapperStyle={{ pointerEvents: "auto" }} />
-            <Bar dataKey="Gulf War" name="Gulf War" fill="#6366F1" radius={4} barSize={14}>
-              {comparisonData.map((d, i) => (
-                <Cell key={i} fill="#6366F1" fillOpacity={d["Gulf War"] == null ? 0 : 1} />
-              ))}
-            </Bar>
-            <Bar dataKey="9/11" name="9/11" fill="#F59E0B" radius={4} barSize={14}>
-              {comparisonData.map((d, i) => (
-                <Cell key={i} fill="#F59E0B" fillOpacity={d["9/11"] == null ? 0 : 1} />
-              ))}
-            </Bar>
-          </BarChart>
-        </ResponsiveContainer>
-        <p style={{ fontSize: 10, color: "#64748B", textAlign: "center", marginTop: 8, fontStyle: "italic" }}>
-          Nikkei 225 Gulf War decline (35%) includes the Japanese bubble burst — war-specific impact was likely 5–8%.
-        </p>
-      </div>
+      )}
 
       {/* Per-conflict cards */}
       <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", gap: 16 }}>
-        {globalMarketsData.map(d => (
+        {filteredGlobal.map(d => (
           <ConflictCard key={d.conflict} d={d} />
         ))}
       </div>

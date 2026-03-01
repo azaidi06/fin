@@ -1,5 +1,7 @@
-import { combinedData } from "../data/warData";
+import { useMemo } from "react";
+import { sp500Data, nasdaqData } from "../data/warData";
 import SourceLink from "./SourceLink";
+import { useEventToggle } from "../context/EventToggleContext";
 
 const section = { background: "#1E293B", border: "1px solid #334155", borderRadius: 12, padding: 24, marginBottom: 32 };
 const CAP = 250;
@@ -69,6 +71,27 @@ function ConflictCard({ d, maxVal }) {
 }
 
 export default function TimelineChart() {
+  const { filterData } = useEventToggle();
+
+  const combinedData = useMemo(() => {
+    const filtered500 = filterData(sp500Data);
+    const filteredNQ = filterData(nasdaqData);
+    return filtered500.map(sp => {
+      const nq = filteredNQ.find(n => n.conflict === sp.conflict);
+      return {
+        conflict: sp.conflict,
+        label: sp.label,
+        date: sp.date,
+        spDecline: sp.decline,
+        nqDecline: nq ? nq.decline : null,
+        spDaysToBottom: sp.daysToBottom,
+        nqDaysToBottom: nq ? nq.daysToBottom : null,
+        spDaysToRecover: sp.daysToRecover,
+        nqDaysToRecover: nq ? nq.daysToRecover : null,
+      };
+    });
+  }, [filterData]);
+
   return (
     <section style={section}>
       <h2 style={{ fontSize: 20, fontWeight: 600, color: "#F8FAFC", marginBottom: 4 }}>Speed of Decline vs. Recovery</h2>
