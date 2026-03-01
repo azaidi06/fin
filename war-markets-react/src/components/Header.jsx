@@ -38,11 +38,6 @@ export default function Header({ compact }) {
           <p className="text-lg sm:text-xl mb-3" style={{ color: "#CBD5E1" }}>
             How U.S. Stocks React to the Onset of Major Conflicts
           </p>
-          <p className="text-sm max-w-2xl mx-auto leading-relaxed" style={{ color: "#94A3B8" }}>
-            S&P 500 (DJIA proxy pre-1957) and NASDAQ Composite drawdowns measured from the
-            trading day before each conflict&apos;s start event. Recovery = return to pre-war close.
-            NASDAQ data available from 1971 onward.
-          </p>
           {/* Rotating stat ticker */}
           <p
             className="mt-4 text-sm font-semibold"
