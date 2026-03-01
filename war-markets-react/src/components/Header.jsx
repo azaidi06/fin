@@ -8,7 +8,7 @@ const stats = [
   "5 global indices tracked",
 ];
 
-export default function Header({ compact }) {
+export default function Header({ compact, onGoHome }) {
   const [statIndex, setStatIndex] = useState(0);
   const [visible, setVisible] = useState(true);
 
@@ -26,7 +26,11 @@ export default function Header({ compact }) {
 
   return (
     <header className="text-center mb-10">
-      <h1 className="animated-gradient-text text-4xl sm:text-5xl font-bold mb-3">
+      <h1
+        className="animated-gradient-text text-4xl sm:text-5xl font-bold mb-3"
+        onClick={onGoHome}
+        style={{ cursor: onGoHome ? "pointer" : undefined }}
+      >
         Money + War
       </h1>
       {compact ? (
