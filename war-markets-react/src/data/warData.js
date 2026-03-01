@@ -927,6 +927,26 @@ export const conflictMarkers = [
   { year: 2022, label: "Russia-Ukraine" },
 ];
 
+// Presidential terms for background color-coding on debt timeline
+export const presidentialTerms = [
+  { president: "FDR", start: 1940, end: 1945, party: "D" },
+  { president: "Truman", start: 1945, end: 1953, party: "D" },
+  { president: "Eisenhower", start: 1953, end: 1961, party: "R" },
+  { president: "JFK", start: 1961, end: 1963, party: "D" },
+  { president: "LBJ", start: 1963, end: 1969, party: "D" },
+  { president: "Nixon", start: 1969, end: 1974, party: "R" },
+  { president: "Ford", start: 1974, end: 1977, party: "R" },
+  { president: "Carter", start: 1977, end: 1981, party: "D" },
+  { president: "Reagan", start: 1981, end: 1989, party: "R" },
+  { president: "H.W. Bush", start: 1989, end: 1993, party: "R" },
+  { president: "Clinton", start: 1993, end: 2001, party: "D" },
+  { president: "W. Bush", start: 2001, end: 2009, party: "R" },
+  { president: "Obama", start: 2009, end: 2017, party: "D" },
+  { president: "Trump", start: 2017, end: 2021, party: "R" },
+  { president: "Biden", start: 2021, end: 2025, party: "D" },
+  { president: "Trump", start: 2025, end: 2029, party: "R" },
+];
+
 // ── SOURCE URLS ──────────────────────────────────────────
 // Direct links to the original data source for every data point
 export const sourceUrls = {

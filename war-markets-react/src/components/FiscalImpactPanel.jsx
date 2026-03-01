@@ -1,11 +1,11 @@
 import { useState, useMemo } from "react";
 import {
   LineChart, Line, AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, Legend,
-  ResponsiveContainer, ReferenceLine,
+  ResponsiveContainer, ReferenceLine, ReferenceArea, ReferenceDot,
 } from "recharts";
 import {
   fiscalConflictColors, cpiData, debtGdpData, fiscalSummary,
-  totalDebtData, conflictMarkers,
+  totalDebtData, conflictMarkers, presidentialTerms,
   buildCpiChartData, buildDebtGdpChartData,
 } from "../data/warData";
 import { TooltipSourceLink } from "./SourceLink";
@@ -21,25 +21,54 @@ function DebtTimelineTooltip({ active, payload, label }) {
   const formatted = debt >= 1000
     ? `$${(debt / 1000).toFixed(1)}T`
     : `$${debt.toFixed(0)}B`;
+  const term = presidentialTerms.find(t => label >= t.start && label < t.end);
+  const marker = conflictMarkers.find(m => m.year === label);
   return (
     <div style={{ background: "#334155", border: "1px solid #475569", borderRadius: 8, padding: "10px 14px", fontSize: 13, color: "#F8FAFC", boxShadow: "0 8px 24px rgba(0,0,0,0.4)" }}>
       <p style={{ fontWeight: 600, marginBottom: 4 }}>{label}</p>
       <p style={{ color: "#06B6D4", fontWeight: 700 }}>{formatted}</p>
+      {term && (
+        <p style={{ color: term.party === "D" ? "#60A5FA" : "#F87171", fontSize: 11, marginTop: 4 }}>
+          President: {term.president} ({term.party === "D" ? "Dem" : "Rep"})
+        </p>
+      )}
+      {marker && (
+        <p style={{ color: "#FBBF24", fontSize: 11, marginTop: 2 }}>
+          Event: {marker.label}
+        </p>
+      )}
       <TooltipSourceLink sourceKey="totalDebt" />
     </div>
   );
 }
 
 function DebtTimelineChart({ filteredMarkers }) {
+  const debtByYear = useMemo(() => {
+    const map = {};
+    totalDebtData.forEach(d => { map[d.year] = d.debt; });
+    return map;
+  }, []);
+
+  // Determine which event labels need extra vertical offset to avoid overlap with neighbors
+  const labelOffsets = useMemo(() => {
+    const offsets = {};
+    const sorted = [...filteredMarkers].sort((a, b) => a.year - b.year);
+    for (let i = 0; i < sorted.length; i++) {
+      const prevYear = i > 0 ? sorted[i - 1].year : -Infinity;
+      offsets[sorted[i].year] = (sorted[i].year - prevYear <= 4) ? 24 : 10;
+    }
+    return offsets;
+  }, [filteredMarkers]);
+
   return (
     <div style={innerCard}>
       <h3 style={{ fontSize: 15, fontWeight: 600, color: "#E2E8F0", marginBottom: 4 }}>US Total Federal Debt (1940–2025)</h3>
-      <p style={{ fontSize: 11, color: "#64748B", marginBottom: 16 }}>Nominal USD — vertical lines mark event start years</p>
-      <ResponsiveContainer width="100%" height={360}>
-        <AreaChart data={totalDebtData} margin={{ top: 20, right: 30, left: 10, bottom: 5 }}>
+      <p style={{ fontSize: 11, color: "#64748B", marginBottom: 16 }}>Nominal USD — background shading by presidential party (blue = Democrat, red = Republican)</p>
+      <ResponsiveContainer width="100%" height={440}>
+        <AreaChart data={totalDebtData} margin={{ top: 40, right: 30, left: 10, bottom: 5 }}>
           <defs>
             <linearGradient id="debtGradient" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="5%" stopColor="#06B6D4" stopOpacity={0.3} />
+              <stop offset="5%" stopColor="#06B6D4" stopOpacity={0.15} />
               <stop offset="95%" stopColor="#06B6D4" stopOpacity={0} />
             </linearGradient>
           </defs>
@@ -57,28 +86,93 @@ function DebtTimelineChart({ filteredMarkers }) {
             label={{ value: "Total Debt", angle: -90, position: "insideLeft", offset: -2, style: { fill: "#64748B", fontSize: 11 } }}
           />
           <Tooltip content={<DebtTimelineTooltip />} />
+
+          {/* Presidential term background areas */}
+          {presidentialTerms.map((term) => {
+            const duration = term.end - term.start;
+            return (
+              <ReferenceArea
+                key={`${term.president}-${term.start}`}
+                x1={term.start}
+                x2={term.end}
+                fill={term.party === "D" ? "#3B82F6" : "#EF4444"}
+                fillOpacity={0.08}
+                label={duration >= 4 ? {
+                  value: term.president,
+                  position: "insideTop",
+                  fill: term.party === "D" ? "#60A5FA" : "#F87171",
+                  fontSize: 9,
+                  fontWeight: 500,
+                  offset: 5,
+                } : undefined}
+              />
+            );
+          })}
+
+          {/* Subtle vertical event lines */}
           {filteredMarkers.map((m) => (
             <ReferenceLine
               key={m.year}
               x={m.year}
               stroke="#F8FAFC"
-              strokeDasharray="6 4"
-              strokeOpacity={0.4}
-              label={{ value: m.label, position: "top", fill: "#94A3B8", fontSize: 9 }}
+              strokeDasharray="4 4"
+              strokeOpacity={0.2}
             />
           ))}
+
           <Area
             type="monotone"
             dataKey="debt"
             stroke="#06B6D4"
             strokeWidth={2}
             fill="url(#debtGradient)"
-            dot={{ r: 3, fill: "#06B6D4", strokeWidth: 0 }}
+            dot={false}
             activeDot={{ r: 6, strokeWidth: 0, fill: "#06B6D4" }}
           />
+
+          {/* Event marker dots on the debt line */}
+          {filteredMarkers.map((m) => {
+            const debt = debtByYear[m.year];
+            if (debt == null) return null;
+            return (
+              <ReferenceDot
+                key={`dot-${m.year}`}
+                x={m.year}
+                y={debt}
+                r={4}
+                fill="#FBBF24"
+                stroke="#0F172A"
+                strokeWidth={2}
+                label={{
+                  value: m.label,
+                  position: "top",
+                  offset: labelOffsets[m.year] || 10,
+                  fill: "#F8FAFC",
+                  fontSize: 10,
+                  fontWeight: 600,
+                }}
+              />
+            );
+          })}
         </AreaChart>
       </ResponsiveContainer>
-      <div style={{ marginTop: 8 }}>
+
+      {/* Legend */}
+      <div style={{ display: "flex", justifyContent: "center", flexWrap: "wrap", gap: 16, marginTop: 8, marginBottom: 4 }}>
+        <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
+          <div style={{ width: 14, height: 10, borderRadius: 2, background: "rgba(59, 130, 246, 0.3)", border: "1px solid rgba(59, 130, 246, 0.5)" }} />
+          <span style={{ fontSize: 11, color: "#94A3B8" }}>Democrat</span>
+        </div>
+        <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
+          <div style={{ width: 14, height: 10, borderRadius: 2, background: "rgba(239, 68, 68, 0.3)", border: "1px solid rgba(239, 68, 68, 0.5)" }} />
+          <span style={{ fontSize: 11, color: "#94A3B8" }}>Republican</span>
+        </div>
+        <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
+          <div style={{ width: 8, height: 8, borderRadius: "50%", background: "#FBBF24", border: "2px solid #0F172A" }} />
+          <span style={{ fontSize: 11, color: "#94A3B8" }}>Event</span>
+        </div>
+      </div>
+      <div style={{ marginTop: 4 }}>
         <SourceLink sourceKey="totalDebt" />
       </div>
     </div>
