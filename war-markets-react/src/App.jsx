@@ -12,6 +12,7 @@ import CostOfLivingPanel from "./components/CostOfLivingPanel";
 import WealthDistributionPanel from "./components/WealthDistributionPanel";
 import MethodologyPage from "./components/MethodologyPage";
 import EventExplainerPanel from "./components/EventExplainerPanel";
+import LiveMarketsPage from "./components/LiveMarketsPage";
 import { sp500Data, nasdaqData, EXTRA_EVENTS } from "./data/warData";
 import { EventToggleProvider, useEventToggle } from "./context/EventToggleContext";
 
@@ -248,6 +249,9 @@ function AppInner() {
 
             {/* Event Explainer tab */}
             {activeTab === "events" && <EventExplainerPanel />}
+
+            {/* Live Markets full page */}
+            {activeTab === "markets" && <LiveMarketsPage />}
 
             {/* Methodology tab */}
             {activeTab === "methodology" && <MethodologyPage onClose={goHome} />}

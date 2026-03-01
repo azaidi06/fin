@@ -293,13 +293,16 @@ async function main() {
   // 5. CoinGecko for crypto
   const cryptoAssets = await fetchCrypto();
 
-  // Merge in display order (indices → stocks → crypto)
-  const allStocks = [...googleAssets, ...avAssets, ...yahooAssets];
-  // Sort to match original STOCK_TICKERS order
-  const symbolOrder = STOCK_TICKERS.map((t) => t.symbol);
-  allStocks.sort((a, b) => symbolOrder.indexOf(a.symbol) - symbolOrder.indexOf(b.symbol));
+  // Merge all fetched assets into a map
+  const allFetched = [...googleAssets, ...avAssets, ...yahooAssets, ...cryptoAssets];
+  const assetMap = Object.fromEntries(allFetched.map((a) => [a.symbol, a]));
 
-  const assets = [...allStocks, ...cryptoAssets];
+  // Final display order — BTC swapped into position 3 (where DJI was)
+  const DISPLAY_ORDER = [
+    "S&P", "NDX", "BTC", "GOLD", "NVDA", "TSLA", "META", "GOOGL", "AMD",
+    "AAOI", "AXTI", "AAPL", "MSFT", "AMZN", "DJI", "ETH", "SOL",
+  ];
+  const assets = DISPLAY_ORDER.map((s) => assetMap[s]).filter(Boolean);
   const sources = [];
   if (avAssets.length > 0) sources.push(`AV:${avAssets.length}`);
   if (googleAssets.length > 0) sources.push(`Google:${googleAssets.length}`);

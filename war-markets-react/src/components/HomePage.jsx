@@ -295,126 +295,92 @@ function TickerStrip({ assets, updatedAt, loading }) {
   );
 }
 
-/* ── Live Market Detail (full-width, below cards) ── */
+/* ── Compact market row (used in 2-col grid on homepage) ── */
+function MarketRow({ a }) {
+  const val = a.change1d ?? null;
+  const has = val != null && val !== 0;
+  const up = (val ?? 0) >= 0;
+  return (
+    <div style={{
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "space-between",
+      padding: "7px 10px",
+      borderRadius: 8,
+      transition: "background 0.15s",
+    }}
+      onMouseEnter={(e) => { e.currentTarget.style.background = "rgba(255,255,255,0.04)"; }}
+      onMouseLeave={(e) => { e.currentTarget.style.background = "transparent"; }}
+    >
+      <div style={{ display: "flex", alignItems: "center", gap: 8, minWidth: 0 }}>
+        <span style={{ fontSize: 12, fontWeight: 700, color: "#F8FAFC", width: 44, flexShrink: 0 }}>{a.symbol}</span>
+        <span style={{ fontSize: 12, fontWeight: 600, color: "#CBD5E1", fontVariantNumeric: "tabular-nums" }}>
+          {formatPrice(a.price)}
+        </span>
+      </div>
+      {has ? (
+        <span style={{
+          fontSize: 11, fontWeight: 600,
+          color: up ? "#34D399" : "#EF4444",
+          background: up ? "rgba(52,211,153,0.1)" : "rgba(239,68,68,0.1)",
+          border: `1px solid ${up ? "rgba(52,211,153,0.2)" : "rgba(239,68,68,0.2)"}`,
+          padding: "2px 7px", borderRadius: 5, fontVariantNumeric: "tabular-nums",
+        }}>
+          {up ? "+" : ""}{val.toFixed(1)}%
+        </span>
+      ) : (
+        <span style={{ fontSize: 11, color: "#475569", padding: "2px 7px" }}>—</span>
+      )}
+    </div>
+  );
+}
 
-function LiveMarketDetail({ assets, updatedAt, loading }) {
+/* ── Compact 2-col live market card (homepage) ── */
+const PREVIEW_ROWS = 5; // per column → up to 10 tickers shown
+
+function LiveMarketCompact({ assets, updatedAt, loading, onExpand }) {
+  const preview = assets.slice(0, PREVIEW_ROWS * 2);
+  const col1 = preview.slice(0, PREVIEW_ROWS);
+  const col2 = preview.slice(PREVIEW_ROWS, PREVIEW_ROWS * 2);
+  const remaining = assets.length - preview.length;
+
   return (
     <div
       className="glass-card"
-      style={{ cursor: "default" }}
+      onClick={onExpand}
+      style={{ cursor: "pointer", transition: "box-shadow 0.2s" }}
+      onMouseEnter={(e) => { e.currentTarget.style.boxShadow = "0 8px 32px rgba(52,211,153,0.15)"; }}
+      onMouseLeave={(e) => { e.currentTarget.style.boxShadow = "none"; }}
     >
       {/* Header */}
-      <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 4 }}>
+      <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 8 }}>
         <span className="live-dot" />
-        <h3 style={{ fontSize: 18, fontWeight: 600, color: "#F8FAFC", margin: 0 }}>
-          Live Markets
-        </h3>
+        <h3 style={{ fontSize: 16, fontWeight: 600, color: "#F8FAFC", margin: 0 }}>Live Markets</h3>
         <span style={{ fontSize: 10, color: "#64748B", marginLeft: "auto" }}>
           {updatedAt ? timeAgo(updatedAt) : ""}
         </span>
       </div>
 
       {loading ? (
-        <div style={{ display: "flex", flexDirection: "column", gap: 12, marginTop: 8 }}>
-          {[...Array(6)].map((_, i) => (
-            <div key={i} className="skeleton" style={{ height: 28, opacity: 1 - i * 0.1 }} />
+        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "0 16px" }}>
+          {[...Array(10)].map((_, i) => (
+            <div key={i} className="skeleton" style={{ height: 24, marginBottom: 6, opacity: 1 - (i % 5) * 0.15 }} />
           ))}
         </div>
       ) : assets.length === 0 ? (
-        <p style={{ fontSize: 13, color: "#64748B", marginTop: 12 }}>Market data unavailable</p>
+        <p style={{ fontSize: 13, color: "#64748B" }}>Market data unavailable</p>
       ) : (
-        <div style={{ display: "flex", flexDirection: "column", gap: 2, marginTop: 4 }}>
-          {/* Column headers */}
-          <div style={{
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "space-between",
-            padding: "0 10px 4px",
-            borderBottom: "1px solid rgba(71, 85, 105, 0.4)",
-            marginBottom: 2,
-          }}>
-            <span style={{ fontSize: 10, fontWeight: 600, color: "#64748B", textTransform: "uppercase", letterSpacing: "0.05em" }}>
-              Asset
-            </span>
-            <div style={{ display: "flex", alignItems: "center", gap: 12, flexShrink: 0 }}>
-              <span style={{ fontSize: 10, fontWeight: 600, color: "#64748B", textTransform: "uppercase", letterSpacing: "0.05em", width: 80, textAlign: "right" }}>
-                Price
-              </span>
-              <span style={{ fontSize: 10, fontWeight: 600, color: "#64748B", textTransform: "uppercase", letterSpacing: "0.05em", minWidth: 56, textAlign: "right" }}>
-                1D %
-              </span>
-              <span style={{ fontSize: 10, fontWeight: 600, color: "#64748B", textTransform: "uppercase", letterSpacing: "0.05em", minWidth: 56, textAlign: "right" }}>
-                7D %
-              </span>
-            </div>
+        <>
+          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "0 16px" }}>
+            <div>{col1.map(a => <MarketRow key={a.symbol} a={a} />)}</div>
+            <div>{col2.map(a => <MarketRow key={a.symbol} a={a} />)}</div>
           </div>
-          {assets.map((a) => {
-            const val1d = a.change1d ?? null;
-            const val7d = a.change7d ?? null;
-            const has1d = val1d != null && val1d !== 0;
-            const has7d = val7d != null && val7d !== 0;
-            const up1d = (val1d ?? 0) >= 0;
-            const up7d = (val7d ?? 0) >= 0;
-            return (
-              <div
-                key={a.symbol}
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "space-between",
-                  padding: "8px 10px",
-                  borderRadius: 10,
-                  transition: "background 0.2s",
-                }}
-                onMouseEnter={(e) => { e.currentTarget.style.background = "rgba(255,255,255,0.04)"; }}
-                onMouseLeave={(e) => { e.currentTarget.style.background = "transparent"; }}
-              >
-                {/* Symbol + name */}
-                <div style={{ display: "flex", alignItems: "center", gap: 10, minWidth: 0 }}>
-                  <span style={{ fontSize: 13, fontWeight: 700, color: "#F8FAFC", width: 52, flexShrink: 0 }}>
-                    {a.symbol}
-                  </span>
-                  <span style={{ fontSize: 12, color: "#64748B", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
-                    {a.name}
-                  </span>
-                </div>
-
-                {/* Price + 1D + 7D changes */}
-                <div style={{ display: "flex", alignItems: "center", gap: 12, flexShrink: 0 }}>
-                  <span style={{ fontSize: 13, fontWeight: 600, color: "#CBD5E1", fontVariantNumeric: "tabular-nums", width: 80, textAlign: "right" }}>
-                    {formatPrice(a.price)}
-                  </span>
-                  {has1d ? (
-                    <span style={{
-                      fontSize: 12, fontWeight: 600,
-                      color: up1d ? "#34D399" : "#EF4444",
-                      background: up1d ? "rgba(52, 211, 153, 0.1)" : "rgba(239, 68, 68, 0.1)",
-                      border: `1px solid ${up1d ? "rgba(52, 211, 153, 0.2)" : "rgba(239, 68, 68, 0.2)"}`,
-                      padding: "2px 8px", borderRadius: 6, minWidth: 56, textAlign: "right", fontVariantNumeric: "tabular-nums",
-                    }}>
-                      {up1d ? "+" : ""}{val1d.toFixed(1)}%
-                    </span>
-                  ) : (
-                    <span style={{ fontSize: 12, fontWeight: 500, color: "#475569", padding: "2px 8px", minWidth: 56, textAlign: "right" }}>—</span>
-                  )}
-                  {has7d ? (
-                    <span style={{
-                      fontSize: 12, fontWeight: 600,
-                      color: up7d ? "#34D399" : "#EF4444",
-                      background: up7d ? "rgba(52, 211, 153, 0.1)" : "rgba(239, 68, 68, 0.1)",
-                      border: `1px solid ${up7d ? "rgba(52, 211, 153, 0.2)" : "rgba(239, 68, 68, 0.2)"}`,
-                      padding: "2px 8px", borderRadius: 6, minWidth: 56, textAlign: "right", fontVariantNumeric: "tabular-nums",
-                    }}>
-                      {up7d ? "+" : ""}{val7d.toFixed(1)}%
-                    </span>
-                  ) : (
-                    <span style={{ fontSize: 12, fontWeight: 500, color: "#475569", padding: "2px 8px", minWidth: 56, textAlign: "right" }}>—</span>
-                  )}
-                </div>
-              </div>
-            );
-          })}
-        </div>
+          {remaining > 0 && (
+            <p style={{ fontSize: 12, color: "#64748B", textAlign: "center", marginTop: 8, marginBottom: 0 }}>
+              +{remaining} more — click to view all
+            </p>
+          )}
+        </>
       )}
     </div>
   );
@@ -539,6 +505,8 @@ function GlowOrb({ color, size, top, left, delay }) {
   );
 }
 
+export { formatPrice, timeAgo, useMarketData };
+
 export default function HomePage({ onSelect }) {
   const { filterData, activeConflicts } = useEventToggle();
   const { assets, updatedAt, loading } = useMarketData();
@@ -617,9 +585,9 @@ export default function HomePage({ onSelect }) {
         ))}
       </div>
 
-      {/* Full live market detail — below the fold */}
+      {/* Compact live market preview — click to expand */}
       <hr className="glow-divider" style={{ marginTop: 32, marginBottom: 28 }} />
-      <LiveMarketDetail assets={assets} updatedAt={updatedAt} loading={loading} />
+      <LiveMarketCompact assets={assets} updatedAt={updatedAt} loading={loading} onExpand={() => onSelect("markets")} />
     </div>
   );
 }
