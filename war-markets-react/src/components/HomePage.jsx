@@ -13,15 +13,16 @@ function AnimatedStat({ value, color }) {
     if (!value) return;
 
     // Parse numeric portion and suffix
-    const match = value.match(/^([\d.]+)(.*)/);
+    const match = value.match(/^([^0-9]*)([\d.]+)(.*)/);
     if (!match) {
       setDisplay(value);
       return;
     }
 
-    const target = parseFloat(match[1]);
-    const suffix = match[2]; // e.g. "%", "×", ""
-    const hasDecimal = match[1].includes(".");
+    const prefix = match[1]; // e.g. "$", "+", "-", ""
+    const target = parseFloat(match[2]);
+    const suffix = match[3]; // e.g. "%", "×", "T"
+    const hasDecimal = match[2].includes(".");
     const duration = 1200; // ms
     const start = performance.now();
 
@@ -33,9 +34,9 @@ function AnimatedStat({ value, color }) {
       const current = eased * target;
 
       if (hasDecimal) {
-        setDisplay(current.toFixed(1) + suffix);
+        setDisplay(prefix + current.toFixed(1) + suffix);
       } else {
-        setDisplay(Math.round(current) + suffix);
+        setDisplay(prefix + Math.round(current) + suffix);
       }
 
       if (progress < 1) {
@@ -395,7 +396,11 @@ const cards = [
     desc: "How far markets fell and how long recovery took",
     color: "#6366F1",
     stat: "46.1%",
-    statLabel: "Worst S&P 500 drawdown",
+    statLabel: "Worst (2008 Crisis)",
+    statColor: "#EF4444",
+    stat2: "5.0%",
+    statLabel2: "Mildest (Vietnam '64)",
+    stat2Color: "#34D399",
     tag: "S&P 500 + NASDAQ",
   },
   {
@@ -403,8 +408,12 @@ const cards = [
     title: "Pre-War Buildup",
     desc: "Market moves from first escalation to eve of conflict",
     color: "#10B981",
-    stat: "9",
-    statLabel: "Had pre-conflict signals",
+    stat: "-15.2%",
+    statLabel: "Worst (Black Monday)",
+    statColor: "#EF4444",
+    stat2: "+11.0%",
+    statLabel2: "Best (Korea '50)",
+    stat2Color: "#34D399",
     tag: "Buildup windows",
   },
   {
@@ -413,7 +422,11 @@ const cards = [
     desc: "International index reactions to U.S. wars",
     color: "#F59E0B",
     stat: "73%",
-    statLabel: "Worst int'l decline (FTSE '73)",
+    statLabel: "Worst (FTSE '73)",
+    statColor: "#EF4444",
+    stat2: "5.0%",
+    statLabel2: "Mildest (FTSE '03)",
+    stat2Color: "#34D399",
     tag: "FTSE · DAX · Nikkei · HSI",
   },
   {
@@ -449,7 +462,9 @@ const cards = [
     desc: "How the top 0.1% share shifted with each conflict era",
     color: "#F472B6",
     stat: "25%",
-    statLabel: "Top 0.1% share (1929 peak)",
+    statLabel: "Top 0.1% peak (1929)",
+    stat2: "38%",
+    statLabel2: "Top 1% share (2024)",
     tag: "Saez-Zucman / WID",
   },
   {
@@ -459,6 +474,8 @@ const cards = [
     color: "#FB923C",
     stat: "84",
     statLabel: "Years of data (1941–2025)",
+    stat2: "12",
+    statLabel2: "Events tracked",
     tag: "Context & analysis",
   },
   {
@@ -586,11 +603,21 @@ export default function HomePage({ onSelect }) {
             {/* Stat + tag row */}
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-end", marginTop: 4 }}>
               {c.stat ? (
-                <div>
-                  <AnimatedStat value={c.stat} color={c.color} />
-                  <div style={{ fontSize: 10, color: "#64748B", marginTop: 2 }}>
-                    {c.statLabel}
+                <div style={{ display: "flex", gap: 14, alignItems: "flex-end" }}>
+                  <div>
+                    <AnimatedStat value={c.stat} color={c.statColor || c.color} />
+                    <div style={{ fontSize: 10, color: "#64748B", marginTop: 2 }}>
+                      {c.statLabel}
+                    </div>
                   </div>
+                  {c.stat2 && (
+                    <div>
+                      <AnimatedStat value={c.stat2} color={c.stat2Color || c.color} />
+                      <div style={{ fontSize: 10, color: "#64748B", marginTop: 2 }}>
+                        {c.statLabel2}
+                      </div>
+                    </div>
+                  )}
                 </div>
               ) : (
                 <div />
