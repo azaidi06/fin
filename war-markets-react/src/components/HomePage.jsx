@@ -622,7 +622,7 @@ export default function HomePage({ onSelect }) {
               ) : (
                 <div />
               )}
-              <span style={badge(c.color)}>{c.tag}</span>
+              {!c.stat2 && <span style={badge(c.color)}>{c.tag}</span>}
             </div>
           </button>
         ))}
