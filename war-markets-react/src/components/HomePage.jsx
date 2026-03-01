@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef, useMemo } from "react";
 import { sp500Data, preWarData, globalMarketsData, costOfLivingData, totalDebtData, buildCpiChartData } from "../data/warData";
+import { wealthTimeSeries } from "../data/wealthData";
 import { useEventToggle } from "../context/EventToggleContext";
 
 /* ── AnimatedStat: counts from 0 to final value ── */
@@ -192,6 +193,7 @@ function CardSparkline({ id, color, filterData, activeConflicts }) {
   }, [activeConflicts]);
   const costValues = useMemo(() => filterData(costOfLivingData).map(d => d.cpiMultiplier), [filterData]);
   const debtTimelineValues = useMemo(() => totalDebtData.map(d => d.debt), []);
+  const wealthValues = useMemo(() => wealthTimeSeries.map(d => d.top1), []);
 
   switch (id) {
     case "reaction":
@@ -206,6 +208,8 @@ function CardSparkline({ id, color, filterData, activeConflicts }) {
       return <BarSparkline values={costValues} color={color} width={w} height={h} animated />;
     case "debt":
       return <LineSparkline values={debtTimelineValues} color={color} width={w} height={h} animated />;
+    case "wealth":
+      return <LineSparkline values={wealthValues} color={color} width={w} height={h} animated />;
     default:
       return null;
   }
@@ -391,6 +395,15 @@ const cards = [
     stat: "$35.5T",
     statLabel: "Total federal debt (2024)",
     tag: "FRED GFDEBTN",
+  },
+  {
+    id: "wealth",
+    title: "Wealth Distribution",
+    desc: "How the top 0.1% share shifted with each conflict era",
+    color: "#F472B6",
+    stat: "25%",
+    statLabel: "Top 0.1% share (1929 peak)",
+    tag: "Saez-Zucman / WID",
   },
   {
     id: "methodology",

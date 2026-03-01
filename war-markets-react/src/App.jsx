@@ -9,6 +9,7 @@ import ComparisonPanel from "./components/ComparisonPanel";
 import GlobalMarketsPanel from "./components/GlobalMarketsPanel";
 import FiscalImpactPanel from "./components/FiscalImpactPanel";
 import CostOfLivingPanel from "./components/CostOfLivingPanel";
+import WealthDistributionPanel from "./components/WealthDistributionPanel";
 import MethodologyPage from "./components/MethodologyPage";
 import { sp500Data, nasdaqData, EXTRA_EVENTS } from "./data/warData";
 import { EventToggleProvider, useEventToggle } from "./context/EventToggleContext";
@@ -19,6 +20,7 @@ const tabs = [
   { id: "global", label: "Global Markets" },
   { id: "fiscal", label: "Fiscal Impact" },
   { id: "cost", label: "Cost of Living" },
+  { id: "wealth", label: "Wealth Distribution" },
   { id: "methodology", label: "Methodology" },
 ];
 
@@ -179,6 +181,9 @@ function AppInner() {
             {/* Cost of Living tab */}
             {activeTab === "cost" && <CostOfLivingPanel />}
 
+            {/* Wealth Distribution tab */}
+            {activeTab === "wealth" && <WealthDistributionPanel />}
+
             {/* Methodology tab */}
             {activeTab === "methodology" && <MethodologyPage onClose={goHome} />}
           </>
@@ -205,6 +210,12 @@ function AppInner() {
                 <p style={sourceCatLabel}>Cost of Living</p>
                 <p style={sourceList}>
                   Census Bureau (housing), EIA (gasoline), USDA (food), NCES (tuition), BLS (income)
+                </p>
+              </div>
+              <div style={sourceCategory}>
+                <p style={sourceCatLabel}>Wealth Distribution</p>
+                <p style={sourceList}>
+                  Saez-Zucman (2016, updated), World Inequality Database (WID)
                 </p>
               </div>
             </div>
