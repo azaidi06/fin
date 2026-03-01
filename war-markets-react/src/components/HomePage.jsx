@@ -223,74 +223,38 @@ function CardSparkline({ id, color }) {
 
 /* ── Live Market Hero ── */
 
-const STOCK_NAMES = { SPY: "S&P 500", QQQ: "NASDAQ", DIA: "DOW 30" };
-
 function formatPrice(price) {
   if (price >= 1000) return "$" + Math.round(price).toLocaleString();
   if (price >= 1) return "$" + price.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
   return "$" + price.toFixed(4);
 }
 
+function timeAgo(iso) {
+  const diff = Date.now() - new Date(iso).getTime();
+  const mins = Math.floor(diff / 60000);
+  if (mins < 1) return "just now";
+  if (mins < 60) return `${mins}m ago`;
+  const hrs = Math.floor(mins / 60);
+  if (hrs < 24) return `${hrs}h ago`;
+  return `${Math.floor(hrs / 24)}d ago`;
+}
+
 function LiveMarketHero() {
   const [assets, setAssets] = useState([]);
+  const [updatedAt, setUpdatedAt] = useState(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    let cancelled = false;
-    async function fetchMarkets() {
-      const results = [];
-
-      // Stocks via Yahoo Finance proxy
-      try {
-        const symbols = ["SPY", "QQQ", "DIA"];
-        const stockRes = await Promise.all(
-          symbols.map((s) =>
-            fetch(`/api/yahoo/v8/finance/chart/${s}?range=5d&interval=1d`)
-              .then((r) => r.ok ? r.json() : null)
-              .catch(() => null)
-          )
-        );
-        stockRes.forEach((data, i) => {
-          if (!data?.chart?.result?.[0]) return;
-          const meta = data.chart.result[0].meta;
-          const price = meta.regularMarketPrice;
-          const prev = meta.chartPreviousClose;
-          if (price && prev) {
-            results.push({
-              symbol: symbols[i],
-              name: STOCK_NAMES[symbols[i]],
-              price,
-              change7d: ((price - prev) / prev) * 100,
-            });
-          }
-        });
-      } catch { /* proxy unavailable */ }
-
-      // Crypto via CoinGecko
-      try {
-        const res = await fetch(
-          "https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&ids=bitcoin,ethereum,solana&price_change_percentage=7d&sparkline=false"
-        );
-        if (res.ok) {
-          const coins = await res.json();
-          coins.forEach((c) =>
-            results.push({
-              symbol: c.symbol.toUpperCase(),
-              name: c.name,
-              price: c.current_price,
-              change7d: c.price_change_percentage_7d_in_currency,
-            })
-          );
+    fetch("./market-data.json")
+      .then((r) => r.ok ? r.json() : null)
+      .then((data) => {
+        if (data?.assets) {
+          setAssets(data.assets);
+          setUpdatedAt(data.updatedAt);
         }
-      } catch { /* CoinGecko unavailable */ }
-
-      if (!cancelled) {
-        setAssets(results);
-        setLoading(false);
-      }
-    }
-    fetchMarkets();
-    return () => { cancelled = true; };
+      })
+      .catch(() => {})
+      .finally(() => setLoading(false));
   }, []);
 
   return (
@@ -304,7 +268,9 @@ function LiveMarketHero() {
         <h3 style={{ fontSize: 18, fontWeight: 600, color: "#F8FAFC", margin: 0 }}>
           Live Markets
         </h3>
-        <span style={{ fontSize: 10, color: "#64748B", marginLeft: "auto" }}>7d change</span>
+        <span style={{ fontSize: 10, color: "#64748B", marginLeft: "auto" }}>
+          {updatedAt ? timeAgo(updatedAt) : ""}
+        </span>
       </div>
 
       {loading ? (
