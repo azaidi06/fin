@@ -61,13 +61,14 @@ function ItemChart({ itemKey, filteredData, height = 240, yFormatter, big = fals
     <div style={{ ...innerCard, marginBottom: 0 }}>
       <h4 style={{ fontSize: big ? 15 : 13, fontWeight: 600, color: "#E2E8F0", marginBottom: big ? 12 : 8 }}>{title}</h4>
       <ResponsiveContainer width="100%" height={height}>
-        <BarChart data={data} margin={{ top: 5, right: 10, left: big ? 10 : 0, bottom: 5 }}>
+        <BarChart data={data} margin={{ top: 5, right: 10, left: big ? 10 : 0, bottom: big ? 40 : 30 }}>
           <CartesianGrid strokeDasharray="3 3" stroke="#475569" opacity={0.25} />
           <XAxis
             dataKey={big ? "era" : "eraShort"} stroke="#475569"
             tick={{ fill: "#94A3B8", fontSize: big ? 12 : 9 }}
             axisLine={false} tickLine={false}
             interval={0} tickMargin={4}
+            angle={-35} textAnchor="end"
           />
           <YAxis
             stroke="#475569"
