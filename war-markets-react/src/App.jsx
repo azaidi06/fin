@@ -189,12 +189,12 @@ function AppInner() {
         <Header compact={activeTab === "home"} />
 
         {activeTab === "home" ? (
-          <>
-            <div style={{ display: "flex", justifyContent: "flex-end", marginBottom: 12 }}>
+          <div style={{ position: "relative" }}>
+            <div style={{ position: "absolute", top: 0, right: 0, zIndex: 10 }}>
               <FilterDropdown />
             </div>
             <HomePage onSelect={setActiveTab} />
-          </>
+          </div>
         ) : (
           <>
             {/* Tab bar */}
