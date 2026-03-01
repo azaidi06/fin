@@ -105,9 +105,12 @@ async function tryYahoo() {
       const price = result.meta.regularMarketPrice || closes[closes.length - 1];
       const weekStart = closes[0];
       const change7d = ((price - weekStart) / weekStart) * 100;
+      const prevClose = closes.length >= 2 ? closes[closes.length - 2] : weekStart;
+      const change1d = ((price - prevClose) / prevClose) * 100;
       assets.push({
         symbol: t.symbol, name: t.name,
         price: Math.round(price * 100) / 100,
+        change1d: Math.round(change1d * 100) / 100,
         change7d: Math.round(change7d * 100) / 100,
       });
       log(t.symbol, price, change7d, "5d");
@@ -144,6 +147,7 @@ async function tryGoogle() {
       assets.push({
         symbol: t.symbol, name: t.name,
         price: Math.round(price * 100) / 100,
+        change1d: Math.round(change * 100) / 100,
         change7d: Math.round(change * 100) / 100,
       });
       log(t.symbol, price, change, "1d");
@@ -162,7 +166,7 @@ async function fetchCrypto() {
   try {
     const ids = CRYPTO_TICKERS.map((c) => c.id).join(",");
     const res = await httpsGet(
-      `https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&ids=${ids}&price_change_percentage=7d&sparkline=false`,
+      `https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&ids=${ids}&price_change_percentage=24h,7d&sparkline=false`,
       { "User-Agent": "war-markets-app/1.0" }
     );
     if (res.status !== 200) throw new Error(`HTTP ${res.status}`);
@@ -172,11 +176,13 @@ async function fetchCrypto() {
 
     return coins.map((c) => {
       const meta = idMap[c.id];
+      const change1d = c.price_change_percentage_24h_in_currency || c.price_change_percentage_24h || 0;
       const change7d = c.price_change_percentage_7d_in_currency || 0;
       log(meta.symbol, c.current_price, change7d, "7d");
       return {
         symbol: meta.symbol, name: meta.name,
         price: Math.round(c.current_price * 100) / 100,
+        change1d: Math.round(change1d * 100) / 100,
         change7d: Math.round(change7d * 100) / 100,
       };
     });

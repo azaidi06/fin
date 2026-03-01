@@ -6,66 +6,77 @@
       "symbol": "S&P",
       "name": "S&P 500",
       "price": 6878.88,
+      "change1d": 0,
       "change7d": 0
     },
     {
       "symbol": "NDX",
       "name": "NASDAQ",
       "price": 22668.21,
+      "change1d": 0,
       "change7d": 0
     },
     {
       "symbol": "DJI",
       "name": "DOW 30",
       "price": 48977.92,
+      "change1d": 0,
       "change7d": 0
     },
     {
       "symbol": "GOLD",
       "name": "Gold (GLD)",
       "price": 483.75,
+      "change1d": 0,
       "change7d": 0
     },
     {
       "symbol": "NVDA",
       "name": "NVIDIA",
       "price": 177.19,
+      "change1d": 0.34,
       "change7d": 0.34
     },
     {
       "symbol": "AAPL",
       "name": "Apple",
       "price": 264.18,
+      "change1d": 0.24,
       "change7d": 0.24
     },
     {
       "symbol": "MSFT",
       "name": "Microsoft",
       "price": 392.74,
+      "change1d": 0.36,
       "change7d": 0.36
     },
     {
       "symbol": "AMZN",
       "name": "Amazon",
       "price": 210,
+      "change1d": 0.37,
       "change7d": 0.37
     },
     {
       "symbol": "BTC",
       "name": "Bitcoin",
       "price": 67538,
+      "change1d": -0.84,
       "change7d": -0.84
     },
     {
       "symbol": "ETH",
       "name": "Ethereum",
       "price": 2032.57,
+      "change1d": 3.09,
       "change7d": 3.09
     },
     {
       "symbol": "SOL",
       "name": "Solana",
       "price": 88.18,
+      "change1d": 3.78,
       "change7d": 3.78
     }
   ]

@@ -278,8 +278,33 @@ function LiveMarketHero() {
         <p style={{ fontSize: 13, color: "#64748B", marginTop: 12 }}>Market data unavailable</p>
       ) : (
         <div style={{ display: "flex", flexDirection: "column", gap: 2, marginTop: 4 }}>
+          {/* Column headers */}
+          <div style={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
+            padding: "0 10px 4px",
+            borderBottom: "1px solid rgba(71, 85, 105, 0.4)",
+            marginBottom: 2,
+          }}>
+            <span style={{ fontSize: 10, fontWeight: 600, color: "#64748B", textTransform: "uppercase", letterSpacing: "0.05em" }}>
+              Asset
+            </span>
+            <div style={{ display: "flex", alignItems: "center", gap: 12, flexShrink: 0 }}>
+              <span style={{ fontSize: 10, fontWeight: 600, color: "#64748B", textTransform: "uppercase", letterSpacing: "0.05em", width: 80, textAlign: "right" }}>
+                Price
+              </span>
+              <span style={{ fontSize: 10, fontWeight: 600, color: "#64748B", textTransform: "uppercase", letterSpacing: "0.05em", minWidth: 56, textAlign: "right" }}>
+                1D %
+              </span>
+              <span style={{ fontSize: 10, fontWeight: 600, color: "#64748B", textTransform: "uppercase", letterSpacing: "0.05em", minWidth: 56, textAlign: "right" }}>
+                7D %
+              </span>
+            </div>
+          </div>
           {assets.map((a) => {
-            const up = a.change7d >= 0;
+            const up1d = (a.change1d ?? 0) >= 0;
+            const up7d = a.change7d >= 0;
             return (
               <div
                 key={a.symbol}
@@ -310,24 +335,38 @@ function LiveMarketHero() {
                   </span>
                 </div>
 
-                {/* Price + change */}
+                {/* Price + 1D + 7D changes */}
                 <div style={{ display: "flex", alignItems: "center", gap: 12, flexShrink: 0 }}>
-                  <span style={{ fontSize: 13, fontWeight: 600, color: "#CBD5E1", fontVariantNumeric: "tabular-nums" }}>
+                  <span style={{ fontSize: 13, fontWeight: 600, color: "#CBD5E1", fontVariantNumeric: "tabular-nums", width: 80, textAlign: "right" }}>
                     {formatPrice(a.price)}
                   </span>
                   <span style={{
                     fontSize: 12,
                     fontWeight: 600,
-                    color: up ? "#34D399" : "#EF4444",
-                    background: up ? "rgba(52, 211, 153, 0.1)" : "rgba(239, 68, 68, 0.1)",
-                    border: `1px solid ${up ? "rgba(52, 211, 153, 0.2)" : "rgba(239, 68, 68, 0.2)"}`,
+                    color: up1d ? "#34D399" : "#EF4444",
+                    background: up1d ? "rgba(52, 211, 153, 0.1)" : "rgba(239, 68, 68, 0.1)",
+                    border: `1px solid ${up1d ? "rgba(52, 211, 153, 0.2)" : "rgba(239, 68, 68, 0.2)"}`,
                     padding: "2px 8px",
                     borderRadius: 6,
                     minWidth: 56,
                     textAlign: "right",
                     fontVariantNumeric: "tabular-nums",
                   }}>
-                    {up ? "+" : ""}{a.change7d.toFixed(1)}%
+                    {up1d ? "+" : ""}{(a.change1d ?? 0).toFixed(1)}%
+                  </span>
+                  <span style={{
+                    fontSize: 12,
+                    fontWeight: 600,
+                    color: up7d ? "#34D399" : "#EF4444",
+                    background: up7d ? "rgba(52, 211, 153, 0.1)" : "rgba(239, 68, 68, 0.1)",
+                    border: `1px solid ${up7d ? "rgba(52, 211, 153, 0.2)" : "rgba(239, 68, 68, 0.2)"}`,
+                    padding: "2px 8px",
+                    borderRadius: 6,
+                    minWidth: 56,
+                    textAlign: "right",
+                    fontVariantNumeric: "tabular-nums",
+                  }}>
+                    {up7d ? "+" : ""}{a.change7d.toFixed(1)}%
                   </span>
                 </div>
               </div>
