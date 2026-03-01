@@ -239,16 +239,21 @@ function LiveMarketHero() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetch("./market-data.json")
-      .then((r) => r.ok ? r.json() : null)
-      .then((data) => {
-        if (data?.assets) {
-          setAssets(data.assets);
-          setUpdatedAt(data.updatedAt);
-        }
-      })
-      .catch(() => {})
-      .finally(() => setLoading(false));
+    const load = () =>
+      fetch(`./market-data.json?t=${Date.now()}`)
+        .then((r) => r.ok ? r.json() : null)
+        .then((data) => {
+          if (data?.assets) {
+            setAssets(data.assets);
+            setUpdatedAt(data.updatedAt);
+          }
+        })
+        .catch(() => {})
+        .finally(() => setLoading(false));
+
+    load();
+    const id = setInterval(load, 5 * 60 * 1000);
+    return () => clearInterval(id);
   }, []);
 
   return (
