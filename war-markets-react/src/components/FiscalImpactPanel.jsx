@@ -349,7 +349,25 @@ function FiscalCard({ d }) {
   );
 }
 
-const partyColor = (party) => party === "D" ? "#3B82F6" : "#EF4444";
+const presidentColors = {
+  "FDR":        "#F59E0B",
+  "Truman":     "#3B82F6",
+  "Eisenhower": "#EF4444",
+  "JFK":        "#06B6D4",
+  "LBJ":        "#8B5CF6",
+  "Nixon":      "#F97316",
+  "Ford":       "#EC4899",
+  "Carter":     "#10B981",
+  "Reagan":     "#E11D48",
+  "H.W. Bush":  "#A855F7",
+  "Clinton":    "#14B8A6",
+  "W. Bush":    "#6366F1",
+  "Obama":      "#0EA5E9",
+  "Trump":      "#F43F5E",
+  "Biden":      "#22D3EE",
+};
+
+const presColor = (name) => presidentColors[name] || "#94A3B8";
 
 const fmtDebt = (v) => v >= 1000 ? `$${(v / 1000).toFixed(1)}T` : `$${v.toFixed(0)}B`;
 
@@ -358,7 +376,7 @@ function VelocityTooltip({ active, payload }) {
   const d = payload[0].payload;
   return (
     <div style={{ background: "#334155", border: "1px solid #475569", borderRadius: 8, padding: "10px 14px", fontSize: 12, color: "#F8FAFC", boxShadow: "0 8px 24px rgba(0,0,0,0.4)", maxWidth: 280 }}>
-      <p style={{ fontWeight: 600, marginBottom: 6, color: partyColor(d.party) }}>
+      <p style={{ fontWeight: 600, marginBottom: 6, color: presColor(d.president) }}>
         {d.president} ({d.party === "D" ? "Dem" : "Rep"})
       </p>
       <p style={{ color: "#94A3B8", margin: "2px 0" }}>Term: {d.start}–{d.end} ({d.years} yr{d.years > 1 ? "s" : ""})</p>
@@ -378,7 +396,7 @@ function AccelerationTooltip({ active, payload }) {
   const sign = val > 0 ? "+" : "";
   return (
     <div style={{ background: "#334155", border: "1px solid #475569", borderRadius: 8, padding: "10px 14px", fontSize: 12, color: "#F8FAFC", boxShadow: "0 8px 24px rgba(0,0,0,0.4)", maxWidth: 260 }}>
-      <p style={{ fontWeight: 600, marginBottom: 6, color: partyColor(d.party) }}>
+      <p style={{ fontWeight: 600, marginBottom: 6, color: presColor(d.president) }}>
         {d.president} ({d.party === "D" ? "Dem" : "Rep"})
       </p>
       <p style={{ color: "#94A3B8", margin: "2px 0" }}>Term: {d.start}–{d.end}</p>
@@ -428,7 +446,7 @@ function DebtVelocitySection() {
           <Tooltip content={<VelocityTooltip />} cursor={{ fill: "rgba(255,255,255,0.04)" }} />
           <Bar dataKey="velocity" radius={[4, 4, 0, 0]} maxBarSize={44}>
             {stats.map((d, i) => (
-              <Cell key={i} fill={partyColor(d.party)} />
+              <Cell key={i} fill={presColor(d.president)} />
             ))}
           </Bar>
         </BarChart>
@@ -462,7 +480,11 @@ function DebtVelocitySection() {
           <ReferenceLine y={0} stroke="#64748B" strokeDasharray="4 4" />
           <Bar dataKey="acceleration" radius={[4, 4, 0, 0]} maxBarSize={44}>
             {accelData.map((d, i) => (
-              <Cell key={i} fill={partyColor(d.party)} />
+              <Cell key={i} fill={
+                d.president === "Obama" ? "#8B5CF6"
+                : d.acceleration < 0 ? "#10B981"
+                : "#EF4444"
+              } />
             ))}
           </Bar>
         </BarChart>
@@ -486,16 +508,14 @@ function DebtVelocitySection() {
         </ul>
       </div>
 
-      {/* Party Legend */}
-      <div style={{ display: "flex", justifyContent: "center", gap: 20, marginTop: 16 }}>
-        <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
-          <div style={{ width: 12, height: 12, borderRadius: 3, background: "#3B82F6" }} />
-          <span style={{ fontSize: 11, color: "#94A3B8" }}>Democrat</span>
-        </div>
-        <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
-          <div style={{ width: 12, height: 12, borderRadius: 3, background: "#EF4444" }} />
-          <span style={{ fontSize: 11, color: "#94A3B8" }}>Republican</span>
-        </div>
+      {/* President Legend */}
+      <div style={{ display: "flex", justifyContent: "center", flexWrap: "wrap", gap: 10, marginTop: 16 }}>
+        {stats.map(d => (
+          <div key={`${d.president}-${d.start}`} style={{ display: "flex", alignItems: "center", gap: 5 }}>
+            <div style={{ width: 10, height: 10, borderRadius: 2, background: presColor(d.president) }} />
+            <span style={{ fontSize: 10, color: "#94A3B8" }}>{d.president}</span>
+          </div>
+        ))}
       </div>
 
       <div style={{ marginTop: 8 }}>
