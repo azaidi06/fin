@@ -303,8 +303,12 @@ function LiveMarketHero() {
             </div>
           </div>
           {assets.map((a) => {
-            const up1d = (a.change1d ?? 0) >= 0;
-            const up7d = a.change7d >= 0;
+            const val1d = a.change1d ?? null;
+            const val7d = a.change7d ?? null;
+            const has1d = val1d != null && val1d !== 0;
+            const has7d = val7d != null && val7d !== 0;
+            const up1d = (val1d ?? 0) >= 0;
+            const up7d = (val7d ?? 0) >= 0;
             return (
               <div
                 key={a.symbol}
@@ -340,34 +344,60 @@ function LiveMarketHero() {
                   <span style={{ fontSize: 13, fontWeight: 600, color: "#CBD5E1", fontVariantNumeric: "tabular-nums", width: 80, textAlign: "right" }}>
                     {formatPrice(a.price)}
                   </span>
-                  <span style={{
-                    fontSize: 12,
-                    fontWeight: 600,
-                    color: up1d ? "#34D399" : "#EF4444",
-                    background: up1d ? "rgba(52, 211, 153, 0.1)" : "rgba(239, 68, 68, 0.1)",
-                    border: `1px solid ${up1d ? "rgba(52, 211, 153, 0.2)" : "rgba(239, 68, 68, 0.2)"}`,
-                    padding: "2px 8px",
-                    borderRadius: 6,
-                    minWidth: 56,
-                    textAlign: "right",
-                    fontVariantNumeric: "tabular-nums",
-                  }}>
-                    {up1d ? "+" : ""}{(a.change1d ?? 0).toFixed(1)}%
-                  </span>
-                  <span style={{
-                    fontSize: 12,
-                    fontWeight: 600,
-                    color: up7d ? "#34D399" : "#EF4444",
-                    background: up7d ? "rgba(52, 211, 153, 0.1)" : "rgba(239, 68, 68, 0.1)",
-                    border: `1px solid ${up7d ? "rgba(52, 211, 153, 0.2)" : "rgba(239, 68, 68, 0.2)"}`,
-                    padding: "2px 8px",
-                    borderRadius: 6,
-                    minWidth: 56,
-                    textAlign: "right",
-                    fontVariantNumeric: "tabular-nums",
-                  }}>
-                    {up7d ? "+" : ""}{a.change7d.toFixed(1)}%
-                  </span>
+                  {has1d ? (
+                    <span style={{
+                      fontSize: 12,
+                      fontWeight: 600,
+                      color: up1d ? "#34D399" : "#EF4444",
+                      background: up1d ? "rgba(52, 211, 153, 0.1)" : "rgba(239, 68, 68, 0.1)",
+                      border: `1px solid ${up1d ? "rgba(52, 211, 153, 0.2)" : "rgba(239, 68, 68, 0.2)"}`,
+                      padding: "2px 8px",
+                      borderRadius: 6,
+                      minWidth: 56,
+                      textAlign: "right",
+                      fontVariantNumeric: "tabular-nums",
+                    }}>
+                      {up1d ? "+" : ""}{val1d.toFixed(1)}%
+                    </span>
+                  ) : (
+                    <span style={{
+                      fontSize: 12,
+                      fontWeight: 500,
+                      color: "#475569",
+                      padding: "2px 8px",
+                      minWidth: 56,
+                      textAlign: "right",
+                    }}>
+                      —
+                    </span>
+                  )}
+                  {has7d ? (
+                    <span style={{
+                      fontSize: 12,
+                      fontWeight: 600,
+                      color: up7d ? "#34D399" : "#EF4444",
+                      background: up7d ? "rgba(52, 211, 153, 0.1)" : "rgba(239, 68, 68, 0.1)",
+                      border: `1px solid ${up7d ? "rgba(52, 211, 153, 0.2)" : "rgba(239, 68, 68, 0.2)"}`,
+                      padding: "2px 8px",
+                      borderRadius: 6,
+                      minWidth: 56,
+                      textAlign: "right",
+                      fontVariantNumeric: "tabular-nums",
+                    }}>
+                      {up7d ? "+" : ""}{val7d.toFixed(1)}%
+                    </span>
+                  ) : (
+                    <span style={{
+                      fontSize: 12,
+                      fontWeight: 500,
+                      color: "#475569",
+                      padding: "2px 8px",
+                      minWidth: 56,
+                      textAlign: "right",
+                    }}>
+                      —
+                    </span>
+                  )}
                 </div>
               </div>
             );

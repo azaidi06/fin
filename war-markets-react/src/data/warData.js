@@ -1,18 +1,27 @@
 export const sp500Data = [
   { conflict: "WWII", label: "WWII (Pearl Harbor, 1941)", date: "Dec 7, 1941", decline: 20.3, daysToBottom: 143, daysToRecover: 917 },
   { conflict: "Korea", label: "Korean War (1950)", date: "Jun 25, 1950", decline: 12.0, daysToBottom: 18, daysToRecover: 60 },
+  { conflict: "Cuban Missile", label: "Cuban Missile Crisis (1962)", date: "Oct 16, 1962", decline: 6.5, daysToBottom: 8, daysToRecover: 14 },
   { conflict: "Vietnam", label: "Vietnam (Gulf of Tonkin, 1964)", date: "Aug 7, 1964", decline: 5.0, daysToBottom: 26, daysToRecover: 50 },
+  { conflict: "Oil Embargo", label: "1973 Oil Embargo (OPEC)", date: "Oct 17, 1973", decline: 43.3, daysToBottom: 245, daysToRecover: 1680 },
+  { conflict: "Black Monday", label: "Black Monday (1987)", date: "Oct 19, 1987", decline: 33.5, daysToBottom: 71, daysToRecover: 393 },
   { conflict: "Gulf War", label: "Gulf War (Kuwait, 1990)", date: "Aug 2, 1990", decline: 16.9, daysToBottom: 71, daysToRecover: 189 },
   { conflict: "9/11", label: "9/11 / Afghanistan (2001)", date: "Sep 11, 2001", decline: 11.6, daysToBottom: 10, daysToRecover: 31 },
   { conflict: "Iraq", label: "Iraq War (2003)", date: "Mar 19, 2003", decline: 5.3, daysToBottom: 10, daysToRecover: 16 },
+  { conflict: "2008 Crisis", label: "2008 Financial Crisis (Lehman)", date: "Sep 15, 2008", decline: 46.1, daysToBottom: 123, daysToRecover: 881 },
   { conflict: "COVID", label: "COVID-19 Pandemic (2020)", date: "Feb 19, 2020", decline: 33.9, daysToBottom: 23, daysToRecover: 105 },
+  { conflict: "Russia-Ukraine", label: "Russia-Ukraine War (2022)", date: "Feb 24, 2022", decline: 15.4, daysToBottom: 160, daysToRecover: 456 },
 ];
 
 export const nasdaqData = [
+  { conflict: "Oil Embargo", label: "1973 Oil Embargo (OPEC)", date: "Oct 17, 1973", decline: 48.0, daysToBottom: 265, daysToRecover: null, preClose: 109.50, bottomClose: 56.90 },
+  { conflict: "Black Monday", label: "Black Monday (1987)", date: "Oct 19, 1987", decline: 35.9, daysToBottom: 57, daysToRecover: 410, preClose: 455.26, bottomClose: 291.88 },
   { conflict: "Gulf War", label: "Gulf War (Kuwait, 1990)", date: "Aug 2, 1990", decline: 24.1, daysToBottom: 75, daysToRecover: 187, preClose: 428.90, bottomClose: 325.40 },
   { conflict: "9/11", label: "9/11 / Afghanistan (2001)", date: "Sep 11, 2001", decline: 16.1, daysToBottom: 11, daysToRecover: 31, preClose: 1695.38, bottomClose: 1423.19 },
   { conflict: "Iraq", label: "Iraq War (2003)", date: "Mar 19, 2003", decline: 4.0, daysToBottom: 12, daysToRecover: 29, preClose: 1397.07, bottomClose: 1341.17 },
+  { conflict: "2008 Crisis", label: "2008 Financial Crisis (Lehman)", date: "Sep 15, 2008", decline: 41.8, daysToBottom: 123, daysToRecover: 583, preClose: 2261.18, bottomClose: 1316.12 },
   { conflict: "COVID", label: "COVID-19 Pandemic (2020)", date: "Feb 19, 2020", decline: 30.1, daysToBottom: 23, daysToRecover: 54, preClose: 9817.18, bottomClose: 6860.67 },
+  { conflict: "Russia-Ukraine", label: "Russia-Ukraine War (2022)", date: "Feb 24, 2022", decline: 25.4, daysToBottom: 160, daysToRecover: 530, preClose: 13037.49, bottomClose: 10321.39 },
 ];
 
 // Pre-war buildup data — market performance in the lead-up to each conflict
@@ -39,6 +48,14 @@ export const preWarData = [
     narrative: "Complete surprise. Markets were at 52-week highs, up +11% in the prior 3 months. The S&P fell 5.4% on the first trading day after the invasion.",
   },
   {
+    conflict: "Cuban Missile", label: "Cuban Missile Crisis (1962)",
+    period: "None (surprise intelligence discovery)", days: null,
+    spChange: 6.2, nqChange: null, surprise: true,
+    spStart: 56.27, spEnd: 59.76, nqStart: null, nqEnd: null,
+    catalyst: "U-2 spy plane photographed Soviet missile sites in Cuba (Oct 14)",
+    narrative: "Markets had no warning. The S&P was up 6.2% in the prior 3 months and at a 1962 high. The crisis lasted just 13 days (Oct 16–28), and the S&P dropped 6.5% before JFK and Khrushchev reached a deal. Markets recovered within 2 weeks — the shortest crisis-to-recovery cycle of any conflict.",
+  },
+  {
     conflict: "Vietnam", label: "Vietnam (Gulf of Tonkin, 1964)",
     period: "Feb 3 – Aug 7, 1964", days: 131,
     spChange: 6.4, nqChange: null,
@@ -47,6 +64,22 @@ export const preWarData = [
     nqStart: null, nqEnd: null,
     catalyst: "Gulf of Tonkin incident (Aug 2–4)",
     narrative: "Markets showed zero concern about Vietnam in 1964. The S&P rose steadily and barely flinched at Tonkin (< 1% dip). War's economic impact wouldn't hit until 1966.",
+  },
+  {
+    conflict: "Oil Embargo", label: "1973 Oil Embargo (OPEC)",
+    period: "Oct 6 – Oct 16, 1973", days: 10,
+    spChange: -1.5, nqChange: -2.0, surprise: false,
+    spStart: 108.43, spEnd: 106.80, nqStart: 112.10, nqEnd: 109.85,
+    catalyst: "Yom Kippur War began Oct 6 → OPEC embargo announced Oct 17",
+    narrative: "The Yom Kippur War provided 10 days of warning before the embargo hit. But the real damage was the oil price quadrupling from $3 to $12/barrel that followed. The S&P would lose 43% over the next year — the worst bear market since the Great Depression.",
+  },
+  {
+    conflict: "Black Monday", label: "Black Monday (1987)",
+    period: "Aug 25 – Oct 16, 1987", days: 38,
+    spChange: -15.2, nqChange: -14.8, surprise: false,
+    spStart: 336.77, spEnd: 285.60, nqStart: 455.26, nqEnd: 387.80,
+    catalyst: "Trade deficit data, rising interest rates, US-Iran Persian Gulf tensions (Operation Earnest Will)",
+    narrative: "Black Monday is often remembered as a purely technical/financial event, but it had significant geopolitical context. The US was engaged in Operation Earnest Will (escorting Kuwaiti tankers through the Persian Gulf during the Iran-Iraq War), US forces had attacked Iranian oil platforms just days before. Combined with a ballooning trade deficit, rising interest rates, and program trading, this created a perfect storm. The S&P dropped 20.4% in a single day — still the largest one-day percentage decline in history.",
   },
   {
     conflict: "Gulf War", label: "Gulf War (Kuwait, 1990)",
@@ -79,6 +112,14 @@ export const preWarData = [
     narrative: "The textbook 'sell the buildup, buy the invasion.' S&P fell 14.7% as war certainty grew. Once the invasion began, markets immediately rallied — the uncertainty discount lifted.",
   },
   {
+    conflict: "2008 Crisis", label: "2008 Financial Crisis (Lehman)",
+    period: "Mar 14 – Sep 12, 2008", days: 131,
+    spChange: -10.8, nqChange: -6.2, surprise: false,
+    spStart: 1288.14, spEnd: 1251.70, nqStart: 2332.54, nqEnd: 2261.18,
+    catalyst: "Bear Stearns rescued (Mar 14) → Fannie/Freddie conservatorship (Sep 7) → Lehman collapse (Sep 15)",
+    narrative: "Unlike sudden geopolitical shocks, the 2008 crisis had a 6-month buildup. Bear Stearns' rescue in March signaled systemic risk. Markets sold off gradually as the subprime crisis spread, but the real panic only began when Lehman Brothers filed for bankruptcy on Sep 15 — the largest bankruptcy in US history. The ensuing crash was global and devastating.",
+  },
+  {
     conflict: "COVID", label: "COVID-19 Pandemic (2020)",
     period: "Jan 30 – Feb 19, 2020", days: 15,
     spChange: 3.1, nqChange: 5.2,
@@ -87,6 +128,14 @@ export const preWarData = [
     nqStart: 9298.93, nqEnd: 9817.18,
     catalyst: "WHO PHEIC (Jan 30) → first deaths outside China → Italy outbreak (Feb 21)",
     narrative: "The most dramatic instance of markets ignoring a looming crisis. COVID was known for weeks, yet the S&P hit an all-time high on Feb 19. The crash began Feb 20 after Italy's outbreak exploded, triggering the fastest 30%+ decline in history — just 22 trading days. Three circuit breakers were triggered in March (Mar 9, 12, 16).",
+  },
+  {
+    conflict: "Russia-Ukraine", label: "Russia-Ukraine War (2022)",
+    period: "Jan 20 – Feb 23, 2022", days: 28,
+    spChange: -8.6, nqChange: -13.2, surprise: false,
+    spStart: 4482.73, spEnd: 4225.50, nqStart: 14340.26, nqEnd: 13037.49,
+    catalyst: "US intelligence warned of imminent invasion (late Jan) → Russia invaded Feb 24",
+    narrative: "The most telegraphed invasion in modern history. US intelligence publicly predicted Russia's attack weeks in advance. Markets sold off 8.6% in the S&P as troop buildups were confirmed by satellite imagery, but the actual invasion on Feb 24 caused only a brief 2-day dip before markets stabilized. The larger selloff through 2022 was driven by Fed rate hikes to combat inflation, not the war itself.",
   },
 ];
 
@@ -174,6 +223,42 @@ export const globalMarketsData = [
     ],
   },
   {
+    conflict: "Cuban Missile",
+    label: "Cuban Missile Crisis (1962)",
+    dataQuality: "minimal",
+    marketCapRanking: ["NYSE"],
+    narrative: "Modern international indices didn't exist in 1962 (FTSE 100 began 1984, DAX 1988, Hang Seng 1969). Only the S&P 500 / DJIA provides reliable data. The crisis was so brief (13 days) that most global markets barely registered it before the resolution.",
+    indices: [
+      { id: "S&P 500", decline: 6.5, daysToBottom: 8, daysToRecover: 14, confidence: "exact", note: null, isPositive: false, caveat: null },
+      { id: "FT 30", decline: 5, daysToBottom: null, daysToRecover: null, confidence: "approx", note: "Brief dip, recovered within weeks", isPositive: false, caveat: null },
+    ],
+  },
+  {
+    conflict: "Oil Embargo",
+    label: "1973 Oil Embargo (OPEC)",
+    dataQuality: "low",
+    marketCapRanking: ["NYSE", "LSE", "TSE"],
+    narrative: "The embargo caused the worst global bear market since the 1930s. The UK's FT 30 fell 73% as Britain faced its own oil crisis and a three-day work week. Japan's Nikkei fell ~37% as the oil-dependent economy was devastated. US markets suffered the most prolonged decline — 245 trading days to bottom.",
+    indices: [
+      { id: "S&P 500", decline: 43.3, daysToBottom: 245, daysToRecover: 1680, confidence: "exact", note: null, isPositive: false, caveat: null },
+      { id: "FT 30", decline: 73, daysToBottom: null, daysToRecover: null, confidence: "approx", note: "Collapsed alongside UK three-day work week and coal miners' strike", isPositive: false, caveat: "Includes concurrent UK domestic crises" },
+      { id: "Nikkei 225", decline: 37, daysToBottom: null, daysToRecover: null, confidence: "approx", note: "Japan was almost 100% dependent on imported oil", isPositive: false, caveat: null },
+    ],
+  },
+  {
+    conflict: "Black Monday",
+    label: "Black Monday (1987)",
+    dataQuality: "medium",
+    marketCapRanking: ["NYSE", "LSE", "TSE", "HKEX"],
+    narrative: "Black Monday was the first truly global synchronized crash. Hong Kong fell 45.5% (closed for a week), Australia 41.8%, and European markets 20-30%. The geopolitical context — US naval operations in the Persian Gulf during the Iran-Iraq War and escalating US-Iran tensions (US attacked Iranian oil platforms Oct 19) — is often overlooked. Combined with rising interest rates, a weak dollar, and program trading, the crash exposed how interconnected global markets had become. DAX and CAC 40 did not yet exist (DAX launched Jul 1988, CAC 40 Dec 1987).",
+    indices: [
+      { id: "S&P 500", decline: 33.5, daysToBottom: 71, daysToRecover: 393, confidence: "exact", note: "Single-day drop of 20.4% on Oct 19 — largest ever", isPositive: false, caveat: null },
+      { id: "FTSE 100", decline: 26.4, daysToBottom: 54, daysToRecover: 350, confidence: "exact", note: null, isPositive: false, caveat: null },
+      { id: "Nikkei 225", decline: 15.6, daysToBottom: 3, daysToRecover: 120, confidence: "approx", note: "Recovered fastest — Japanese bubble was still inflating", isPositive: false, caveat: "Japan was mid-bubble; Nikkei went on to peak at 38,916 in Dec 1989" },
+      { id: "Hang Seng", decline: 45.5, daysToBottom: 12, daysToRecover: null, confidence: "exact", note: "Exchange closed for a week after Oct 19; reopened with 33% single-day crash", isPositive: false, caveat: "Exchange closure amplified the crash" },
+    ],
+  },
+  {
     conflict: "Gulf War",
     label: "Gulf War (Kuwait, 1990)",
     dataQuality: "high",
@@ -217,6 +302,21 @@ export const globalMarketsData = [
     ],
   },
   {
+    conflict: "2008 Crisis",
+    label: "2008 Financial Crisis (Lehman)",
+    dataQuality: "high",
+    marketCapRanking: ["NYSE", "NASDAQ", "TSE", "LSE", "Euronext", "Frankfurt", "HKEX"],
+    narrative: "The most devastating global financial crisis since the Great Depression. Every major index fell 40-65% from peak to trough. The crisis originated in US subprime mortgages but spread globally through interconnected banking systems. Lehman's collapse (Sep 15, 2008) triggered a worldwide credit freeze. Central banks coordinated unprecedented interventions — the Fed cut rates to 0% and launched QE, while governments injected capital directly into banks (TARP in the US, bank nationalization in the UK).",
+    indices: [
+      { id: "S&P 500", decline: 46.1, daysToBottom: 123, daysToRecover: 881, confidence: "exact", note: null, isPositive: false, caveat: null },
+      { id: "FTSE 100", decline: 48.4, daysToBottom: 175, daysToRecover: null, confidence: "exact", note: "UK government nationalized Northern Rock, RBS, Lloyds", isPositive: false, caveat: "Did not recover to 2007 peak until 2015" },
+      { id: "DAX", decline: 48.0, daysToBottom: 160, daysToRecover: 1100, confidence: "exact", note: null, isPositive: false, caveat: null },
+      { id: "CAC 40", decline: 53.5, daysToBottom: 170, daysToRecover: null, confidence: "exact", note: null, isPositive: false, caveat: "CAC 40 never recovered to 2007 peak until 2021" },
+      { id: "Nikkei 225", decline: 56.2, daysToBottom: 160, daysToRecover: null, confidence: "exact", note: "Nikkei was still below its 1989 bubble peak", isPositive: false, caveat: "Japan entered 'lost decades'" },
+      { id: "Hang Seng", decline: 65.2, daysToBottom: 250, daysToRecover: null, confidence: "exact", note: null, isPositive: false, caveat: "China's massive stimulus ($586B) enabled partial recovery" },
+    ],
+  },
+  {
     conflict: "COVID",
     label: "COVID-19 Pandemic (2020)",
     dataQuality: "high",
@@ -232,6 +332,21 @@ export const globalMarketsData = [
       { id: "Hang Seng", decline: 25.6, daysToBottom: 43, daysToRecover: null, confidence: "exact", note: "Still well below Jan 2020 levels years later", isPositive: false, caveat: "Pre-existing drag from 2019 Hong Kong protests + China tech crackdown prevented recovery" },
     ],
   },
+  {
+    conflict: "Russia-Ukraine",
+    label: "Russia-Ukraine War (2022)",
+    dataQuality: "high",
+    marketCapRanking: ["NYSE", "NASDAQ", "TSE", "LSE", "Euronext", "Frankfurt", "HKEX"],
+    narrative: "Markets had largely priced in the invasion risk by Feb 24. The direct war impact on Western indices was modest (S&P down ~5% in the first week) as the conflict was seen as regional. European markets suffered more due to energy dependence on Russia — the DAX fell 24% on gas supply fears. The larger 2022 selloff was primarily driven by Fed rate hikes to combat 8% inflation, not the war. Russia's MOEX index fell 45% and was closed for nearly a month.",
+    indices: [
+      { id: "S&P 500", decline: 15.4, daysToBottom: 160, daysToRecover: 456, confidence: "exact", note: "Most of the decline driven by Fed rate hikes, not war", isPositive: false, caveat: "War-specific impact estimated at ~5%" },
+      { id: "FTSE 100", decline: 6.8, daysToBottom: 45, daysToRecover: 90, confidence: "exact", note: "UK energy companies benefited from high oil prices", isPositive: false, caveat: null },
+      { id: "DAX", decline: 24.5, daysToBottom: 200, daysToRecover: 380, confidence: "exact", note: "Germany most exposed via Russian gas dependence (Nord Stream)", isPositive: false, caveat: null },
+      { id: "CAC 40", decline: 19.8, daysToBottom: 190, daysToRecover: 350, confidence: "exact", note: null, isPositive: false, caveat: null },
+      { id: "Nikkei 225", decline: 12.5, daysToBottom: 120, daysToRecover: 300, confidence: "exact", note: "Yen weakness cushioned corporate earnings", isPositive: false, caveat: null },
+      { id: "Hang Seng", decline: 22.0, daysToBottom: 200, daysToRecover: null, confidence: "exact", note: "Continued drag from China tech/property crises", isPositive: false, caveat: "Pre-existing China headwinds" },
+    ],
+  },
 ];
 
 // ── FISCAL IMPACT DATA ─────────────────────────────────────
@@ -241,11 +356,16 @@ export const globalMarketsData = [
 export const fiscalConflictColors = {
   WWII: "#EF4444",
   Korea: "#F59E0B",
+  "Cuban Missile": "#84CC16",
   Vietnam: "#10B981",
+  "Oil Embargo": "#F97316",
+  "Black Monday": "#A855F7",
   "Gulf War": "#6366F1",
   "9/11": "#EC4899",
   Iraq: "#3B82F6",
+  "2008 Crisis": "#14B8A6",
   COVID: "#06B6D4",
+  "Russia-Ukraine": "#E11D48",
 };
 
 export const cpiData = [
@@ -269,6 +389,15 @@ export const cpiData = [
       { t: 8, year: 1958, value: 2.8 },   { t: 9, year: 1959, value: 0.7 },
       { t: 10, year: 1960, value: 1.7 },
     ] },
+  { conflict: "Cuban Missile", startYear: 1962, series: [
+      { t: -2, year: 1960, value: 1.7 }, { t: -1, year: 1961, value: 1.0 },
+      { t: 0, year: 1962, value: 1.0 },  { t: 1, year: 1963, value: 1.3 },
+      { t: 2, year: 1964, value: 1.3 },  { t: 3, year: 1965, value: 1.6 },
+      { t: 4, year: 1966, value: 2.9 },  { t: 5, year: 1967, value: 3.1 },
+      { t: 6, year: 1968, value: 4.2 },  { t: 7, year: 1969, value: 5.5 },
+      { t: 8, year: 1970, value: 5.7 },  { t: 9, year: 1971, value: 4.4 },
+      { t: 10, year: 1972, value: 3.2 },
+    ] },
   { conflict: "Vietnam", label: "Vietnam (1964)", startYear: 1964,
     series: [
       { t: -2, year: 1962, value: 1.0 }, { t: -1, year: 1963, value: 1.3 },
@@ -278,6 +407,24 @@ export const cpiData = [
       { t: 6, year: 1970, value: 5.7 },  { t: 7, year: 1971, value: 4.4 },
       { t: 8, year: 1972, value: 3.2 },  { t: 9, year: 1973, value: 6.2 },
       { t: 10, year: 1974, value: 11.0 },
+    ] },
+  { conflict: "Oil Embargo", startYear: 1973, series: [
+      { t: -2, year: 1971, value: 4.4 }, { t: -1, year: 1972, value: 3.2 },
+      { t: 0, year: 1973, value: 6.2 },  { t: 1, year: 1974, value: 11.0 },
+      { t: 2, year: 1975, value: 9.1 },  { t: 3, year: 1976, value: 5.8 },
+      { t: 4, year: 1977, value: 6.5 },  { t: 5, year: 1978, value: 7.6 },
+      { t: 6, year: 1979, value: 11.3 }, { t: 7, year: 1980, value: 13.5 },
+      { t: 8, year: 1981, value: 10.3 }, { t: 9, year: 1982, value: 6.2 },
+      { t: 10, year: 1983, value: 3.2 },
+    ] },
+  { conflict: "Black Monday", startYear: 1987, series: [
+      { t: -2, year: 1985, value: 3.6 }, { t: -1, year: 1986, value: 1.9 },
+      { t: 0, year: 1987, value: 3.6 },  { t: 1, year: 1988, value: 4.1 },
+      { t: 2, year: 1989, value: 4.8 },  { t: 3, year: 1990, value: 5.4 },
+      { t: 4, year: 1991, value: 4.2 },  { t: 5, year: 1992, value: 3.0 },
+      { t: 6, year: 1993, value: 3.0 },  { t: 7, year: 1994, value: 2.6 },
+      { t: 8, year: 1995, value: 2.8 },  { t: 9, year: 1996, value: 3.0 },
+      { t: 10, year: 1997, value: 2.3 },
     ] },
   { conflict: "Gulf War", label: "Gulf War (1990)", startYear: 1990,
     series: [
@@ -309,6 +456,15 @@ export const cpiData = [
       { t: 8, year: 2011, value: 3.2 },  { t: 9, year: 2012, value: 2.1 },
       { t: 10, year: 2013, value: 1.5 },
     ] },
+  { conflict: "2008 Crisis", startYear: 2008, series: [
+      { t: -2, year: 2006, value: 3.2 }, { t: -1, year: 2007, value: 2.8 },
+      { t: 0, year: 2008, value: 3.8 },  { t: 1, year: 2009, value: -0.4 },
+      { t: 2, year: 2010, value: 1.6 },  { t: 3, year: 2011, value: 3.2 },
+      { t: 4, year: 2012, value: 2.1 },  { t: 5, year: 2013, value: 1.5 },
+      { t: 6, year: 2014, value: 1.6 },  { t: 7, year: 2015, value: 0.1 },
+      { t: 8, year: 2016, value: 1.3 },  { t: 9, year: 2017, value: 2.1 },
+      { t: 10, year: 2018, value: 2.4 },
+    ] },
   { conflict: "COVID", label: "COVID-19 (2020)", startYear: 2020,
     series: [
       { t: -2, year: 2018, value: 2.4 }, { t: -1, year: 2019, value: 1.8 },
@@ -318,6 +474,15 @@ export const cpiData = [
       { t: 6, year: 2026, value: 2.4 },  { t: 7, year: 2027, value: 2.2 },
       { t: 8, year: 2028, value: 2.1 },  { t: 9, year: 2029, value: 2.0 },
       { t: 10, year: 2030, value: 2.0 },
+    ] },
+  { conflict: "Russia-Ukraine", startYear: 2022, series: [
+      { t: -2, year: 2020, value: 1.2 }, { t: -1, year: 2021, value: 4.7 },
+      { t: 0, year: 2022, value: 8.0 },  { t: 1, year: 2023, value: 4.1 },
+      { t: 2, year: 2024, value: 2.9 },  { t: 3, year: 2025, value: 2.8 },
+      { t: 4, year: 2026, value: 2.4 },  { t: 5, year: 2027, value: 2.2 },
+      { t: 6, year: 2028, value: 2.1 },  { t: 7, year: 2029, value: 2.0 },
+      { t: 8, year: 2030, value: 2.0 },  { t: 9, year: 2031, value: 2.0 },
+      { t: 10, year: 2032, value: 2.0 },
     ] },
 ];
 
@@ -342,6 +507,15 @@ export const debtGdpData = [
       { t: 8, year: 1958, value: 53.6 },  { t: 9, year: 1959, value: 49.2 },
       { t: 10, year: 1960, value: 45.6 },
     ] },
+  { conflict: "Cuban Missile", startYear: 1962, series: [
+      { t: -2, year: 1960, value: 45.6 }, { t: -1, year: 1961, value: 44.0 },
+      { t: 0, year: 1962, value: 42.4 },  { t: 1, year: 1963, value: 40.9 },
+      { t: 2, year: 1964, value: 38.5 },  { t: 3, year: 1965, value: 36.7 },
+      { t: 4, year: 1966, value: 33.8 },  { t: 5, year: 1967, value: 32.9 },
+      { t: 6, year: 1968, value: 33.3 },  { t: 7, year: 1969, value: 29.3 },
+      { t: 8, year: 1970, value: 28.0 },  { t: 9, year: 1971, value: 28.1 },
+      { t: 10, year: 1972, value: 27.4 },
+    ] },
   { conflict: "Vietnam", label: "Vietnam (1964)", startYear: 1964,
     series: [
       { t: -2, year: 1962, value: 42.4 }, { t: -1, year: 1963, value: 40.9 },
@@ -351,6 +525,24 @@ export const debtGdpData = [
       { t: 6, year: 1970, value: 28.0 },  { t: 7, year: 1971, value: 28.1 },
       { t: 8, year: 1972, value: 27.4 },  { t: 9, year: 1973, value: 26.0 },
       { t: 10, year: 1974, value: 23.8 },
+    ] },
+  { conflict: "Oil Embargo", startYear: 1973, series: [
+      { t: -2, year: 1971, value: 28.1 }, { t: -1, year: 1972, value: 27.4 },
+      { t: 0, year: 1973, value: 26.0 },  { t: 1, year: 1974, value: 23.8 },
+      { t: 2, year: 1975, value: 25.3 },  { t: 3, year: 1976, value: 27.5 },
+      { t: 4, year: 1977, value: 27.8 },  { t: 5, year: 1978, value: 27.4 },
+      { t: 6, year: 1979, value: 25.6 },  { t: 7, year: 1980, value: 26.1 },
+      { t: 8, year: 1981, value: 25.8 },  { t: 9, year: 1982, value: 29.0 },
+      { t: 10, year: 1983, value: 33.1 },
+    ] },
+  { conflict: "Black Monday", startYear: 1987, series: [
+      { t: -2, year: 1985, value: 43.8 }, { t: -1, year: 1986, value: 48.1 },
+      { t: 0, year: 1987, value: 49.8 },  { t: 1, year: 1988, value: 50.5 },
+      { t: 2, year: 1989, value: 51.1 },  { t: 3, year: 1990, value: 54.2 },
+      { t: 4, year: 1991, value: 59.9 },  { t: 5, year: 1992, value: 62.4 },
+      { t: 6, year: 1993, value: 63.8 },  { t: 7, year: 1994, value: 63.2 },
+      { t: 8, year: 1995, value: 63.4 },  { t: 9, year: 1996, value: 63.4 },
+      { t: 10, year: 1997, value: 61.3 },
     ] },
   { conflict: "Gulf War", label: "Gulf War (1990)", startYear: 1990,
     series: [
@@ -382,6 +574,15 @@ export const debtGdpData = [
       { t: 8, year: 2011, value: 95.6 },  { t: 9, year: 2012, value: 99.7 },
       { t: 10, year: 2013, value: 100.2 },
     ] },
+  { conflict: "2008 Crisis", startYear: 2008, series: [
+      { t: -2, year: 2006, value: 61.0 }, { t: -1, year: 2007, value: 62.0 },
+      { t: 0, year: 2008, value: 67.7 },  { t: 1, year: 2009, value: 82.4 },
+      { t: 2, year: 2010, value: 91.4 },  { t: 3, year: 2011, value: 95.6 },
+      { t: 4, year: 2012, value: 99.7 },  { t: 5, year: 2013, value: 100.2 },
+      { t: 6, year: 2014, value: 101.0 }, { t: 7, year: 2015, value: 100.5 },
+      { t: 8, year: 2016, value: 105.2 }, { t: 9, year: 2017, value: 103.8 },
+      { t: 10, year: 2018, value: 104.0 },
+    ] },
   { conflict: "COVID", label: "COVID-19 (2020)", startYear: 2020,
     series: [
       { t: -2, year: 2018, value: 104.0 }, { t: -1, year: 2019, value: 106.8 },
@@ -392,11 +593,26 @@ export const debtGdpData = [
       { t: 8, year: 2028, value: 130.0 },  { t: 9, year: 2029, value: 132.0 },
       { t: 10, year: 2030, value: 134.0 },
     ] },
+  { conflict: "Russia-Ukraine", startYear: 2022, series: [
+      { t: -2, year: 2020, value: 128.1 }, { t: -1, year: 2021, value: 124.0 },
+      { t: 0, year: 2022, value: 119.7 },  { t: 1, year: 2023, value: 120.0 },
+      { t: 2, year: 2024, value: 122.3 },  { t: 3, year: 2025, value: 124.0 },
+      { t: 4, year: 2026, value: 126.0 },  { t: 5, year: 2027, value: 128.0 },
+      { t: 6, year: 2028, value: 130.0 },  { t: 7, year: 2029, value: 132.0 },
+      { t: 8, year: 2030, value: 134.0 },  { t: 9, year: 2031, value: 136.0 },
+      { t: 10, year: 2032, value: 138.0 },
+    ] },
 ];
 
 // Flattened for Recharts — one row per time point, column per conflict
-export const BASE_CONFLICTS = ["WWII", "Korea", "Vietnam", "Gulf War", "9/11", "Iraq"];
-export const EXTRA_EVENTS = { COVID: "COVID-19 (2020)" };
+export const BASE_CONFLICTS = [
+  "WWII", "Korea", "Cuban Missile", "Vietnam", "Oil Embargo",
+  "Black Monday", "Gulf War", "9/11", "Iraq", "Russia-Ukraine"
+];
+export const EXTRA_EVENTS = {
+  COVID: "COVID-19 (2020)",
+  "2008 Crisis": "2008 Financial Crisis",
+};
 
 const conflicts = BASE_CONFLICTS;
 const tValues = [-2, -1, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
@@ -443,16 +659,26 @@ export const fiscalSummary = [
     narrative: "Debt peaked at 118% of GDP at T+5, then fell rapidly as postwar GDP boomed. The real inflation shock came after controls were lifted — CPI hit 14.4% in 1947 (T+6), the highest wartime-era reading." },
   { conflict: "Korea", peakCpi: 7.9, debtGdpDelta: -34.6,
     narrative: "Triggered an inflation spike to 7.9% in 1951, but rapid GDP growth from war mobilization cut debt-to-GDP nearly in half over a decade — from 80% to 46%." },
+  { conflict: "Cuban Missile", peakCpi: 5.7, debtGdpDelta: -18.2,
+    narrative: "The crisis had zero lasting fiscal impact — it lasted only 13 days. The CPI trajectory reflects the broader 1960s story: benign inflation early, then accelerating as Vietnam spending heated the economy. Debt/GDP fell steadily as strong GDP growth outpaced modest debt increases." },
   { conflict: "Vietnam", peakCpi: 11.0, debtGdpDelta: -14.7,
     narrative: "The slow burn becomes clear at T+10: inflation crept to 5.5% by 1969, then exploded to 11.0% by 1974 as the oil crisis compounded war-era overheating. Debt/GDP fell steadily on strong nominal GDP growth." },
+  { conflict: "Oil Embargo", peakCpi: 13.5, debtGdpDelta: 7.1,
+    narrative: "Triggered the worst inflation of the 20th century. CPI hit 11% in 1974 immediately after the embargo, briefly subsided, then surged again to 13.5% in 1980 during the second oil shock. Despite this, debt/GDP barely rose — high inflation inflated GDP faster than the government could borrow. The real debt explosion didn't begin until Reagan's tax cuts in the early 1980s." },
+  { conflict: "Black Monday", peakCpi: 5.4, debtGdpDelta: 11.5,
+    narrative: "Black Monday itself had no direct fiscal impact — there was no war spending or emergency stimulus. The crash exposed Reagan-era structural deficits already in progress, and the subsequent S&L crisis (1989-95) added ~$130B in bailout costs. Debt/GDP rose from 50% to 61% over the decade as the Bush and Clinton administrations dealt with the accumulated fiscal damage." },
   { conflict: "Gulf War", peakCpi: 5.4, debtGdpDelta: 0.5,
     narrative: "Inflation peaked at the war's start then steadily declined. Debt/GDP rose through T+3 but the Clinton-era surpluses reversed it — by T+10 it was back to the pre-war level." },
   { conflict: "9/11", peakCpi: 3.8, debtGdpDelta: 41.0,
     narrative: "Moderate inflation masked a fiscal time bomb. Debt/GDP barely moved for 6 years, then the 2008 financial crisis sent it from 62% to 96% in just 4 years — the sharpest peacetime surge in U.S. history." },
   { conflict: "Iraq", peakCpi: 3.8, debtGdpDelta: 40.6,
     narrative: "War costs and the financial crisis combined to push debt from 60% to 100% of GDP in a decade. CPI briefly went negative in 2009 (-0.4%) before stabilizing — the only deflationary year since WWII." },
+  { conflict: "2008 Crisis", peakCpi: 3.8, debtGdpDelta: 36.3,
+    narrative: "The largest peacetime debt surge in US history. Debt/GDP exploded from 68% to 104% as the government spent $700B on TARP, $831B on the Recovery Act, and absorbed Fannie/Freddie's liabilities. CPI briefly went negative (-0.4% in 2009) — the only deflationary year since 1955. The Fed held rates at zero for 7 years (2008-2015). The fiscal damage was so severe that debt/GDP never returned to pre-crisis levels." },
   { conflict: "COVID", peakCpi: 8.0, debtGdpDelta: 21.3,
     narrative: "COVID triggered the largest single-year debt spike since WWII — debt/GDP jumped 21 points in 2020 alone as the government spent over $5 trillion on pandemic relief (CARES Act, PPP, enhanced unemployment, stimulus checks). Inflation was initially suppressed by demand collapse (1.2% in 2020), but exploded to 8.0% by 2022 — the highest since 1981 — driven by supply chain disruptions, labor shortages, and the lagged effect of massive monetary expansion. The Fed's response (rate hikes from 0% to 5.5%) was the most aggressive tightening cycle since Volcker." },
+  { conflict: "Russia-Ukraine", peakCpi: 8.0, debtGdpDelta: 2.6,
+    narrative: "The war's fiscal impact was modest compared to prior conflicts. Energy price spikes drove CPI to 8.0% in 2022 — the highest since 1981 — but this was largely a continuation of COVID-era inflation. The Fed's aggressive rate hikes (0% → 5.5% in 16 months) tamed inflation but increased debt service costs. Debt/GDP actually fell initially as nominal GDP surged with inflation, but is projected to resume climbing." },
 ];
 
 // ── COST OF LIVING DATA ────────────────────────────────────
@@ -511,6 +737,32 @@ export const costOfLivingData = [
     },
   },
   {
+    era: "Oil Embargo", year: 1973, cpiMultiplier: 7.05,
+    items: {
+      home:    { nominal: 32500, adjusted: 229125 },
+      car:     { nominal: 3950, adjusted: 27848 },
+      tuition: { nominal: 500, adjusted: 3525 },
+      income:  { nominal: 10500, adjusted: 74025 },
+      milk:    { nominal: 1.31, adjusted: 9.24 },
+      eggs:    { nominal: 0.78, adjusted: 5.50 },
+      gas:     { nominal: 0.39, adjusted: 2.75 },
+      bread:   { nominal: 0.28, adjusted: 1.97 },
+    },
+  },
+  {
+    era: "Black Monday", year: 1987, cpiMultiplier: 2.75,
+    items: {
+      home:    { nominal: 104500, adjusted: 287375 },
+      car:     { nominal: 12500, adjusted: 34375 },
+      tuition: { nominal: 1350, adjusted: 3713 },
+      income:  { nominal: 26000, adjusted: 71500 },
+      milk:    { nominal: 2.28, adjusted: 6.27 },
+      eggs:    { nominal: 0.78, adjusted: 2.15 },
+      gas:     { nominal: 0.90, adjusted: 2.48 },
+      bread:   { nominal: 0.55, adjusted: 1.51 },
+    },
+  },
+  {
     era: "Gulf War", year: 1990, cpiMultiplier: 2.39,
     items: {
       home:    { nominal: 117000, adjusted: 279630 },
@@ -547,6 +799,19 @@ export const costOfLivingData = [
       eggs:    { nominal: 1.03,   adjusted: 1.75 },
       gas:     { nominal: 1.59,   adjusted: 2.70 },
       bread:   { nominal: 1.05,   adjusted: 1.79 },
+    },
+  },
+  {
+    era: "2008 Crisis", year: 2008, cpiMultiplier: 1.46,
+    items: {
+      home:    { nominal: 198100, adjusted: 289226 },
+      car:     { nominal: 27800, adjusted: 40588 },
+      tuition: { nominal: 6312, adjusted: 9216 },
+      income:  { nominal: 50303, adjusted: 73442 },
+      milk:    { nominal: 3.87, adjusted: 5.65 },
+      eggs:    { nominal: 1.95, adjusted: 2.85 },
+      gas:     { nominal: 3.27, adjusted: 4.77 },
+      bread:   { nominal: 1.37, adjusted: 2.00 },
     },
   },
   {
