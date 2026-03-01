@@ -25,7 +25,7 @@ export default function Header({ compact, onGoHome }) {
   }, [compact]);
 
   return (
-    <header className="text-center mb-10">
+    <header className="text-center mb-10 page-header">
       <h1
         className="animated-gradient-text text-4xl sm:text-5xl font-bold mb-3"
         onClick={onGoHome}

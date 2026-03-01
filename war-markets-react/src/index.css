@@ -241,3 +241,15 @@ body::after {
     grid-template-columns: 1fr;
   }
 }
+
+/* ── Tablet portrait: vertical compression (601px–1024px) ── */
+@media (min-width: 601px) and (max-width: 1024px) {
+  .page-root         { padding-top: 24px !important; padding-bottom: 24px !important; }
+  .page-header       { margin-bottom: 20px !important; }
+  .ticker-strip      { margin-bottom: 8px; }
+  .bento-grid        { gap: 10px; }
+  .glass-card        { padding: 14px; gap: 8px; }
+  .landing-intro     { margin-bottom: 14px !important; line-height: 1.5 !important; }
+  .landing-conclusion      { margin-top: 16px !important; }
+  .landing-conclusion-text { line-height: 1.5 !important; }
+}

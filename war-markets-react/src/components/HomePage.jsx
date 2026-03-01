@@ -3,6 +3,20 @@ import { sp500Data, preWarData, globalMarketsData, costOfLivingData, totalDebtDa
 import { wealthTimeSeries } from "../data/wealthData";
 import { useEventToggle } from "../context/EventToggleContext";
 
+/* ── Tablet detection hook ── */
+function useIsTablet() {
+  const [t, setT] = useState(
+    () => typeof window !== 'undefined' && window.innerWidth >= 601 && window.innerWidth <= 1024
+  );
+  useEffect(() => {
+    const mq = window.matchMedia('(min-width: 601px) and (max-width: 1024px)');
+    const h = (e) => setT(e.matches);
+    mq.addEventListener('change', h);
+    return () => mq.removeEventListener('change', h);
+  }, []);
+  return t;
+}
+
 /* ── AnimatedStat: counts from 0 to final value ── */
 
 function AnimatedStat({ value, color }) {
@@ -175,9 +189,9 @@ function GroupedBarSparkline({ groups, color, width = 120, height = 32, animated
 }
 
 /* ── Card sparkline map ── */
-function CardSparkline({ id, color, filterData, activeConflicts }) {
+function CardSparkline({ id, color, filterData, activeConflicts, isTablet }) {
   const w = 120;
-  const h = 32;
+  const h = isTablet ? 24 : 32;
 
   const reactionValues = useMemo(() => filterData(sp500Data).map(d => d.decline), [filterData]);
   const buildupValues = useMemo(() => filterData(preWarData).map(d => d.spChange), [filterData]);
@@ -527,6 +541,7 @@ export { formatPrice, timeAgo, useMarketData };
 export default function HomePage({ onSelect }) {
   const { filterData, activeConflicts } = useEventToggle();
   const { assets, updatedAt, loading } = useMarketData();
+  const isTablet = useIsTablet();
 
   return (
     <div style={{ maxWidth: 900, margin: "0 auto", position: "relative", overflow: "hidden" }}>
@@ -539,7 +554,7 @@ export default function HomePage({ onSelect }) {
       <TickerStrip assets={assets} updatedAt={updatedAt} loading={loading} />
 
       {/* Intro paragraph */}
-      <p style={{
+      <p className="landing-intro" style={{
         fontSize: 14,
         color: "#94A3B8",
         lineHeight: 1.75,
@@ -596,7 +611,7 @@ export default function HomePage({ onSelect }) {
             {/* Sparkline */}
             {c.id !== "methodology" && (
               <div style={{ marginTop: -4, marginBottom: -4 }}>
-                <CardSparkline id={c.id} color={c.color} filterData={filterData} activeConflicts={activeConflicts} />
+                <CardSparkline id={c.id} color={c.color} filterData={filterData} activeConflicts={activeConflicts} isTablet={isTablet} />
               </div>
             )}
 
@@ -629,12 +644,12 @@ export default function HomePage({ onSelect }) {
       </div>
 
       {/* Conclusion */}
-      <div style={{
+      <div className="landing-conclusion" style={{
         maxWidth: 720,
         margin: "36px auto 0",
         textAlign: "center",
       }}>
-        <p style={{
+        <p className="landing-conclusion-text" style={{
           fontSize: 14,
           color: "#94A3B8",
           lineHeight: 1.75,

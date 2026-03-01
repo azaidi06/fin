@@ -185,7 +185,7 @@ function AppInner() {
   const filteredNasdaq = filterData(nasdaqData);
 
   return (
-    <div className="min-h-screen px-4 py-10 sm:px-6 lg:px-8" style={{ color: "#F8FAFC" }}>
+    <div className="page-root min-h-screen px-4 py-10 sm:px-6 lg:px-8" style={{ color: "#F8FAFC" }}>
       <div className="max-w-[960px] mx-auto">
         <Header compact={activeTab === "home"} onGoHome={activeTab !== "home" ? goHome : undefined} />
 
