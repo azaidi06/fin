@@ -1,0 +1,37 @@
+name: Update Market Data
+
+on:
+  schedule:
+    # Every 15 min, Mon-Fri, 9am-4pm ET (14:00-21:00 UTC)
+    - cron: '*/15 14-21 * * 1-5'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+          cache-dependency-path: war-markets-react/package-lock.json
+
+      - name: Install dependencies
+        run: npm ci
+        working-directory: war-markets-react
+
+      - name: Fetch market data
+        run: node scripts/fetch_market_data.mjs
+        working-directory: war-markets-react
+
+      - name: Commit and push if changed
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add war-markets-react/public/market-data.json
+          git diff --cached --quiet || (git commit -m "Update market data" && git push)

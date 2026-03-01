@@ -29,6 +29,10 @@ jobs:
         run: npm ci
         working-directory: war-markets-react
 
+      - name: Fetch market data
+        run: node scripts/fetch_market_data.mjs || echo "Market data fetch skipped"
+        working-directory: war-markets-react
+
       - name: Build
         run: npm run build
         working-directory: war-markets-react
