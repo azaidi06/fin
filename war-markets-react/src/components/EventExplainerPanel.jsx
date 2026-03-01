@@ -306,11 +306,17 @@ function EventCard({ conflict, sp, preWar, global, fiscal, context, isExpanded, 
       {isExpanded && (
         <div style={{
           padding: "0 24px 24px",
-          borderTop: "1px solid #1E293B",
         }}>
+          {/* Separator */}
+          <div style={{
+            borderTop: "1px solid #1E293B",
+            margin: "0 -24px",
+            padding: "0 24px",
+          }} />
+
           {/* Why It Matters */}
-          <div style={{ marginBottom: 20 }}>
-            <h4 style={{ fontSize: 13, fontWeight: 600, color, textTransform: "uppercase", letterSpacing: "0.05em", marginBottom: 10 }}>
+          <div style={{ marginBottom: 20, marginTop: 20 }}>
+            <h4 style={{ fontSize: 14, fontWeight: 600, color, textTransform: "uppercase", letterSpacing: "0.05em", marginBottom: 12 }}>
               Why It Should Be Considered
             </h4>
             <ul style={{ margin: 0, paddingLeft: 18, listStyleType: "none" }}>
