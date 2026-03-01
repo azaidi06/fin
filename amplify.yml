@@ -3,9 +3,13 @@ frontend:
   phases:
     preBuild:
       commands:
+        - nvm install 20
+        - nvm use 20
+        - node -v
         - npm ci --prefix war-markets-react
     build:
       commands:
+        - cd war-markets-react && node scripts/fetch_market_data.mjs || echo "Market data fetch skipped"
         - npm run build --prefix war-markets-react
     postBuild:
       commands:
