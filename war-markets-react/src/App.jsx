@@ -39,13 +39,21 @@ const sourceCategory = { marginBottom: 12 };
 const sourceCatLabel = { fontSize: 11, fontWeight: 600, color: "#94A3B8", textTransform: "uppercase", letterSpacing: "0.05em", marginBottom: 4 };
 const sourceList = { fontSize: 11, color: "#64748B", lineHeight: 1.6, margin: 0 };
 
-function ToggleRow() {
+function TogglePill() {
   const { toggles, toggle } = useEventToggle();
   const entries = Object.entries(EXTRA_EVENTS);
   if (entries.length === 0) return null;
 
   return (
-    <div style={{ display: "flex", justifyContent: "center", gap: 8, marginBottom: 16 }}>
+    <div style={{
+      position: "fixed",
+      top: 16,
+      right: 16,
+      zIndex: 50,
+      display: "flex",
+      flexDirection: "column",
+      gap: 6,
+    }}>
       {entries.map(([key, label]) => {
         const on = toggles[key];
         return (
@@ -60,11 +68,16 @@ function ToggleRow() {
               fontSize: 12,
               fontWeight: 500,
               color: on ? "#06B6D4" : "#64748B",
-              background: on ? "rgba(6,182,212,0.10)" : "rgba(255,255,255,0.03)",
+              background: on ? "rgba(6,182,212,0.12)" : "rgba(15,23,42,0.85)",
+              backdropFilter: "blur(12px)",
+              WebkitBackdropFilter: "blur(12px)",
               border: `1px solid ${on ? "rgba(6,182,212,0.3)" : "#334155"}`,
               borderRadius: 20,
               cursor: "pointer",
               transition: "all 0.2s ease",
+              boxShadow: on
+                ? "0 0 12px rgba(6,182,212,0.2)"
+                : "0 2px 8px rgba(0,0,0,0.3)",
             }}
           >
             <span
@@ -113,10 +126,9 @@ function AppInner() {
 
   return (
     <div className="min-h-screen px-4 py-10 sm:px-6 lg:px-8" style={{ color: "#F8FAFC" }}>
+      <TogglePill />
       <div className="max-w-[960px] mx-auto">
         <Header compact={activeTab === "home"} />
-
-        <ToggleRow />
 
         {activeTab === "home" ? (
           <HomePage onSelect={setActiveTab} />
