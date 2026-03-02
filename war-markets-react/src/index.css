@@ -179,7 +179,7 @@ body::after {
 }
 
 .animated-gradient-text {
-  background: linear-gradient(135deg, #818CF8, #34D399, #818CF8, #A78BFA);
+  background: linear-gradient(135deg, #34D399, #F8FAFC, #EF4444, #F8FAFC);
   background-size: 300% 300%;
   animation: textGradientShift 6s ease infinite;
   -webkit-background-clip: text;
