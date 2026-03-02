@@ -4,12 +4,14 @@ import OverviewCards from "./components/OverviewCards";
 import AnnualChart from "./components/AnnualChart";
 import GrowthChart from "./components/GrowthChart";
 import CompanyDetail from "./components/CompanyDetail";
+import UnderTheHood from "./components/UnderTheHood";
 
 const TABS = [
   { id: "overview", label: "Overview" },
   { id: "annual", label: "Annual Spending" },
   { id: "growth", label: "YoY Growth" },
   { id: "company", label: "Company Details" },
+  { id: "accounting", label: "Under the Hood" },
 ];
 
 export default function App() {
@@ -79,6 +81,7 @@ export default function App() {
         {tab === "annual" && <AnnualChart data={data} />}
         {tab === "growth" && <GrowthChart data={data} />}
         {tab === "company" && <CompanyDetail data={data} />}
+        {tab === "accounting" && <UnderTheHood />}
 
         {/* Footer */}
         <footer style={{ textAlign: "center", marginTop: 48, paddingTop: 24 }}>
