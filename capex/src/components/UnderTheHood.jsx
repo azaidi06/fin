@@ -21,7 +21,7 @@ import {
   freeCashFlow,
   capexVsCashFlow,
   revenueGap,
-  annotations,
+  commentaryThemes,
 } from "../data/accountingData";
 
 const COMPANY_COLORS = {
@@ -303,35 +303,32 @@ function RevenueGapChart() {
 }
 
 /* ── Quote card ── */
-function QuoteCard({ annotation, index }) {
-  const colorMap = { burry: "#EF4444", sequoia: "#F59E0B", "meta-ey": "#0668E1", "amazon-reversal": "#FF9900" };
-  const color = colorMap[annotation.id] || "#818CF8";
-
+function QuoteCard({ entry, color, delay }) {
   return (
     <div
-      className={`glass-card card-enter card-enter-${index + 6}`}
+      className={`glass-card card-enter card-enter-${delay}`}
       style={{
         "--card-glow": `linear-gradient(135deg, ${color}4D, transparent 60%)`,
         cursor: "default",
       }}
     >
-      <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 4 }}>
+      <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 4, flexWrap: "wrap" }}>
         <div style={{ width: 8, height: 8, borderRadius: 2, background: color, flexShrink: 0 }} />
-        <span style={{ fontSize: 13, fontWeight: 700, color: "#F8FAFC" }}>{annotation.author}</span>
-        <span style={{ fontSize: 11, color: "#64748B" }}>{annotation.role}</span>
+        <span style={{ fontSize: 13, fontWeight: 700, color: "#F8FAFC" }}>{entry.author}</span>
+        <span style={{ fontSize: 11, color: "#64748B" }}>{entry.role}</span>
       </div>
       <p style={{ fontSize: 13, color: "#CBD5E1", lineHeight: 1.6, margin: 0, fontStyle: "italic" }}>
-        &ldquo;{annotation.quote}&rdquo;
+        &ldquo;{entry.quote}&rdquo;
       </p>
-      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginTop: 4 }}>
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginTop: 4, flexWrap: "wrap", gap: 8 }}>
         <span style={{
           fontSize: 11, fontWeight: 600, color, background: `${color}1A`,
           padding: "3px 10px", borderRadius: 5,
         }}>
-          {annotation.metric}
+          {entry.metric}
         </span>
         <a
-          href={annotation.source}
+          href={entry.source}
           target="_blank"
           rel="noopener noreferrer"
           onClick={(e) => e.stopPropagation()}
@@ -339,6 +336,28 @@ function QuoteCard({ annotation, index }) {
         >
           Source
         </a>
+      </div>
+    </div>
+  );
+}
+
+/* ── Themed commentary section ── */
+function CommentarySection({ theme, color, entries, baseDelay }) {
+  return (
+    <div style={{ marginBottom: 32 }}>
+      <div className={`card-enter card-enter-${baseDelay}`} style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 14 }}>
+        <div style={{ width: 12, height: 12, borderRadius: 3, background: color, flexShrink: 0 }} />
+        <h3 style={{ fontSize: 16, fontWeight: 700, color: "#F8FAFC", margin: 0 }}>{theme}</h3>
+      </div>
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gap: 14 }}>
+        {entries.map((entry, i) => (
+          <QuoteCard
+            key={`${entry.author}-${i}`}
+            entry={entry}
+            color={color}
+            delay={Math.min(baseDelay + i + 1, 10)}
+          />
+        ))}
       </div>
     </div>
   );
@@ -412,21 +431,30 @@ export default function UnderTheHood() {
         <RevenueGapChart />
       </Section>
 
-      {/* 6. Expert commentary */}
-      <h3
+      {/* Divider before commentary */}
+      <div className="glow-divider" style={{ margin: "40px auto 36px", width: "60%" }} />
+
+      {/* 6. Themed commentary sections */}
+      <h2
         className="card-enter card-enter-6"
-        style={{ fontSize: 17, fontWeight: 700, color: "#F8FAFC", marginBottom: 4, marginTop: 8 }}
+        style={{ fontSize: 20, fontWeight: 700, color: "#F8FAFC", marginBottom: 4 }}
       >
         What the Critics Are Saying
-      </h3>
-      <p className="card-enter card-enter-6" style={{ fontSize: 13, color: "#94A3B8", marginBottom: 16 }}>
-        Investors, auditors, and analysts raising red flags.
+      </h2>
+      <p className="card-enter card-enter-6" style={{ fontSize: 13, color: "#94A3B8", marginBottom: 28, maxWidth: 700 }}>
+        Hedge fund managers, forensic accountants, independent researchers, and academics
+        questioning the numbers behind the AI infrastructure boom — all with sourced links.
       </p>
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gap: 14 }}>
-        {annotations.map((a, i) => (
-          <QuoteCard key={a.id} annotation={a} index={i} />
-        ))}
-      </div>
+
+      {commentaryThemes.map((group, gi) => (
+        <CommentarySection
+          key={group.theme}
+          theme={group.theme}
+          color={group.color}
+          entries={group.entries}
+          baseDelay={Math.min(7 + gi, 10)}
+        />
+      ))}
     </div>
   );
 }
