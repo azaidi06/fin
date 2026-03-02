@@ -39,10 +39,23 @@ jobs:
         run: npm run build
         working-directory: war-markets-react
 
+      - name: Install capex dependencies
+        run: npm install
+        working-directory: capex
+
+      - name: Fetch capex data
+        run: node scripts/fetch_capex_data.mjs || echo "Capex data fetch skipped"
+        working-directory: capex
+
+      - name: Build capex dashboard
+        run: npm run build
+        working-directory: capex
+
       - name: Assemble site
         run: |
           mkdir -p _site
           cp -r war-markets-react/dist/* _site/
+          cp -r capex/dist _site/capex
 
       - uses: actions/upload-pages-artifact@v3
         with:

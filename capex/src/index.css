@@ -1,0 +1,181 @@
+@import "tailwindcss";
+
+/* ── Animated background gradient ── */
+@keyframes gradientShift {
+  0%   { background-position: 0% 50%; }
+  25%  { background-position: 50% 100%; }
+  50%  { background-position: 100% 50%; }
+  75%  { background-position: 50% 0%; }
+  100% { background-position: 0% 50%; }
+}
+
+body {
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  background: linear-gradient(135deg, #0F172A, #1a1040, #0F172A, #0d1f2d);
+  background-size: 400% 400%;
+  animation: gradientShift 15s ease infinite;
+  color: #F8FAFC;
+  margin: 0;
+  padding: 0;
+}
+
+/* ── Noise texture overlay ── */
+body::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  pointer-events: none;
+  opacity: 0.03;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-repeat: repeat;
+}
+
+/* ── Card entrance animations ── */
+@keyframes fadeSlideUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.card-enter {
+  opacity: 0;
+  animation: fadeSlideUp 0.5s ease forwards;
+}
+.card-enter-0 { animation-delay: 0ms; }
+.card-enter-1 { animation-delay: 80ms; }
+.card-enter-2 { animation-delay: 160ms; }
+.card-enter-3 { animation-delay: 240ms; }
+.card-enter-4 { animation-delay: 320ms; }
+.card-enter-5 { animation-delay: 400ms; }
+.card-enter-6 { animation-delay: 480ms; }
+.card-enter-7 { animation-delay: 560ms; }
+.card-enter-8 { animation-delay: 640ms; }
+.card-enter-9 { animation-delay: 720ms; }
+.card-enter-10 { animation-delay: 800ms; }
+
+/* ── Glassmorphism card ── */
+.glass-card {
+  position: relative;
+  background: rgba(30, 41, 59, 0.5);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 16px;
+  padding: 24px;
+  transition: transform 0.3s ease, box-shadow 0.3s ease, background 0.3s ease;
+  text-align: left;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+/* Gradient border glow pseudo-element */
+.glass-card::before {
+  content: "";
+  position: absolute;
+  inset: -1px;
+  border-radius: 17px;
+  padding: 1px;
+  background: var(--card-glow);
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.glass-card:hover::before {
+  opacity: 1;
+}
+
+.glass-card:hover {
+  transform: scale(1.02);
+  background: rgba(36, 48, 68, 0.6);
+}
+
+/* ── Sparkline bar grow animation ── */
+@keyframes barGrow {
+  from { transform: scaleY(0); }
+  to { transform: scaleY(1); }
+}
+
+.sparkline-bar {
+  transform-origin: bottom;
+  transform: scaleY(0);
+  animation: barGrow 0.6s ease-out forwards;
+}
+
+/* ── Text gradient shift (header title) ── */
+@keyframes textGradientShift {
+  0%   { background-position: 0% 50%; }
+  50%  { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+.animated-gradient-text {
+  background: linear-gradient(135deg, #6366F1, #F8FAFC, #34D399, #F8FAFC);
+  background-size: 300% 300%;
+  animation: textGradientShift 6s ease infinite;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* ── Glowing divider ── */
+.glow-divider {
+  width: 50%;
+  height: 1px;
+  margin: 12px auto 0;
+  background: linear-gradient(90deg, transparent, #818CF8, #34D399, transparent);
+  opacity: 0.4;
+  border: none;
+}
+
+/* ── Bento grid layout ── */
+.bento-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 14px;
+}
+
+/* ── Ambient glow orb float ── */
+@keyframes float {
+  0%, 100% { transform: translate(0, 0); }
+  33% { transform: translate(30px, -20px); }
+  66% { transform: translate(-20px, 15px); }
+}
+
+/* ── Counter animation ── */
+@keyframes countUp {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* ── Recharts customizations ── */
+.recharts-cartesian-grid line {
+  stroke: rgba(255, 255, 255, 0.06);
+}
+
+.recharts-tooltip-wrapper {
+  outline: none;
+}
+
+/* ── Responsive ── */
+@media (max-width: 600px) {
+  .bento-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (min-width: 601px) and (max-width: 1024px) {
+  .bento-grid { gap: 10px; }
+  .glass-card { padding: 16px; gap: 8px; }
+}

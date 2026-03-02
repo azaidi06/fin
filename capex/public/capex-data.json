@@ -1,0 +1,2395 @@
+{
+  "updatedAt": "2026-03-02T01:20:12.884Z",
+  "source": "SEC-EDGAR",
+  "companies": [
+    {
+      "ticker": "MSFT",
+      "name": "Microsoft",
+      "cik": "0000789019",
+      "fiscalYearEnd": "June",
+      "quarterly": [
+        {
+          "period": "CY2008Q3",
+          "calendarYear": 2008,
+          "calendarQuarter": 3,
+          "value": 778000000,
+          "valueBillions": 0.78,
+          "endDate": "2008-09-30"
+        },
+        {
+          "period": "CY2008Q4",
+          "calendarYear": 2008,
+          "calendarQuarter": 4,
+          "value": 842000000,
+          "valueBillions": 0.84,
+          "endDate": "2008-12-31"
+        },
+        {
+          "period": "CY2009Q1",
+          "calendarYear": 2009,
+          "calendarQuarter": 1,
+          "value": 632000000,
+          "valueBillions": 0.63,
+          "endDate": "2009-03-31"
+        },
+        {
+          "period": "CY2009Q3",
+          "calendarYear": 2009,
+          "calendarQuarter": 3,
+          "value": 435000000,
+          "valueBillions": 0.44,
+          "endDate": "2009-09-30"
+        },
+        {
+          "period": "CY2009Q4",
+          "calendarYear": 2009,
+          "calendarQuarter": 4,
+          "value": 376000000,
+          "valueBillions": 0.38,
+          "endDate": "2009-12-31"
+        },
+        {
+          "period": "CY2010Q1",
+          "calendarYear": 2010,
+          "calendarQuarter": 1,
+          "value": 408000000,
+          "valueBillions": 0.41,
+          "endDate": "2010-03-31"
+        },
+        {
+          "period": "CY2010Q3",
+          "calendarYear": 2010,
+          "calendarQuarter": 3,
+          "value": 564000000,
+          "valueBillions": 0.56,
+          "endDate": "2010-09-30"
+        },
+        {
+          "period": "CY2010Q4",
+          "calendarYear": 2010,
+          "calendarQuarter": 4,
+          "value": 491000000,
+          "valueBillions": 0.49,
+          "endDate": "2010-12-31"
+        },
+        {
+          "period": "CY2011Q1",
+          "calendarYear": 2011,
+          "calendarQuarter": 1,
+          "value": 658000000,
+          "valueBillions": 0.66,
+          "endDate": "2011-03-31"
+        },
+        {
+          "period": "CY2011Q3",
+          "calendarYear": 2011,
+          "calendarQuarter": 3,
+          "value": 436000000,
+          "valueBillions": 0.44,
+          "endDate": "2011-09-30"
+        },
+        {
+          "period": "CY2011Q4",
+          "calendarYear": 2011,
+          "calendarQuarter": 4,
+          "value": 498000000,
+          "valueBillions": 0.5,
+          "endDate": "2011-12-31"
+        },
+        {
+          "period": "CY2012Q1",
+          "calendarYear": 2012,
+          "calendarQuarter": 1,
+          "value": 749000000,
+          "valueBillions": 0.75,
+          "endDate": "2012-03-31"
+        },
+        {
+          "period": "CY2012Q3",
+          "calendarYear": 2012,
+          "calendarQuarter": 3,
+          "value": 603000000,
+          "valueBillions": 0.6,
+          "endDate": "2012-09-30"
+        },
+        {
+          "period": "CY2012Q4",
+          "calendarYear": 2012,
+          "calendarQuarter": 4,
+          "value": 930000000,
+          "valueBillions": 0.93,
+          "endDate": "2012-12-31"
+        },
+        {
+          "period": "CY2013Q1",
+          "calendarYear": 2013,
+          "calendarQuarter": 1,
+          "value": 930000000,
+          "valueBillions": 0.93,
+          "endDate": "2013-03-31"
+        },
+        {
+          "period": "CY2013Q3",
+          "calendarYear": 2013,
+          "calendarQuarter": 3,
+          "value": 1231000000,
+          "valueBillions": 1.23,
+          "endDate": "2013-09-30"
+        },
+        {
+          "period": "CY2013Q4",
+          "calendarYear": 2013,
+          "calendarQuarter": 4,
+          "value": 1732000000,
+          "valueBillions": 1.73,
+          "endDate": "2013-12-31"
+        },
+        {
+          "period": "CY2014Q1",
+          "calendarYear": 2014,
+          "calendarQuarter": 1,
+          "value": 1192000000,
+          "valueBillions": 1.19,
+          "endDate": "2014-03-31"
+        },
+        {
+          "period": "CY2014Q3",
+          "calendarYear": 2014,
+          "calendarQuarter": 3,
+          "value": 1282000000,
+          "valueBillions": 1.28,
+          "endDate": "2014-09-30"
+        },
+        {
+          "period": "CY2014Q4",
+          "calendarYear": 2014,
+          "calendarQuarter": 4,
+          "value": 1490000000,
+          "valueBillions": 1.49,
+          "endDate": "2014-12-31"
+        },
+        {
+          "period": "CY2015Q1",
+          "calendarYear": 2015,
+          "calendarQuarter": 1,
+          "value": 1391000000,
+          "valueBillions": 1.39,
+          "endDate": "2015-03-31"
+        },
+        {
+          "period": "CY2015Q3",
+          "calendarYear": 2015,
+          "calendarQuarter": 3,
+          "value": 1356000000,
+          "valueBillions": 1.36,
+          "endDate": "2015-09-30"
+        },
+        {
+          "period": "CY2015Q4",
+          "calendarYear": 2015,
+          "calendarQuarter": 4,
+          "value": 2024000000,
+          "valueBillions": 2.02,
+          "endDate": "2015-12-31"
+        },
+        {
+          "period": "CY2016Q1",
+          "calendarYear": 2016,
+          "calendarQuarter": 1,
+          "value": 2308000000,
+          "valueBillions": 2.31,
+          "endDate": "2016-03-31"
+        },
+        {
+          "period": "CY2016Q3",
+          "calendarYear": 2016,
+          "calendarQuarter": 3,
+          "value": 2163000000,
+          "valueBillions": 2.16,
+          "endDate": "2016-09-30"
+        },
+        {
+          "period": "CY2016Q4",
+          "calendarYear": 2016,
+          "calendarQuarter": 4,
+          "value": 1988000000,
+          "valueBillions": 1.99,
+          "endDate": "2016-12-31"
+        },
+        {
+          "period": "CY2017Q1",
+          "calendarYear": 2017,
+          "calendarQuarter": 1,
+          "value": 1695000000,
+          "valueBillions": 1.7,
+          "endDate": "2017-03-31"
+        },
+        {
+          "period": "CY2017Q3",
+          "calendarYear": 2017,
+          "calendarQuarter": 3,
+          "value": 2132000000,
+          "valueBillions": 2.13,
+          "endDate": "2017-09-30"
+        },
+        {
+          "period": "CY2017Q4",
+          "calendarYear": 2017,
+          "calendarQuarter": 4,
+          "value": 2586000000,
+          "valueBillions": 2.59,
+          "endDate": "2017-12-31"
+        },
+        {
+          "period": "CY2018Q1",
+          "calendarYear": 2018,
+          "calendarQuarter": 1,
+          "value": 2934000000,
+          "valueBillions": 2.93,
+          "endDate": "2018-03-31"
+        },
+        {
+          "period": "CY2018Q3",
+          "calendarYear": 2018,
+          "calendarQuarter": 3,
+          "value": 3602000000,
+          "valueBillions": 3.6,
+          "endDate": "2018-09-30"
+        },
+        {
+          "period": "CY2018Q4",
+          "calendarYear": 2018,
+          "calendarQuarter": 4,
+          "value": 3707000000,
+          "valueBillions": 3.71,
+          "endDate": "2018-12-31"
+        },
+        {
+          "period": "CY2019Q1",
+          "calendarYear": 2019,
+          "calendarQuarter": 1,
+          "value": 2565000000,
+          "valueBillions": 2.57,
+          "endDate": "2019-03-31"
+        },
+        {
+          "period": "CY2019Q3",
+          "calendarYear": 2019,
+          "calendarQuarter": 3,
+          "value": 3385000000,
+          "valueBillions": 3.39,
+          "endDate": "2019-09-30"
+        },
+        {
+          "period": "CY2019Q4",
+          "calendarYear": 2019,
+          "calendarQuarter": 4,
+          "value": 3545000000,
+          "valueBillions": 3.55,
+          "endDate": "2019-12-31"
+        },
+        {
+          "period": "CY2020Q1",
+          "calendarYear": 2020,
+          "calendarQuarter": 1,
+          "value": 3767000000,
+          "valueBillions": 3.77,
+          "endDate": "2020-03-31"
+        },
+        {
+          "period": "CY2020Q3",
+          "calendarYear": 2020,
+          "calendarQuarter": 3,
+          "value": 4907000000,
+          "valueBillions": 4.91,
+          "endDate": "2020-09-30"
+        },
+        {
+          "period": "CY2020Q4",
+          "calendarYear": 2020,
+          "calendarQuarter": 4,
+          "value": 4174000000,
+          "valueBillions": 4.17,
+          "endDate": "2020-12-31"
+        },
+        {
+          "period": "CY2021Q1",
+          "calendarYear": 2021,
+          "calendarQuarter": 1,
+          "value": 5089000000,
+          "valueBillions": 5.09,
+          "endDate": "2021-03-31"
+        },
+        {
+          "period": "CY2021Q3",
+          "calendarYear": 2021,
+          "calendarQuarter": 3,
+          "value": 5810000000,
+          "valueBillions": 5.81,
+          "endDate": "2021-09-30"
+        },
+        {
+          "period": "CY2021Q4",
+          "calendarYear": 2021,
+          "calendarQuarter": 4,
+          "value": 5865000000,
+          "valueBillions": 5.87,
+          "endDate": "2021-12-31"
+        },
+        {
+          "period": "CY2022Q1",
+          "calendarYear": 2022,
+          "calendarQuarter": 1,
+          "value": 5340000000,
+          "valueBillions": 5.34,
+          "endDate": "2022-03-31"
+        },
+        {
+          "period": "CY2022Q3",
+          "calendarYear": 2022,
+          "calendarQuarter": 3,
+          "value": 6283000000,
+          "valueBillions": 6.28,
+          "endDate": "2022-09-30"
+        },
+        {
+          "period": "CY2022Q4",
+          "calendarYear": 2022,
+          "calendarQuarter": 4,
+          "value": 6274000000,
+          "valueBillions": 6.27,
+          "endDate": "2022-12-31"
+        },
+        {
+          "period": "CY2023Q1",
+          "calendarYear": 2023,
+          "calendarQuarter": 1,
+          "value": 6607000000,
+          "valueBillions": 6.61,
+          "endDate": "2023-03-31"
+        },
+        {
+          "period": "CY2023Q3",
+          "calendarYear": 2023,
+          "calendarQuarter": 3,
+          "value": 9917000000,
+          "valueBillions": 9.92,
+          "endDate": "2023-09-30"
+        },
+        {
+          "period": "CY2023Q4",
+          "calendarYear": 2023,
+          "calendarQuarter": 4,
+          "value": 9735000000,
+          "valueBillions": 9.74,
+          "endDate": "2023-12-31"
+        },
+        {
+          "period": "CY2024Q1",
+          "calendarYear": 2024,
+          "calendarQuarter": 1,
+          "value": 10952000000,
+          "valueBillions": 10.95,
+          "endDate": "2024-03-31"
+        },
+        {
+          "period": "CY2024Q3",
+          "calendarYear": 2024,
+          "calendarQuarter": 3,
+          "value": 14923000000,
+          "valueBillions": 14.92,
+          "endDate": "2024-09-30"
+        },
+        {
+          "period": "CY2024Q4",
+          "calendarYear": 2024,
+          "calendarQuarter": 4,
+          "value": 15804000000,
+          "valueBillions": 15.8,
+          "endDate": "2024-12-31"
+        },
+        {
+          "period": "CY2025Q1",
+          "calendarYear": 2025,
+          "calendarQuarter": 1,
+          "value": 16745000000,
+          "valueBillions": 16.75,
+          "endDate": "2025-03-31"
+        },
+        {
+          "period": "CY2025Q3",
+          "calendarYear": 2025,
+          "calendarQuarter": 3,
+          "value": 19394000000,
+          "valueBillions": 19.39,
+          "endDate": "2025-09-30"
+        },
+        {
+          "period": "CY2025Q4",
+          "calendarYear": 2025,
+          "calendarQuarter": 4,
+          "value": 29876000000,
+          "valueBillions": 29.88,
+          "endDate": "2025-12-31"
+        }
+      ],
+      "annual": [
+        {
+          "period": "CY2008",
+          "calendarYear": 2008,
+          "value": 3182000000,
+          "valueBillions": 3.18,
+          "endDate": "2008-06-30"
+        },
+        {
+          "period": "CY2009",
+          "calendarYear": 2009,
+          "value": 3119000000,
+          "valueBillions": 3.12,
+          "endDate": "2009-06-30",
+          "yoyGrowthPct": -1.98
+        },
+        {
+          "period": "CY2010",
+          "calendarYear": 2010,
+          "value": 1977000000,
+          "valueBillions": 1.98,
+          "endDate": "2010-06-30",
+          "yoyGrowthPct": -36.61
+        },
+        {
+          "period": "CY2011",
+          "calendarYear": 2011,
+          "value": 2355000000,
+          "valueBillions": 2.36,
+          "endDate": "2011-06-30",
+          "yoyGrowthPct": 19.12
+        },
+        {
+          "period": "CY2012",
+          "calendarYear": 2012,
+          "value": 2305000000,
+          "valueBillions": 2.31,
+          "endDate": "2012-06-30",
+          "yoyGrowthPct": -2.12
+        },
+        {
+          "period": "CY2013",
+          "calendarYear": 2013,
+          "value": 4257000000,
+          "valueBillions": 4.26,
+          "endDate": "2013-06-30",
+          "yoyGrowthPct": 84.69
+        },
+        {
+          "period": "CY2014",
+          "calendarYear": 2014,
+          "value": 5485000000,
+          "valueBillions": 5.49,
+          "endDate": "2014-06-30",
+          "yoyGrowthPct": 28.85
+        },
+        {
+          "period": "CY2015",
+          "calendarYear": 2015,
+          "value": 5944000000,
+          "valueBillions": 5.94,
+          "endDate": "2015-06-30",
+          "yoyGrowthPct": 8.37
+        },
+        {
+          "period": "CY2016",
+          "calendarYear": 2016,
+          "value": 8343000000,
+          "valueBillions": 8.34,
+          "endDate": "2016-06-30",
+          "yoyGrowthPct": 40.36
+        },
+        {
+          "period": "CY2017",
+          "calendarYear": 2017,
+          "value": 8129000000,
+          "valueBillions": 8.13,
+          "endDate": "2017-06-30",
+          "yoyGrowthPct": -2.57
+        },
+        {
+          "period": "CY2018",
+          "calendarYear": 2018,
+          "value": 11632000000,
+          "valueBillions": 11.63,
+          "endDate": "2018-06-30",
+          "yoyGrowthPct": 43.09
+        },
+        {
+          "period": "CY2019",
+          "calendarYear": 2019,
+          "value": 13925000000,
+          "valueBillions": 13.93,
+          "endDate": "2019-06-30",
+          "yoyGrowthPct": 19.71
+        },
+        {
+          "period": "CY2020",
+          "calendarYear": 2020,
+          "value": 15441000000,
+          "valueBillions": 15.44,
+          "endDate": "2020-06-30",
+          "yoyGrowthPct": 10.89
+        },
+        {
+          "period": "CY2021",
+          "calendarYear": 2021,
+          "value": 20622000000,
+          "valueBillions": 20.62,
+          "endDate": "2021-06-30",
+          "yoyGrowthPct": 33.55
+        },
+        {
+          "period": "CY2022",
+          "calendarYear": 2022,
+          "value": 23886000000,
+          "valueBillions": 23.89,
+          "endDate": "2022-06-30",
+          "yoyGrowthPct": 15.83
+        },
+        {
+          "period": "CY2023",
+          "calendarYear": 2023,
+          "value": 28107000000,
+          "valueBillions": 28.11,
+          "endDate": "2023-06-30",
+          "yoyGrowthPct": 17.67
+        },
+        {
+          "period": "CY2024",
+          "calendarYear": 2024,
+          "value": 44477000000,
+          "valueBillions": 44.48,
+          "endDate": "2024-06-30",
+          "yoyGrowthPct": 58.24
+        },
+        {
+          "period": "CY2025",
+          "calendarYear": 2025,
+          "value": 64551000000,
+          "valueBillions": 64.55,
+          "endDate": "2025-06-30",
+          "yoyGrowthPct": 45.13
+        }
+      ],
+      "latestQuarter": {
+        "period": "CY2025Q4",
+        "calendarYear": 2025,
+        "calendarQuarter": 4,
+        "value": 29876000000,
+        "valueBillions": 29.88,
+        "endDate": "2025-12-31"
+      },
+      "latestAnnual": {
+        "period": "CY2025",
+        "calendarYear": 2025,
+        "value": 64551000000,
+        "valueBillions": 64.55,
+        "endDate": "2025-06-30",
+        "yoyGrowthPct": 45.13
+      },
+      "trailingTwelveMonths": null
+    },
+    {
+      "ticker": "GOOGL",
+      "name": "Alphabet",
+      "cik": "0001652044",
+      "fiscalYearEnd": "Dec",
+      "quarterly": [
+        {
+          "period": "CY2015Q1",
+          "calendarYear": 2015,
+          "calendarQuarter": 1,
+          "value": 2927000000,
+          "valueBillions": 2.93,
+          "endDate": "2015-03-31"
+        },
+        {
+          "period": "CY2015Q2",
+          "calendarYear": 2015,
+          "calendarQuarter": 2,
+          "value": 2515000000,
+          "valueBillions": 2.52,
+          "endDate": "2015-06-30"
+        },
+        {
+          "period": "CY2015Q3",
+          "calendarYear": 2015,
+          "calendarQuarter": 3,
+          "value": 2383000000,
+          "valueBillions": 2.38,
+          "endDate": "2015-09-30"
+        },
+        {
+          "period": "CY2016Q1",
+          "calendarYear": 2016,
+          "calendarQuarter": 1,
+          "value": 2444000000,
+          "valueBillions": 2.44,
+          "endDate": "2016-03-31"
+        },
+        {
+          "period": "CY2016Q2",
+          "calendarYear": 2016,
+          "calendarQuarter": 2,
+          "value": 2136000000,
+          "valueBillions": 2.14,
+          "endDate": "2016-06-30"
+        },
+        {
+          "period": "CY2016Q3",
+          "calendarYear": 2016,
+          "calendarQuarter": 3,
+          "value": 2554000000,
+          "valueBillions": 2.55,
+          "endDate": "2016-09-30"
+        },
+        {
+          "period": "CY2017Q1",
+          "calendarYear": 2017,
+          "calendarQuarter": 1,
+          "value": 2508000000,
+          "valueBillions": 2.51,
+          "endDate": "2017-03-31"
+        },
+        {
+          "period": "CY2017Q2",
+          "calendarYear": 2017,
+          "calendarQuarter": 2,
+          "value": 2831000000,
+          "valueBillions": 2.83,
+          "endDate": "2017-06-30"
+        },
+        {
+          "period": "CY2017Q3",
+          "calendarYear": 2017,
+          "calendarQuarter": 3,
+          "value": 3538000000,
+          "valueBillions": 3.54,
+          "endDate": "2017-09-30"
+        },
+        {
+          "period": "CY2018Q1",
+          "calendarYear": 2018,
+          "calendarQuarter": 1,
+          "value": 7299000000,
+          "valueBillions": 7.3,
+          "endDate": "2018-03-31"
+        },
+        {
+          "period": "CY2018Q2",
+          "calendarYear": 2018,
+          "calendarQuarter": 2,
+          "value": 5477000000,
+          "valueBillions": 5.48,
+          "endDate": "2018-06-30"
+        },
+        {
+          "period": "CY2018Q3",
+          "calendarYear": 2018,
+          "calendarQuarter": 3,
+          "value": 5282000000,
+          "valueBillions": 5.28,
+          "endDate": "2018-09-30"
+        },
+        {
+          "period": "CY2019Q1",
+          "calendarYear": 2019,
+          "calendarQuarter": 1,
+          "value": 4638000000,
+          "valueBillions": 4.64,
+          "endDate": "2019-03-31"
+        },
+        {
+          "period": "CY2019Q2",
+          "calendarYear": 2019,
+          "calendarQuarter": 2,
+          "value": 6126000000,
+          "valueBillions": 6.13,
+          "endDate": "2019-06-30"
+        },
+        {
+          "period": "CY2019Q3",
+          "calendarYear": 2019,
+          "calendarQuarter": 3,
+          "value": 6732000000,
+          "valueBillions": 6.73,
+          "endDate": "2019-09-30"
+        },
+        {
+          "period": "CY2020Q1",
+          "calendarYear": 2020,
+          "calendarQuarter": 1,
+          "value": 6005000000,
+          "valueBillions": 6.01,
+          "endDate": "2020-03-31"
+        },
+        {
+          "period": "CY2020Q2",
+          "calendarYear": 2020,
+          "calendarQuarter": 2,
+          "value": 5391000000,
+          "valueBillions": 5.39,
+          "endDate": "2020-06-30"
+        },
+        {
+          "period": "CY2020Q3",
+          "calendarYear": 2020,
+          "calendarQuarter": 3,
+          "value": 5406000000,
+          "valueBillions": 5.41,
+          "endDate": "2020-09-30"
+        },
+        {
+          "period": "CY2021Q1",
+          "calendarYear": 2021,
+          "calendarQuarter": 1,
+          "value": 5942000000,
+          "valueBillions": 5.94,
+          "endDate": "2021-03-31"
+        },
+        {
+          "period": "CY2022Q1",
+          "calendarYear": 2022,
+          "calendarQuarter": 1,
+          "value": 9786000000,
+          "valueBillions": 9.79,
+          "endDate": "2022-03-31"
+        },
+        {
+          "period": "CY2023Q1",
+          "calendarYear": 2023,
+          "calendarQuarter": 1,
+          "value": 6289000000,
+          "valueBillions": 6.29,
+          "endDate": "2023-03-31"
+        },
+        {
+          "period": "CY2024Q1",
+          "calendarYear": 2024,
+          "calendarQuarter": 1,
+          "value": 12012000000,
+          "valueBillions": 12.01,
+          "endDate": "2024-03-31"
+        },
+        {
+          "period": "CY2025Q1",
+          "calendarYear": 2025,
+          "calendarQuarter": 1,
+          "value": 17197000000,
+          "valueBillions": 17.2,
+          "endDate": "2025-03-31"
+        }
+      ],
+      "annual": [
+        {
+          "period": "CY2013",
+          "calendarYear": 2013,
+          "value": 7358000000,
+          "valueBillions": 7.36,
+          "endDate": "2013-12-31"
+        },
+        {
+          "period": "CY2014",
+          "calendarYear": 2014,
+          "value": 11014000000,
+          "valueBillions": 11.01,
+          "endDate": "2014-12-31",
+          "yoyGrowthPct": 49.69
+        },
+        {
+          "period": "CY2015",
+          "calendarYear": 2015,
+          "value": 9950000000,
+          "valueBillions": 9.95,
+          "endDate": "2015-12-31",
+          "yoyGrowthPct": -9.66
+        },
+        {
+          "period": "CY2016",
+          "calendarYear": 2016,
+          "value": 10212000000,
+          "valueBillions": 10.21,
+          "endDate": "2016-12-31",
+          "yoyGrowthPct": 2.63
+        },
+        {
+          "period": "CY2017",
+          "calendarYear": 2017,
+          "value": 13184000000,
+          "valueBillions": 13.18,
+          "endDate": "2017-12-31",
+          "yoyGrowthPct": 29.1
+        },
+        {
+          "period": "CY2018",
+          "calendarYear": 2018,
+          "value": 25139000000,
+          "valueBillions": 25.14,
+          "endDate": "2018-12-31",
+          "yoyGrowthPct": 90.68
+        },
+        {
+          "period": "CY2019",
+          "calendarYear": 2019,
+          "value": 23548000000,
+          "valueBillions": 23.55,
+          "endDate": "2019-12-31",
+          "yoyGrowthPct": -6.33
+        },
+        {
+          "period": "CY2020",
+          "calendarYear": 2020,
+          "value": 22281000000,
+          "valueBillions": 22.28,
+          "endDate": "2020-12-31",
+          "yoyGrowthPct": -5.38
+        },
+        {
+          "period": "CY2021",
+          "calendarYear": 2021,
+          "value": 24640000000,
+          "valueBillions": 24.64,
+          "endDate": "2021-12-31",
+          "yoyGrowthPct": 10.59
+        },
+        {
+          "period": "CY2022",
+          "calendarYear": 2022,
+          "value": 31485000000,
+          "valueBillions": 31.49,
+          "endDate": "2022-12-31",
+          "yoyGrowthPct": 27.78
+        },
+        {
+          "period": "CY2023",
+          "calendarYear": 2023,
+          "value": 32251000000,
+          "valueBillions": 32.25,
+          "endDate": "2023-12-31",
+          "yoyGrowthPct": 2.43
+        },
+        {
+          "period": "CY2024",
+          "calendarYear": 2024,
+          "value": 52535000000,
+          "valueBillions": 52.54,
+          "endDate": "2024-12-31",
+          "yoyGrowthPct": 62.89
+        },
+        {
+          "period": "CY2025",
+          "calendarYear": 2025,
+          "value": 91447000000,
+          "valueBillions": 91.45,
+          "endDate": "2025-12-31",
+          "yoyGrowthPct": 74.07
+        }
+      ],
+      "latestQuarter": {
+        "period": "CY2025Q1",
+        "calendarYear": 2025,
+        "calendarQuarter": 1,
+        "value": 17197000000,
+        "valueBillions": 17.2,
+        "endDate": "2025-03-31"
+      },
+      "latestAnnual": {
+        "period": "CY2025",
+        "calendarYear": 2025,
+        "value": 91447000000,
+        "valueBillions": 91.45,
+        "endDate": "2025-12-31",
+        "yoyGrowthPct": 74.07
+      },
+      "trailingTwelveMonths": null
+    },
+    {
+      "ticker": "AMZN",
+      "name": "Amazon",
+      "cik": "0001018724",
+      "fiscalYearEnd": "Dec",
+      "quarterly": [
+        {
+          "period": "CY2017Q3",
+          "calendarYear": 2017,
+          "calendarQuarter": 3,
+          "value": 3074000000,
+          "valueBillions": 3.07,
+          "endDate": "2017-09-30"
+        },
+        {
+          "period": "CY2018Q1",
+          "calendarYear": 2018,
+          "calendarQuarter": 1,
+          "value": 3098000000,
+          "valueBillions": 3.1,
+          "endDate": "2018-03-31"
+        },
+        {
+          "period": "CY2018Q2",
+          "calendarYear": 2018,
+          "calendarQuarter": 2,
+          "value": 3243000000,
+          "valueBillions": 3.24,
+          "endDate": "2018-06-30"
+        },
+        {
+          "period": "CY2018Q3",
+          "calendarYear": 2018,
+          "calendarQuarter": 3,
+          "value": 3352000000,
+          "valueBillions": 3.35,
+          "endDate": "2018-09-30"
+        },
+        {
+          "period": "CY2019Q1",
+          "calendarYear": 2019,
+          "calendarQuarter": 1,
+          "value": 3290000000,
+          "valueBillions": 3.29,
+          "endDate": "2019-03-31"
+        },
+        {
+          "period": "CY2019Q2",
+          "calendarYear": 2019,
+          "calendarQuarter": 2,
+          "value": 3562000000,
+          "valueBillions": 3.56,
+          "endDate": "2019-06-30"
+        },
+        {
+          "period": "CY2019Q3",
+          "calendarYear": 2019,
+          "calendarQuarter": 3,
+          "value": 4697000000,
+          "valueBillions": 4.7,
+          "endDate": "2019-09-30"
+        },
+        {
+          "period": "CY2020Q1",
+          "calendarYear": 2020,
+          "calendarQuarter": 1,
+          "value": 6795000000,
+          "valueBillions": 6.8,
+          "endDate": "2020-03-31"
+        },
+        {
+          "period": "CY2020Q2",
+          "calendarYear": 2020,
+          "calendarQuarter": 2,
+          "value": 7459000000,
+          "valueBillions": 7.46,
+          "endDate": "2020-06-30"
+        },
+        {
+          "period": "CY2020Q3",
+          "calendarYear": 2020,
+          "calendarQuarter": 3,
+          "value": 11063000000,
+          "valueBillions": 11.06,
+          "endDate": "2020-09-30"
+        },
+        {
+          "period": "CY2021Q1",
+          "calendarYear": 2021,
+          "calendarQuarter": 1,
+          "value": 12082000000,
+          "valueBillions": 12.08,
+          "endDate": "2021-03-31"
+        },
+        {
+          "period": "CY2021Q2",
+          "calendarYear": 2021,
+          "calendarQuarter": 2,
+          "value": 14288000000,
+          "valueBillions": 14.29,
+          "endDate": "2021-06-30"
+        },
+        {
+          "period": "CY2021Q3",
+          "calendarYear": 2021,
+          "calendarQuarter": 3,
+          "value": 15748000000,
+          "valueBillions": 15.75,
+          "endDate": "2021-09-30"
+        },
+        {
+          "period": "CY2022Q1",
+          "calendarYear": 2022,
+          "calendarQuarter": 1,
+          "value": 14951000000,
+          "valueBillions": 14.95,
+          "endDate": "2022-03-31"
+        },
+        {
+          "period": "CY2022Q2",
+          "calendarYear": 2022,
+          "calendarQuarter": 2,
+          "value": 15724000000,
+          "valueBillions": 15.72,
+          "endDate": "2022-06-30"
+        },
+        {
+          "period": "CY2022Q3",
+          "calendarYear": 2022,
+          "calendarQuarter": 3,
+          "value": 16378000000,
+          "valueBillions": 16.38,
+          "endDate": "2022-09-30"
+        },
+        {
+          "period": "CY2023Q1",
+          "calendarYear": 2023,
+          "calendarQuarter": 1,
+          "value": 14207000000,
+          "valueBillions": 14.21,
+          "endDate": "2023-03-31"
+        },
+        {
+          "period": "CY2023Q2",
+          "calendarYear": 2023,
+          "calendarQuarter": 2,
+          "value": 11455000000,
+          "valueBillions": 11.46,
+          "endDate": "2023-06-30"
+        },
+        {
+          "period": "CY2023Q3",
+          "calendarYear": 2023,
+          "calendarQuarter": 3,
+          "value": 12479000000,
+          "valueBillions": 12.48,
+          "endDate": "2023-09-30"
+        },
+        {
+          "period": "CY2024Q1",
+          "calendarYear": 2024,
+          "calendarQuarter": 1,
+          "value": 14925000000,
+          "valueBillions": 14.93,
+          "endDate": "2024-03-31"
+        },
+        {
+          "period": "CY2024Q2",
+          "calendarYear": 2024,
+          "calendarQuarter": 2,
+          "value": 17620000000,
+          "valueBillions": 17.62,
+          "endDate": "2024-06-30"
+        },
+        {
+          "period": "CY2024Q3",
+          "calendarYear": 2024,
+          "calendarQuarter": 3,
+          "value": 22620000000,
+          "valueBillions": 22.62,
+          "endDate": "2024-09-30"
+        },
+        {
+          "period": "CY2025Q1",
+          "calendarYear": 2025,
+          "calendarQuarter": 1,
+          "value": 25019000000,
+          "valueBillions": 25.02,
+          "endDate": "2025-03-31"
+        },
+        {
+          "period": "CY2025Q2",
+          "calendarYear": 2025,
+          "calendarQuarter": 2,
+          "value": 32183000000,
+          "valueBillions": 32.18,
+          "endDate": "2025-06-30"
+        },
+        {
+          "period": "CY2025Q3",
+          "calendarYear": 2025,
+          "calendarQuarter": 3,
+          "value": 35095000000,
+          "valueBillions": 35.1,
+          "endDate": "2025-09-30"
+        }
+      ],
+      "annual": [
+        {
+          "period": "CY2016",
+          "calendarYear": 2016,
+          "value": 7804000000,
+          "valueBillions": 7.8,
+          "endDate": "2016-12-31"
+        },
+        {
+          "period": "CY2017",
+          "calendarYear": 2017,
+          "value": 11955000000,
+          "valueBillions": 11.96,
+          "endDate": "2017-12-31",
+          "yoyGrowthPct": 53.19
+        },
+        {
+          "period": "CY2018",
+          "calendarYear": 2018,
+          "value": 13427000000,
+          "valueBillions": 13.43,
+          "endDate": "2018-12-31",
+          "yoyGrowthPct": 12.31
+        },
+        {
+          "period": "CY2019",
+          "calendarYear": 2019,
+          "value": 16861000000,
+          "valueBillions": 16.86,
+          "endDate": "2019-12-31",
+          "yoyGrowthPct": 25.58
+        },
+        {
+          "period": "CY2020",
+          "calendarYear": 2020,
+          "value": 40140000000,
+          "valueBillions": 40.14,
+          "endDate": "2020-12-31",
+          "yoyGrowthPct": 138.06
+        },
+        {
+          "period": "CY2021",
+          "calendarYear": 2021,
+          "value": 61053000000,
+          "valueBillions": 61.05,
+          "endDate": "2021-12-31",
+          "yoyGrowthPct": 52.1
+        },
+        {
+          "period": "CY2022",
+          "calendarYear": 2022,
+          "value": 63645000000,
+          "valueBillions": 63.65,
+          "endDate": "2022-12-31",
+          "yoyGrowthPct": 4.25
+        },
+        {
+          "period": "CY2023",
+          "calendarYear": 2023,
+          "value": 52729000000,
+          "valueBillions": 52.73,
+          "endDate": "2023-12-31",
+          "yoyGrowthPct": -17.15
+        },
+        {
+          "period": "CY2024",
+          "calendarYear": 2024,
+          "value": 82999000000,
+          "valueBillions": 83,
+          "endDate": "2024-12-31",
+          "yoyGrowthPct": 57.41
+        },
+        {
+          "period": "CY2025",
+          "calendarYear": 2025,
+          "value": 131819000000,
+          "valueBillions": 131.82,
+          "endDate": "2025-12-31",
+          "yoyGrowthPct": 58.82
+        }
+      ],
+      "latestQuarter": {
+        "period": "CY2025Q3",
+        "calendarYear": 2025,
+        "calendarQuarter": 3,
+        "value": 35095000000,
+        "valueBillions": 35.1,
+        "endDate": "2025-09-30"
+      },
+      "latestAnnual": {
+        "period": "CY2025",
+        "calendarYear": 2025,
+        "value": 131819000000,
+        "valueBillions": 131.82,
+        "endDate": "2025-12-31",
+        "yoyGrowthPct": 58.82
+      },
+      "trailingTwelveMonths": null
+    },
+    {
+      "ticker": "META",
+      "name": "Meta",
+      "cik": "0001326801",
+      "fiscalYearEnd": "Dec",
+      "quarterly": [
+        {
+          "period": "CY2012Q1",
+          "calendarYear": 2012,
+          "calendarQuarter": 1,
+          "value": 453000000,
+          "valueBillions": 0.45,
+          "endDate": "2012-03-31"
+        },
+        {
+          "period": "CY2013Q1",
+          "calendarYear": 2013,
+          "calendarQuarter": 1,
+          "value": 327000000,
+          "valueBillions": 0.33,
+          "endDate": "2013-03-31"
+        },
+        {
+          "period": "CY2014Q1",
+          "calendarYear": 2014,
+          "calendarQuarter": 1,
+          "value": 363000000,
+          "valueBillions": 0.36,
+          "endDate": "2014-03-31"
+        },
+        {
+          "period": "CY2015Q1",
+          "calendarYear": 2015,
+          "calendarQuarter": 1,
+          "value": 502000000,
+          "valueBillions": 0.5,
+          "endDate": "2015-03-31"
+        },
+        {
+          "period": "CY2016Q1",
+          "calendarYear": 2016,
+          "calendarQuarter": 1,
+          "value": 1132000000,
+          "valueBillions": 1.13,
+          "endDate": "2016-03-31"
+        },
+        {
+          "period": "CY2017Q1",
+          "calendarYear": 2017,
+          "calendarQuarter": 1,
+          "value": 1271000000,
+          "valueBillions": 1.27,
+          "endDate": "2017-03-31"
+        },
+        {
+          "period": "CY2018Q1",
+          "calendarYear": 2018,
+          "calendarQuarter": 1,
+          "value": 2812000000,
+          "valueBillions": 2.81,
+          "endDate": "2018-03-31"
+        },
+        {
+          "period": "CY2019Q1",
+          "calendarYear": 2019,
+          "calendarQuarter": 1,
+          "value": 3837000000,
+          "valueBillions": 3.84,
+          "endDate": "2019-03-31"
+        },
+        {
+          "period": "CY2020Q1",
+          "calendarYear": 2020,
+          "calendarQuarter": 1,
+          "value": 3558000000,
+          "valueBillions": 3.56,
+          "endDate": "2020-03-31"
+        },
+        {
+          "period": "CY2021Q1",
+          "calendarYear": 2021,
+          "calendarQuarter": 1,
+          "value": 4303000000,
+          "valueBillions": 4.3,
+          "endDate": "2021-03-31"
+        },
+        {
+          "period": "CY2022Q1",
+          "calendarYear": 2022,
+          "calendarQuarter": 1,
+          "value": 5441000000,
+          "valueBillions": 5.44,
+          "endDate": "2022-03-31"
+        },
+        {
+          "period": "CY2023Q1",
+          "calendarYear": 2023,
+          "calendarQuarter": 1,
+          "value": 6823000000,
+          "valueBillions": 6.82,
+          "endDate": "2023-03-31"
+        },
+        {
+          "period": "CY2024Q1",
+          "calendarYear": 2024,
+          "calendarQuarter": 1,
+          "value": 6400000000,
+          "valueBillions": 6.4,
+          "endDate": "2024-03-31"
+        },
+        {
+          "period": "CY2025Q1",
+          "calendarYear": 2025,
+          "calendarQuarter": 1,
+          "value": 12941000000,
+          "valueBillions": 12.94,
+          "endDate": "2025-03-31"
+        }
+      ],
+      "annual": [
+        {
+          "period": "CY2010",
+          "calendarYear": 2010,
+          "value": 293000000,
+          "valueBillions": 0.29,
+          "endDate": "2010-12-31"
+        },
+        {
+          "period": "CY2011",
+          "calendarYear": 2011,
+          "value": 606000000,
+          "valueBillions": 0.61,
+          "endDate": "2011-12-31",
+          "yoyGrowthPct": 106.83
+        },
+        {
+          "period": "CY2012",
+          "calendarYear": 2012,
+          "value": 1235000000,
+          "valueBillions": 1.24,
+          "endDate": "2012-12-31",
+          "yoyGrowthPct": 103.8
+        },
+        {
+          "period": "CY2013",
+          "calendarYear": 2013,
+          "value": 1362000000,
+          "valueBillions": 1.36,
+          "endDate": "2013-12-31",
+          "yoyGrowthPct": 10.28
+        },
+        {
+          "period": "CY2014",
+          "calendarYear": 2014,
+          "value": 1831000000,
+          "valueBillions": 1.83,
+          "endDate": "2014-12-31",
+          "yoyGrowthPct": 34.43
+        },
+        {
+          "period": "CY2015",
+          "calendarYear": 2015,
+          "value": 2523000000,
+          "valueBillions": 2.52,
+          "endDate": "2015-12-31",
+          "yoyGrowthPct": 37.79
+        },
+        {
+          "period": "CY2016",
+          "calendarYear": 2016,
+          "value": 4491000000,
+          "valueBillions": 4.49,
+          "endDate": "2016-12-31",
+          "yoyGrowthPct": 78
+        },
+        {
+          "period": "CY2017",
+          "calendarYear": 2017,
+          "value": 6733000000,
+          "valueBillions": 6.73,
+          "endDate": "2017-12-31",
+          "yoyGrowthPct": 49.92
+        },
+        {
+          "period": "CY2018",
+          "calendarYear": 2018,
+          "value": 13915000000,
+          "valueBillions": 13.92,
+          "endDate": "2018-12-31",
+          "yoyGrowthPct": 106.67
+        },
+        {
+          "period": "CY2019",
+          "calendarYear": 2019,
+          "value": 15102000000,
+          "valueBillions": 15.1,
+          "endDate": "2019-12-31",
+          "yoyGrowthPct": 8.53
+        },
+        {
+          "period": "CY2020",
+          "calendarYear": 2020,
+          "value": 15163000000,
+          "valueBillions": 15.16,
+          "endDate": "2020-12-31",
+          "yoyGrowthPct": 0.4
+        },
+        {
+          "period": "CY2021",
+          "calendarYear": 2021,
+          "value": 18690000000,
+          "valueBillions": 18.69,
+          "endDate": "2021-12-31",
+          "yoyGrowthPct": 23.26
+        },
+        {
+          "period": "CY2022",
+          "calendarYear": 2022,
+          "value": 31186000000,
+          "valueBillions": 31.19,
+          "endDate": "2022-12-31",
+          "yoyGrowthPct": 66.86
+        },
+        {
+          "period": "CY2023",
+          "calendarYear": 2023,
+          "value": 27045000000,
+          "valueBillions": 27.05,
+          "endDate": "2023-12-31",
+          "yoyGrowthPct": -13.28
+        },
+        {
+          "period": "CY2024",
+          "calendarYear": 2024,
+          "value": 37256000000,
+          "valueBillions": 37.26,
+          "endDate": "2024-12-31",
+          "yoyGrowthPct": 37.76
+        },
+        {
+          "period": "CY2025",
+          "calendarYear": 2025,
+          "value": 69691000000,
+          "valueBillions": 69.69,
+          "endDate": "2025-12-31",
+          "yoyGrowthPct": 87.06
+        }
+      ],
+      "latestQuarter": {
+        "period": "CY2025Q1",
+        "calendarYear": 2025,
+        "calendarQuarter": 1,
+        "value": 12941000000,
+        "valueBillions": 12.94,
+        "endDate": "2025-03-31"
+      },
+      "latestAnnual": {
+        "period": "CY2025",
+        "calendarYear": 2025,
+        "value": 69691000000,
+        "valueBillions": 69.69,
+        "endDate": "2025-12-31",
+        "yoyGrowthPct": 87.06
+      },
+      "trailingTwelveMonths": null
+    },
+    {
+      "ticker": "AAPL",
+      "name": "Apple",
+      "cik": "0000320193",
+      "fiscalYearEnd": "Sep",
+      "quarterly": [
+        {
+          "period": "CY2013Q4",
+          "calendarYear": 2013,
+          "calendarQuarter": 4,
+          "value": 1985000000,
+          "valueBillions": 1.99,
+          "endDate": "2013-12-28"
+        },
+        {
+          "period": "CY2014Q4",
+          "calendarYear": 2014,
+          "calendarQuarter": 4,
+          "value": 3217000000,
+          "valueBillions": 3.22,
+          "endDate": "2014-12-27"
+        },
+        {
+          "period": "CY2015Q4",
+          "calendarYear": 2015,
+          "calendarQuarter": 4,
+          "value": 3612000000,
+          "valueBillions": 3.61,
+          "endDate": "2015-12-26"
+        },
+        {
+          "period": "CY2016Q4",
+          "calendarYear": 2016,
+          "calendarQuarter": 4,
+          "value": 3334000000,
+          "valueBillions": 3.33,
+          "endDate": "2016-12-31"
+        },
+        {
+          "period": "CY2017Q4",
+          "calendarYear": 2017,
+          "calendarQuarter": 4,
+          "value": 2810000000,
+          "valueBillions": 2.81,
+          "endDate": "2017-12-30"
+        },
+        {
+          "period": "CY2018Q4",
+          "calendarYear": 2018,
+          "calendarQuarter": 4,
+          "value": 3355000000,
+          "valueBillions": 3.36,
+          "endDate": "2018-12-29"
+        },
+        {
+          "period": "CY2019Q4",
+          "calendarYear": 2019,
+          "calendarQuarter": 4,
+          "value": 2107000000,
+          "valueBillions": 2.11,
+          "endDate": "2019-12-28"
+        },
+        {
+          "period": "CY2020Q4",
+          "calendarYear": 2020,
+          "calendarQuarter": 4,
+          "value": 3500000000,
+          "valueBillions": 3.5,
+          "endDate": "2020-12-26"
+        },
+        {
+          "period": "CY2021Q4",
+          "calendarYear": 2021,
+          "calendarQuarter": 4,
+          "value": 2803000000,
+          "valueBillions": 2.8,
+          "endDate": "2021-12-25"
+        },
+        {
+          "period": "CY2022Q4",
+          "calendarYear": 2022,
+          "calendarQuarter": 4,
+          "value": 3787000000,
+          "valueBillions": 3.79,
+          "endDate": "2022-12-31"
+        },
+        {
+          "period": "CY2023Q4",
+          "calendarYear": 2023,
+          "calendarQuarter": 4,
+          "value": 2392000000,
+          "valueBillions": 2.39,
+          "endDate": "2023-12-30"
+        },
+        {
+          "period": "CY2024Q4",
+          "calendarYear": 2024,
+          "calendarQuarter": 4,
+          "value": 2940000000,
+          "valueBillions": 2.94,
+          "endDate": "2024-12-28"
+        },
+        {
+          "period": "CY2025Q4",
+          "calendarYear": 2025,
+          "calendarQuarter": 4,
+          "value": 2373000000,
+          "valueBillions": 2.37,
+          "endDate": "2025-12-27"
+        }
+      ],
+      "annual": [
+        {
+          "period": "CY2013",
+          "calendarYear": 2013,
+          "value": 8165000000,
+          "valueBillions": 8.16,
+          "endDate": "2013-09-28"
+        },
+        {
+          "period": "CY2014",
+          "calendarYear": 2014,
+          "value": 9571000000,
+          "valueBillions": 9.57,
+          "endDate": "2014-09-27",
+          "yoyGrowthPct": 17.22
+        },
+        {
+          "period": "CY2015",
+          "calendarYear": 2015,
+          "value": 11247000000,
+          "valueBillions": 11.25,
+          "endDate": "2015-09-26",
+          "yoyGrowthPct": 17.51
+        },
+        {
+          "period": "CY2016",
+          "calendarYear": 2016,
+          "value": 12734000000,
+          "valueBillions": 12.73,
+          "endDate": "2016-09-24",
+          "yoyGrowthPct": 13.22
+        },
+        {
+          "period": "CY2017",
+          "calendarYear": 2017,
+          "value": 12451000000,
+          "valueBillions": 12.45,
+          "endDate": "2017-09-30",
+          "yoyGrowthPct": -2.22
+        },
+        {
+          "period": "CY2018",
+          "calendarYear": 2018,
+          "value": 13313000000,
+          "valueBillions": 13.31,
+          "endDate": "2018-09-29",
+          "yoyGrowthPct": 6.92
+        },
+        {
+          "period": "CY2019",
+          "calendarYear": 2019,
+          "value": 10495000000,
+          "valueBillions": 10.5,
+          "endDate": "2019-09-28",
+          "yoyGrowthPct": -21.17
+        },
+        {
+          "period": "CY2020",
+          "calendarYear": 2020,
+          "value": 7309000000,
+          "valueBillions": 7.31,
+          "endDate": "2020-09-26",
+          "yoyGrowthPct": -30.36
+        },
+        {
+          "period": "CY2021",
+          "calendarYear": 2021,
+          "value": 11085000000,
+          "valueBillions": 11.09,
+          "endDate": "2021-09-25",
+          "yoyGrowthPct": 51.66
+        },
+        {
+          "period": "CY2022",
+          "calendarYear": 2022,
+          "value": 10708000000,
+          "valueBillions": 10.71,
+          "endDate": "2022-09-24",
+          "yoyGrowthPct": -3.4
+        },
+        {
+          "period": "CY2023",
+          "calendarYear": 2023,
+          "value": 10959000000,
+          "valueBillions": 10.96,
+          "endDate": "2023-09-30",
+          "yoyGrowthPct": 2.34
+        },
+        {
+          "period": "CY2024",
+          "calendarYear": 2024,
+          "value": 9447000000,
+          "valueBillions": 9.45,
+          "endDate": "2024-09-28",
+          "yoyGrowthPct": -13.8
+        },
+        {
+          "period": "CY2025",
+          "calendarYear": 2025,
+          "value": 12715000000,
+          "valueBillions": 12.72,
+          "endDate": "2025-09-27",
+          "yoyGrowthPct": 34.59
+        }
+      ],
+      "latestQuarter": {
+        "period": "CY2025Q4",
+        "calendarYear": 2025,
+        "calendarQuarter": 4,
+        "value": 2373000000,
+        "valueBillions": 2.37,
+        "endDate": "2025-12-27"
+      },
+      "latestAnnual": {
+        "period": "CY2025",
+        "calendarYear": 2025,
+        "value": 12715000000,
+        "valueBillions": 12.72,
+        "endDate": "2025-09-27",
+        "yoyGrowthPct": 34.59
+      },
+      "trailingTwelveMonths": null
+    },
+    {
+      "ticker": "NVDA",
+      "name": "NVIDIA",
+      "cik": "0001045810",
+      "fiscalYearEnd": "Jan",
+      "quarterly": [
+        {
+          "period": "CY2020Q1",
+          "calendarYear": 2020,
+          "calendarQuarter": 1,
+          "value": 155000000,
+          "valueBillions": 0.16,
+          "endDate": "2020-04-26"
+        },
+        {
+          "period": "CY2021Q1",
+          "calendarYear": 2021,
+          "calendarQuarter": 1,
+          "value": 298000000,
+          "valueBillions": 0.3,
+          "endDate": "2021-05-02"
+        },
+        {
+          "period": "CY2023Q1",
+          "calendarYear": 2023,
+          "calendarQuarter": 1,
+          "value": 248000000,
+          "valueBillions": 0.25,
+          "endDate": "2023-04-30"
+        },
+        {
+          "period": "CY2024Q1",
+          "calendarYear": 2024,
+          "calendarQuarter": 1,
+          "value": 369000000,
+          "valueBillions": 0.37,
+          "endDate": "2024-04-28"
+        },
+        {
+          "period": "CY2025Q1",
+          "calendarYear": 2025,
+          "calendarQuarter": 1,
+          "value": 1227000000,
+          "valueBillions": 1.23,
+          "endDate": "2025-04-27"
+        }
+      ],
+      "annual": [
+        {
+          "period": "CY2021",
+          "calendarYear": 2021,
+          "value": 976000000,
+          "valueBillions": 0.98,
+          "endDate": "2022-01-30"
+        },
+        {
+          "period": "CY2022",
+          "calendarYear": 2022,
+          "value": 1833000000,
+          "valueBillions": 1.83,
+          "endDate": "2023-01-29",
+          "yoyGrowthPct": 87.81
+        },
+        {
+          "period": "CY2023",
+          "calendarYear": 2023,
+          "value": 1069000000,
+          "valueBillions": 1.07,
+          "endDate": "2024-01-28",
+          "yoyGrowthPct": -41.68
+        },
+        {
+          "period": "CY2024",
+          "calendarYear": 2024,
+          "value": 3236000000,
+          "valueBillions": 3.24,
+          "endDate": "2025-01-26",
+          "yoyGrowthPct": 202.71
+        },
+        {
+          "period": "CY2025",
+          "calendarYear": 2025,
+          "value": 6042000000,
+          "valueBillions": 6.04,
+          "endDate": "2026-01-25",
+          "yoyGrowthPct": 86.71
+        }
+      ],
+      "latestQuarter": {
+        "period": "CY2025Q1",
+        "calendarYear": 2025,
+        "calendarQuarter": 1,
+        "value": 1227000000,
+        "valueBillions": 1.23,
+        "endDate": "2025-04-27"
+      },
+      "latestAnnual": {
+        "period": "CY2025",
+        "calendarYear": 2025,
+        "value": 6042000000,
+        "valueBillions": 6.04,
+        "endDate": "2026-01-25",
+        "yoyGrowthPct": 86.71
+      },
+      "trailingTwelveMonths": null
+    },
+    {
+      "ticker": "ORCL",
+      "name": "Oracle",
+      "cik": "0001341439",
+      "fiscalYearEnd": "May",
+      "quarterly": [
+        {
+          "period": "CY2010Q3",
+          "calendarYear": 2010,
+          "calendarQuarter": 3,
+          "value": 118000000,
+          "valueBillions": 0.12,
+          "endDate": "2010-08-31"
+        },
+        {
+          "period": "CY2011Q3",
+          "calendarYear": 2011,
+          "calendarQuarter": 3,
+          "value": 160000000,
+          "valueBillions": 0.16,
+          "endDate": "2011-08-31"
+        },
+        {
+          "period": "CY2012Q3",
+          "calendarYear": 2012,
+          "calendarQuarter": 3,
+          "value": 139000000,
+          "valueBillions": 0.14,
+          "endDate": "2012-08-31"
+        },
+        {
+          "period": "CY2013Q3",
+          "calendarYear": 2013,
+          "calendarQuarter": 3,
+          "value": 153000000,
+          "valueBillions": 0.15,
+          "endDate": "2013-08-31"
+        },
+        {
+          "period": "CY2014Q3",
+          "calendarYear": 2014,
+          "calendarQuarter": 3,
+          "value": 201000000,
+          "valueBillions": 0.2,
+          "endDate": "2014-08-31"
+        },
+        {
+          "period": "CY2015Q3",
+          "calendarYear": 2015,
+          "calendarQuarter": 3,
+          "value": 446000000,
+          "valueBillions": 0.45,
+          "endDate": "2015-08-31"
+        },
+        {
+          "period": "CY2016Q3",
+          "calendarYear": 2016,
+          "calendarQuarter": 3,
+          "value": 299000000,
+          "valueBillions": 0.3,
+          "endDate": "2016-08-31"
+        },
+        {
+          "period": "CY2017Q3",
+          "calendarYear": 2017,
+          "calendarQuarter": 3,
+          "value": 473000000,
+          "valueBillions": 0.47,
+          "endDate": "2017-08-31"
+        },
+        {
+          "period": "CY2018Q3",
+          "calendarYear": 2018,
+          "calendarQuarter": 3,
+          "value": 383000000,
+          "valueBillions": 0.38,
+          "endDate": "2018-08-31"
+        },
+        {
+          "period": "CY2019Q3",
+          "calendarYear": 2019,
+          "calendarQuarter": 3,
+          "value": 386000000,
+          "valueBillions": 0.39,
+          "endDate": "2019-08-31"
+        },
+        {
+          "period": "CY2020Q3",
+          "calendarYear": 2020,
+          "calendarQuarter": 3,
+          "value": 436000000,
+          "valueBillions": 0.44,
+          "endDate": "2020-08-31"
+        },
+        {
+          "period": "CY2021Q3",
+          "calendarYear": 2021,
+          "calendarQuarter": 3,
+          "value": 1062000000,
+          "valueBillions": 1.06,
+          "endDate": "2021-08-31"
+        },
+        {
+          "period": "CY2022Q3",
+          "calendarYear": 2022,
+          "calendarQuarter": 3,
+          "value": 1719000000,
+          "valueBillions": 1.72,
+          "endDate": "2022-08-31"
+        },
+        {
+          "period": "CY2023Q3",
+          "calendarYear": 2023,
+          "calendarQuarter": 3,
+          "value": 1314000000,
+          "valueBillions": 1.31,
+          "endDate": "2023-08-31"
+        },
+        {
+          "period": "CY2024Q3",
+          "calendarYear": 2024,
+          "calendarQuarter": 3,
+          "value": 2303000000,
+          "valueBillions": 2.3,
+          "endDate": "2024-08-31"
+        },
+        {
+          "period": "CY2025Q3",
+          "calendarYear": 2025,
+          "calendarQuarter": 3,
+          "value": 8502000000,
+          "valueBillions": 8.5,
+          "endDate": "2025-08-31"
+        }
+      ],
+      "annual": [
+        {
+          "period": "CY2009",
+          "calendarYear": 2009,
+          "value": 230000000,
+          "valueBillions": 0.23,
+          "endDate": "2010-05-31"
+        },
+        {
+          "period": "CY2010",
+          "calendarYear": 2010,
+          "value": 450000000,
+          "valueBillions": 0.45,
+          "endDate": "2011-05-31",
+          "yoyGrowthPct": 95.65
+        },
+        {
+          "period": "CY2011",
+          "calendarYear": 2011,
+          "value": 648000000,
+          "valueBillions": 0.65,
+          "endDate": "2012-05-31",
+          "yoyGrowthPct": 44
+        },
+        {
+          "period": "CY2012",
+          "calendarYear": 2012,
+          "value": 650000000,
+          "valueBillions": 0.65,
+          "endDate": "2013-05-31",
+          "yoyGrowthPct": 0.31
+        },
+        {
+          "period": "CY2013",
+          "calendarYear": 2013,
+          "value": 580000000,
+          "valueBillions": 0.58,
+          "endDate": "2014-05-31",
+          "yoyGrowthPct": -10.77
+        },
+        {
+          "period": "CY2014",
+          "calendarYear": 2014,
+          "value": 1391000000,
+          "valueBillions": 1.39,
+          "endDate": "2015-05-31",
+          "yoyGrowthPct": 139.83
+        },
+        {
+          "period": "CY2015",
+          "calendarYear": 2015,
+          "value": 1189000000,
+          "valueBillions": 1.19,
+          "endDate": "2016-05-31",
+          "yoyGrowthPct": -14.52
+        },
+        {
+          "period": "CY2016",
+          "calendarYear": 2016,
+          "value": 2021000000,
+          "valueBillions": 2.02,
+          "endDate": "2017-05-31",
+          "yoyGrowthPct": 69.97
+        },
+        {
+          "period": "CY2017",
+          "calendarYear": 2017,
+          "value": 1736000000,
+          "valueBillions": 1.74,
+          "endDate": "2018-05-31",
+          "yoyGrowthPct": -14.1
+        },
+        {
+          "period": "CY2018",
+          "calendarYear": 2018,
+          "value": 1660000000,
+          "valueBillions": 1.66,
+          "endDate": "2019-05-31",
+          "yoyGrowthPct": -4.38
+        },
+        {
+          "period": "CY2019",
+          "calendarYear": 2019,
+          "value": 1564000000,
+          "valueBillions": 1.56,
+          "endDate": "2020-05-31",
+          "yoyGrowthPct": -5.78
+        },
+        {
+          "period": "CY2020",
+          "calendarYear": 2020,
+          "value": 2135000000,
+          "valueBillions": 2.13,
+          "endDate": "2021-05-31",
+          "yoyGrowthPct": 36.51
+        },
+        {
+          "period": "CY2021",
+          "calendarYear": 2021,
+          "value": 4511000000,
+          "valueBillions": 4.51,
+          "endDate": "2022-05-31",
+          "yoyGrowthPct": 111.29
+        },
+        {
+          "period": "CY2022",
+          "calendarYear": 2022,
+          "value": 8695000000,
+          "valueBillions": 8.7,
+          "endDate": "2023-05-31",
+          "yoyGrowthPct": 92.75
+        },
+        {
+          "period": "CY2023",
+          "calendarYear": 2023,
+          "value": 6866000000,
+          "valueBillions": 6.87,
+          "endDate": "2024-05-31",
+          "yoyGrowthPct": -21.04
+        },
+        {
+          "period": "CY2024",
+          "calendarYear": 2024,
+          "value": 21215000000,
+          "valueBillions": 21.22,
+          "endDate": "2025-05-31",
+          "yoyGrowthPct": 208.99
+        }
+      ],
+      "latestQuarter": {
+        "period": "CY2025Q3",
+        "calendarYear": 2025,
+        "calendarQuarter": 3,
+        "value": 8502000000,
+        "valueBillions": 8.5,
+        "endDate": "2025-08-31"
+      },
+      "latestAnnual": {
+        "period": "CY2024",
+        "calendarYear": 2024,
+        "value": 21215000000,
+        "valueBillions": 21.22,
+        "endDate": "2025-05-31",
+        "yoyGrowthPct": 208.99
+      },
+      "trailingTwelveMonths": null
+    },
+    {
+      "ticker": "TSLA",
+      "name": "Tesla",
+      "cik": "0001318605",
+      "fiscalYearEnd": "Dec",
+      "quarterly": [
+        {
+          "period": "CY2011Q1",
+          "calendarYear": 2011,
+          "calendarQuarter": 1,
+          "value": 20476000,
+          "valueBillions": 0.02,
+          "endDate": "2011-03-31"
+        },
+        {
+          "period": "CY2012Q1",
+          "calendarYear": 2012,
+          "calendarQuarter": 1,
+          "value": 54774000,
+          "valueBillions": 0.05,
+          "endDate": "2012-03-31"
+        },
+        {
+          "period": "CY2013Q1",
+          "calendarYear": 2013,
+          "calendarQuarter": 1,
+          "value": 57727000,
+          "valueBillions": 0.06,
+          "endDate": "2013-03-31"
+        },
+        {
+          "period": "CY2014Q1",
+          "calendarYear": 2014,
+          "calendarQuarter": 1,
+          "value": 141364000,
+          "valueBillions": 0.14,
+          "endDate": "2014-03-31"
+        },
+        {
+          "period": "CY2015Q1",
+          "calendarYear": 2015,
+          "calendarQuarter": 1,
+          "value": 426060000,
+          "valueBillions": 0.43,
+          "endDate": "2015-03-31"
+        },
+        {
+          "period": "CY2016Q1",
+          "calendarYear": 2016,
+          "calendarQuarter": 1,
+          "value": 216859000,
+          "valueBillions": 0.22,
+          "endDate": "2016-03-31"
+        },
+        {
+          "period": "CY2017Q1",
+          "calendarYear": 2017,
+          "calendarQuarter": 1,
+          "value": 552624000,
+          "valueBillions": 0.55,
+          "endDate": "2017-03-31"
+        },
+        {
+          "period": "CY2018Q1",
+          "calendarYear": 2018,
+          "calendarQuarter": 1,
+          "value": 655662000,
+          "valueBillions": 0.66,
+          "endDate": "2018-03-31"
+        },
+        {
+          "period": "CY2019Q1",
+          "calendarYear": 2019,
+          "calendarQuarter": 1,
+          "value": 280000000,
+          "valueBillions": 0.28,
+          "endDate": "2019-03-31"
+        },
+        {
+          "period": "CY2020Q1",
+          "calendarYear": 2020,
+          "calendarQuarter": 1,
+          "value": 455000000,
+          "valueBillions": 0.46,
+          "endDate": "2020-03-31"
+        },
+        {
+          "period": "CY2021Q1",
+          "calendarYear": 2021,
+          "calendarQuarter": 1,
+          "value": 1348000000,
+          "valueBillions": 1.35,
+          "endDate": "2021-03-31"
+        },
+        {
+          "period": "CY2022Q1",
+          "calendarYear": 2022,
+          "calendarQuarter": 1,
+          "value": 1767000000,
+          "valueBillions": 1.77,
+          "endDate": "2022-03-31"
+        },
+        {
+          "period": "CY2023Q1",
+          "calendarYear": 2023,
+          "calendarQuarter": 1,
+          "value": 2072000000,
+          "valueBillions": 2.07,
+          "endDate": "2023-03-31"
+        },
+        {
+          "period": "CY2024Q1",
+          "calendarYear": 2024,
+          "calendarQuarter": 1,
+          "value": 2777000000,
+          "valueBillions": 2.78,
+          "endDate": "2024-03-31"
+        },
+        {
+          "period": "CY2025Q1",
+          "calendarYear": 2025,
+          "calendarQuarter": 1,
+          "value": 1492000000,
+          "valueBillions": 1.49,
+          "endDate": "2025-03-31"
+        }
+      ],
+      "annual": [
+        {
+          "period": "CY2009",
+          "calendarYear": 2009,
+          "value": 11884000,
+          "valueBillions": 0.01,
+          "endDate": "2009-12-31"
+        },
+        {
+          "period": "CY2010",
+          "calendarYear": 2010,
+          "value": 40203000,
+          "valueBillions": 0.04,
+          "endDate": "2010-12-31",
+          "yoyGrowthPct": 238.3
+        },
+        {
+          "period": "CY2011",
+          "calendarYear": 2011,
+          "value": 184226000,
+          "valueBillions": 0.18,
+          "endDate": "2011-12-31",
+          "yoyGrowthPct": 358.24
+        },
+        {
+          "period": "CY2012",
+          "calendarYear": 2012,
+          "value": 239228000,
+          "valueBillions": 0.24,
+          "endDate": "2012-12-31",
+          "yoyGrowthPct": 29.86
+        },
+        {
+          "period": "CY2013",
+          "calendarYear": 2013,
+          "value": 264224000,
+          "valueBillions": 0.26,
+          "endDate": "2013-12-31",
+          "yoyGrowthPct": 10.45
+        },
+        {
+          "period": "CY2014",
+          "calendarYear": 2014,
+          "value": 969885000,
+          "valueBillions": 0.97,
+          "endDate": "2014-12-31",
+          "yoyGrowthPct": 267.07
+        },
+        {
+          "period": "CY2015",
+          "calendarYear": 2015,
+          "value": 1634850000,
+          "valueBillions": 1.63,
+          "endDate": "2015-12-31",
+          "yoyGrowthPct": 68.56
+        },
+        {
+          "period": "CY2016",
+          "calendarYear": 2016,
+          "value": 1280802000,
+          "valueBillions": 1.28,
+          "endDate": "2016-12-31",
+          "yoyGrowthPct": -21.66
+        },
+        {
+          "period": "CY2017",
+          "calendarYear": 2017,
+          "value": 3415000000,
+          "valueBillions": 3.42,
+          "endDate": "2017-12-31",
+          "yoyGrowthPct": 166.63
+        },
+        {
+          "period": "CY2018",
+          "calendarYear": 2018,
+          "value": 2101000000,
+          "valueBillions": 2.1,
+          "endDate": "2018-12-31",
+          "yoyGrowthPct": -38.48
+        },
+        {
+          "period": "CY2019",
+          "calendarYear": 2019,
+          "value": 1327000000,
+          "valueBillions": 1.33,
+          "endDate": "2019-12-31",
+          "yoyGrowthPct": -36.84
+        },
+        {
+          "period": "CY2020",
+          "calendarYear": 2020,
+          "value": 3157000000,
+          "valueBillions": 3.16,
+          "endDate": "2020-12-31",
+          "yoyGrowthPct": 137.91
+        },
+        {
+          "period": "CY2021",
+          "calendarYear": 2021,
+          "value": 6482000000,
+          "valueBillions": 6.48,
+          "endDate": "2021-12-31",
+          "yoyGrowthPct": 105.32
+        },
+        {
+          "period": "CY2022",
+          "calendarYear": 2022,
+          "value": 7158000000,
+          "valueBillions": 7.16,
+          "endDate": "2022-12-31",
+          "yoyGrowthPct": 10.43
+        },
+        {
+          "period": "CY2023",
+          "calendarYear": 2023,
+          "value": 8899000000,
+          "valueBillions": 8.9,
+          "endDate": "2023-12-31",
+          "yoyGrowthPct": 24.32
+        },
+        {
+          "period": "CY2024",
+          "calendarYear": 2024,
+          "value": 11342000000,
+          "valueBillions": 11.34,
+          "endDate": "2024-12-31",
+          "yoyGrowthPct": 27.45
+        },
+        {
+          "period": "CY2025",
+          "calendarYear": 2025,
+          "value": 8527000000,
+          "valueBillions": 8.53,
+          "endDate": "2025-12-31",
+          "yoyGrowthPct": -24.82
+        }
+      ],
+      "latestQuarter": {
+        "period": "CY2025Q1",
+        "calendarYear": 2025,
+        "calendarQuarter": 1,
+        "value": 1492000000,
+        "valueBillions": 1.49,
+        "endDate": "2025-03-31"
+      },
+      "latestAnnual": {
+        "period": "CY2025",
+        "calendarYear": 2025,
+        "value": 8527000000,
+        "valueBillions": 8.53,
+        "endDate": "2025-12-31",
+        "yoyGrowthPct": -24.82
+      },
+      "trailingTwelveMonths": null
+    }
+  ],
+  "summary": {
+    "totalLatestAnnualCapexBillions": 406.01,
+    "topSpender": "AMZN",
+    "fastestGrower": "ORCL"
+  }
+}
