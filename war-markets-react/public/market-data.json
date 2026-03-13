@@ -1,34 +1,27 @@
 {
-  "updatedAt": "2026-03-13T14:15:41.961Z",
-  "source": "AV:11+Google:3+CoinGecko:3",
+  "updatedAt": "2026-03-13T14:46:35.862Z",
+  "source": "AV:8+Google:3+CoinGecko:3",
   "assets": [
     {
       "symbol": "S&P",
       "name": "S&P 500",
-      "price": 6698.76,
-      "change1d": 0.39,
+      "price": 6684.75,
+      "change1d": 0.18,
       "change7d": 0
     },
     {
       "symbol": "NDX",
       "name": "NASDAQ",
-      "price": 22399.98,
-      "change1d": 0.39,
+      "price": 22342.19,
+      "change1d": 0.14,
       "change7d": 0
     },
     {
       "symbol": "BTC",
       "name": "Bitcoin",
-      "price": 73517,
-      "change1d": 4.4,
-      "change7d": 5.15
-    },
-    {
-      "symbol": "GOLD",
-      "name": "Gold (GLD)",
-      "price": 466.88,
-      "change1d": -1.97,
-      "change7d": 0.16
+      "price": 72972,
+      "change1d": 5.06,
+      "change7d": 4.37
     },
     {
       "symbol": "NVDA",
@@ -80,20 +73,6 @@
       "change7d": 20.45
     },
     {
-      "symbol": "AAPL",
-      "name": "Apple",
-      "price": 255.76,
-      "change1d": -1.94,
-      "change7d": -1.74
-    },
-    {
-      "symbol": "MSFT",
-      "name": "Microsoft",
-      "price": 401.86,
-      "change1d": -0.75,
-      "change7d": -2.15
-    },
-    {
       "symbol": "AMZN",
       "name": "Amazon",
       "price": 209.53,
@@ -103,23 +82,23 @@
     {
       "symbol": "DJI",
       "name": "DOW 30",
-      "price": 46868.89,
-      "change1d": 0.41,
+      "price": 46826.79,
+      "change1d": 0.32,
       "change7d": 0
     },
     {
       "symbol": "ETH",
       "name": "Ethereum",
-      "price": 2193.52,
-      "change1d": 5.41,
-      "change7d": 7.04
+      "price": 2176.48,
+      "change1d": 6.46,
+      "change7d": 6.21
     },
     {
       "symbol": "SOL",
       "name": "Solana",
-      "price": 92.35,
-      "change1d": 5.96,
-      "change7d": 6.81
+      "price": 92.1,
+      "change1d": 7.52,
+      "change7d": 6.52
     }
   ]
 }
