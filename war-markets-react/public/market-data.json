@@ -1,20 +1,27 @@
 {
-  "updatedAt": "2026-03-25T18:18:43.755Z",
-  "source": "AV:11+Google:1+CoinGecko:3",
+  "updatedAt": "2026-03-25T18:47:00.217Z",
+  "source": "AV:11+Google:3+CoinGecko:3",
   "assets": [
+    {
+      "symbol": "S&P",
+      "name": "S&P 500",
+      "price": 6598.26,
+      "change1d": 0.64,
+      "change7d": 0
+    },
     {
       "symbol": "NDX",
       "name": "NASDAQ",
-      "price": 21972.13,
-      "change1d": 0.97,
+      "price": 21943.64,
+      "change1d": 0.84,
       "change7d": 0
     },
     {
       "symbol": "BTC",
       "name": "Bitcoin",
-      "price": 70988,
-      "change1d": 2.44,
-      "change7d": -0.89
+      "price": 70834,
+      "change1d": 2,
+      "change7d": -1.11
     },
     {
       "symbol": "GOLD",
@@ -94,18 +101,25 @@
       "change7d": -3.7
     },
     {
+      "symbol": "DJI",
+      "name": "DOW 30",
+      "price": 46458.27,
+      "change1d": 0.72,
+      "change7d": 0
+    },
+    {
       "symbol": "ETH",
       "name": "Ethereum",
-      "price": 2169.99,
-      "change1d": 2.83,
-      "change7d": -1.52
+      "price": 2163.74,
+      "change1d": 2.15,
+      "change7d": -1.81
     },
     {
       "symbol": "SOL",
       "name": "Solana",
-      "price": 91.87,
-      "change1d": 3.12,
-      "change7d": 2.1
+      "price": 91.77,
+      "change1d": 2.91,
+      "change7d": 2
     }
   ]
 }
