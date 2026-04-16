@@ -13,6 +13,7 @@ import WealthDistributionPanel from "./components/WealthDistributionPanel";
 import MethodologyPage from "./components/MethodologyPage";
 import EventExplainerPanel from "./components/EventExplainerPanel";
 import LiveMarketsPage from "./components/LiveMarketsPage";
+import PostTroughReboundChart from "./components/PostTroughReboundChart";
 import { sp500Data, nasdaqData, EXTRA_EVENTS } from "./data/warData";
 import { EventToggleProvider, useEventToggle } from "./context/EventToggleContext";
 
@@ -223,6 +224,7 @@ function AppInner() {
             {activeTab === "reaction" && (
               <>
                 <DrawdownChart />
+                <PostTroughReboundChart />
                 <TimelineChart />
                 <ComparisonPanel />
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-10">

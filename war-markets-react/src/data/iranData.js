@@ -13,19 +13,20 @@
 // ══════════════════════════════════════════════════════════════
 
 // ── S&P 500 REACTION ─────────────────────────────────────────
-// Pre-war close: Feb 27, 2026 = 6,878.88
-// Trough close:   Mar 30, 2026 = 6,316.91 (−8.17%)
-// New ATH:        Apr 15, 2026 = 7,022.95
+// Pre-war close:   Feb 27, 2026 = 6,878.88
+// Intraday low:    Mar 30, 2026 = 6,316.91
+// Trough CLOSE:    Mar 30, 2026 = 6,343.72 (−7.78%)
+// New ATH:         Apr 15, 2026 = 7,022.95
 // Sources: Yahoo Finance ^GSPC, CNBC, NBC News, Motley Fool
 export const iranSp500 = {
   conflict: "Iran",
   label: "Iran War (2026)",
   date: "Feb 28, 2026",
-  decline: 8.2,
+  decline: 7.8,
   daysToBottom: 21,     // trading days Feb 27 close → Mar 30 close
   daysToRecover: 32,    // trading days to return above pre-war close (~Apr 14)
   preClose: 6878.88,
-  bottomClose: 6316.91,
+  bottomClose: 6343.72,
 };
 
 // ── NASDAQ REACTION ──────────────────────────────────────────

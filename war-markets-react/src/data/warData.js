@@ -11,8 +11,31 @@ export const sp500Data = [
   { conflict: "2008 Crisis", label: "2008 Financial Crisis (Lehman)", date: "Sep 15, 2008", decline: 46.1, daysToBottom: 123, daysToRecover: 881 },
   { conflict: "COVID", label: "COVID-19 Pandemic (2020)", date: "Feb 19, 2020", decline: 33.9, daysToBottom: 23, daysToRecover: 105 },
   { conflict: "Russia-Ukraine", label: "Russia-Ukraine War (2022)", date: "Feb 24, 2022", decline: 15.4, daysToBottom: 160, daysToRecover: 456 },
-  { conflict: "Iran", label: "Iran War (2026)", date: "Feb 28, 2026", decline: 8.2, daysToBottom: 21, daysToRecover: 32 },
+  { conflict: "Iran", label: "Iran War (2026)", date: "Feb 28, 2026", decline: 7.8, daysToBottom: 21, daysToRecover: 32 },
 ];
+
+// ── POST-TROUGH REBOUND RETURNS ─────────────────────────────
+// % return of S&P 500 from the trough close at each weekly interval.
+// Week = 5 trading days. Null = not yet observed (for Iran) or past end-of-series.
+// Source: Yahoo Finance ^GSPC daily closes; trough identified as local min
+// within a ±10-day window of event + daysToBottom.
+// Generated once by scripts/compute_post_trough_returns.mjs (2026-04-16).
+export const postTroughWeeks = [1, 2, 3, 4, 6, 8, 13, 26];
+export const postTroughReturns = {
+  "WWII":           { troughDate: "1942-04-28", troughClose: 7.47,    w1: 4.4,  w2: 6.3,  w3: 5.9,  w4: 7.1,  w6: 12.3, w8: 10.4, w13: 15.4, w26: 24.5 },
+  "Korea":          { troughDate: "1950-07-17", troughClose: 16.68,   w1: 4.8,  w2: 7.0,  w3: 10.4, w4: 9.7,  w6: 11.1, w8: 13.1, w13: 20.0, w26: 27.5 },
+  "Cuban Missile":  { troughDate: "1962-10-23", troughClose: 53.49,   w1: 5.7,  w2: 9.8,  w3: 12.5, w4: 13.7, w6: 17.6, w8: 17.4, w13: 23.8, w26: 30.8 },
+  "Vietnam":        { troughDate: "1964-09-01", troughClose: 82.18,   w1: 1.1,  w2: 1.3,  w3: 2.1,  w4: 2.4,  w6: 3.2,  w8: 3.1,  w13: 2.6,  w26: 5.3 },
+  "Oil Embargo":    { troughDate: "1974-10-03", troughClose: 62.28,   w1: 12.1, w2: 14.3, w3: 12.7, w4: 18.7, w6: 17.3, w8: 12.3, w13: 14.0, w26: 34.5 },
+  "Black Monday":   { troughDate: "1987-12-04", troughClose: 223.92,  w1: 5.1,  w2: 11.3, w3: 9.7,  w4: 15.5, w6: 11.3, w8: 14.1, w13: 20.2, w26: 21.1 },
+  "Gulf War":       { troughDate: "1990-10-11", troughClose: 295.46,  w1: 3.5,  w2: 5.0,  w3: 3.9,  w4: 4.1,  w6: 6.6,  w8: 10.9, w13: 6.2,  w26: 31.5 },
+  "9/11":           { troughDate: "2001-09-21", troughClose: 965.80,  w1: 7.8,  w2: 10.9, w3: 13.0, w4: 11.1, w6: 12.6, w8: 17.9, w13: 18.5, w26: 18.7 },
+  "Iraq":           { troughDate: "2003-03-31", troughClose: 848.18,  w1: 3.7,  w2: 4.4,  w3: 7.5,  w4: 8.2,  w6: 11.1, w8: 12.4, w13: 17.2, w26: 21.4 },
+  "2008 Crisis":    { troughDate: "2009-03-09", troughClose: 676.53,  w1: 11.4, w2: 21.6, w3: 16.4, w4: 23.5, w6: 25.7, w8: 33.6, w13: 38.8, w26: 54.1 },
+  "COVID":          { troughDate: "2020-03-23", troughClose: 2237.40, w1: 17.4, w2: 19.1, w3: 27.2, w4: 22.3, w6: 28.2, w8: 30.6, w13: 36.3, w26: 47.4 },
+  "Russia-Ukraine": { troughDate: "2022-10-12", troughClose: 3577.03, w1: 3.3,  w2: 7.1,  w3: 5.1,  w4: 4.8,  w6: 12.6, w8: 10.8, w13: 11.6, w26: 15.5 },
+  "Iran":           { troughDate: "2026-03-30", troughClose: 6343.72, w1: 4.3,  w2: 9.8,  w3: null, w4: null, w6: null, w8: null, w13: null, w26: null },
+};
 
 export const nasdaqData = [
   { conflict: "Oil Embargo", label: "1973 Oil Embargo (OPEC)", date: "Oct 17, 1973", decline: 48.0, daysToBottom: 265, daysToRecover: null, preClose: 109.50, bottomClose: 56.90 },
@@ -364,7 +387,7 @@ export const globalMarketsData = [
     marketCapRanking: ["NYSE", "NASDAQ", "TSE", "LSE", "Euronext", "Frankfurt", "HKEX"],
     narrative: "The conflict that nearly shut down the Strait of Hormuz produced a surprisingly orderly global selloff. Asian markets were hit hardest — the Nikkei plunged more than 7% intraday on the first post-strike session (closing −5.2% at 52,728) on oil-import fears; Korea's KOSPI had the worst regional decline. European indices fell less (FTSE 100 −1.9%, DAX −2.6% on initial reaction) as UK energy majors benefited from the oil spike. By mid-April, Brent had retreated from its Apr 2 peak of $128 toward $94, and US indices had recouped all war losses — the S&P 500 and NASDAQ hit new all-time highs on Apr 15 despite an active US naval blockade of Iranian ports.",
     indices: [
-      { id: "S&P 500", decline: 8.2, daysToBottom: 21, daysToRecover: 32, confidence: "exact", note: "Pre-war 6878.88 → trough 6316.91 (Mar 30) → ATH 7022.95 (Apr 15)", isPositive: false, caveat: null },
+      { id: "S&P 500", decline: 7.8, daysToBottom: 21, daysToRecover: 32, confidence: "exact", note: "Pre-war 6878.88 → trough close 6343.72 (Mar 30) → ATH 7022.95 (Apr 15)", isPositive: false, caveat: null },
       { id: "DJIA", decline: 8.0, daysToBottom: 21, daysToRecover: 33, confidence: "approx", note: "Dropped 521 pts on Feb 28; full recovery by mid-April", isPositive: false, caveat: null },
       { id: "Nikkei 225", decline: 10.0, daysToBottom: 18, daysToRecover: null, confidence: "approx", note: "Intraday −7% on Mar 9; closed −5.2% at 52,728 — worst regional reaction", isPositive: false, caveat: "Closing-basis estimate; partial recovery by Apr 15" },
       { id: "FTSE 100", decline: 5.0, daysToBottom: 15, daysToRecover: 28, confidence: "approx", note: "Shallower decline — UK energy majors (Shell, BP) cushioned the index", isPositive: false, caveat: null },
