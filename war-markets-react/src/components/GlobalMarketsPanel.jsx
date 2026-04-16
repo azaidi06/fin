@@ -159,6 +159,7 @@ export default function GlobalMarketsPanel() {
     "2008 Crisis": "#14B8A6",
     "COVID": "#06B6D4",
     "Russia-Ukraine": "#E11D48",
+    Iran: "#FBBF24",
   };
 
   return (

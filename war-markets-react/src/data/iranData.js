@@ -1,214 +1,132 @@
 // ══════════════════════════════════════════════════════════════
-// IRAN WAR (2026) — COLLECTED DATA (NOT YET INTEGRATED)
+// IRAN WAR (2026) — INTEGRATED (short-horizon only)
 // ══════════════════════════════════════════════════════════════
-// This file contains structured data for the US-Iran conflict,
-// formatted to match warData.js schema.
-// Data quality: VERY LOW — conflict literally began TODAY (Feb 28, 2026).
-// Most fields are preliminary day-1 reactions or TBD.
+// Status: data through April 15, 2026. Shooting war began Feb 28,
+// ceasefire agreed Apr 8 (Pakistan-mediated, two-week term, expires
+// Apr 21). Markets fully recovered to new ATHs by Apr 15 despite
+// ongoing US naval blockade of the Strait of Hormuz (effective Apr 13).
 //
-// KEY EVENT: US & Israel launch strikes on Iran (Feb 28, 2026)
-// STATUS: ACTIVE / DEVELOPING — all data subject to change
+// Integration scope: reaction, buildup, and global-markets arrays
+// in warData.js. Long-horizon series (CPI, debt/GDP, fiscal summary,
+// cost of living, wealth) are intentionally NOT wired up — the data
+// is too young to be meaningful on those horizons.
 // ══════════════════════════════════════════════════════════════
 
 // ── S&P 500 REACTION ─────────────────────────────────────────
-// Source: Yahoo Finance ^GSPC, CNBC (Feb 28, 2026)
-// Day-1 reaction only — final decline/recovery TBD
-// S&P 500 fell 0.43% on the day of strikes
-// Futures down an additional 622 pts (Dow) after close
+// Pre-war close: Feb 27, 2026 = 6,878.88
+// Trough close:   Mar 30, 2026 = 6,316.91 (−8.17%)
+// New ATH:        Apr 15, 2026 = 7,022.95
+// Sources: Yahoo Finance ^GSPC, CNBC, NBC News, Motley Fool
 export const iranSp500 = {
   conflict: "Iran",
   label: "Iran War (2026)",
   date: "Feb 28, 2026",
-  decline: null,            // TBD — only day-1 data available
-  daysToBottom: null,       // TBD
-  daysToRecover: null,      // TBD
-  // Day-1 snapshot:
-  _day1SpChange: -0.43,     // S&P 500 intraday decline
-  _day1DjiaChange: -1.3,    // DJIA dropped 521 pts
-  _day1NasdaqChange: -0.92, // NASDAQ decline
+  decline: 8.2,
+  daysToBottom: 21,     // trading days Feb 27 close → Mar 30 close
+  daysToRecover: 32,    // trading days to return above pre-war close (~Apr 14)
+  preClose: 6878.88,
+  bottomClose: 6316.91,
 };
 
 // ── NASDAQ REACTION ──────────────────────────────────────────
-// Source: Yahoo Finance ^IXIC, CNBC
-// NASDAQ was already down 3% YTD before strikes
+// Mar 30, 2026 close: 20,948.36 (-2.2% on the day, 5th weekly decline)
+// Pre-war close estimated from −3% YTD through Feb 27 context
+// Sources: Yahoo Finance ^IXIC, CNBC
 export const iranNasdaq = {
   conflict: "Iran",
   label: "Iran War (2026)",
   date: "Feb 28, 2026",
-  decline: null,             // TBD
-  daysToBottom: null,        // TBD
-  daysToRecover: null,       // TBD
-  preClose: null,            // TBD — need pre-strike close
-  bottomClose: null,         // TBD
-  _day1Change: -0.92,
+  decline: 8.1,         // approx peak-to-trough from Feb 27 close
+  daysToBottom: 21,
+  daysToRecover: 32,
+  preClose: 22800,      // estimated
+  bottomClose: 20948.36,
 };
 
 // ── PRE-WAR BUILDUP ──────────────────────────────────────────
-// The Iran buildup is well-documented with a clear escalation timeline:
-//
-// TIMELINE:
-// Late Dec 2025: Massive nationwide protests erupt in Iran (largest since 1979)
-// Jan 25, 2026:  USS Abraham Lincoln carrier group deployed to Gulf
-// Jan 28, 2026:  Trump declares "massive Armada heading to Iran"
-// Feb 3, 2026:   IRGC gunboats attempt to seize US tanker in Strait of Hormuz
-// Feb 19, 2026:  Reports: US could launch strikes "within days"
-// Feb 21, 2026:  Warships, tankers, submarines positioned for potential strikes
-// Feb 28, 2026:  US & Israel conduct strikes on Iranian targets in Tehran
-//
-// Market behavior during buildup:
-// - S&P 500 YTD through Feb 27: +0.7% (remarkably flat)
-// - NASDAQ YTD through Feb 27: -3.0% (tech underperforming)
-// - Energy sector: +22% YTD (massive outperformance on oil fears)
-// - Defense stocks (LMT, BA, RTX): rallying on elevated budgets
-//
-// Source: CNBC, Seeking Alpha, Wespath market summary (Feb 20, 2026)
+// Window: Jan 28 (Trump "armada" announcement) → Feb 27 (pre-strike close)
+// S&P path: roughly flat (+0.7% YTD through Feb 27) despite heavy
+// sector rotation. Energy +22% YTD, defense rallying, tech −3% YTD.
 export const iranPreWar = {
   conflict: "Iran",
   label: "Iran War (2026)",
-  period: "Jan 28 – Feb 27, 2026",    // Trump "armada" to day before strikes
-  days: 22,                            // ~22 trading days
-  spChange: 0.7,                       // S&P roughly flat during buildup (YTD proxy)
-  nqChange: -3.0,                      // NASDAQ down (tech rotation)
-  surprise: false,                     // buildup was highly telegraphed
-  spStart: null,                       // exact level TBD
-  spEnd: null,                         // exact level TBD
+  period: "Jan 28 – Feb 27, 2026",
+  days: 22,
+  spChange: 0.7,
+  nqChange: -3.0,
+  surprise: false,
+  spStart: null,
+  spEnd: 6878.88,
   nqStart: null,
   nqEnd: null,
-  catalyst: "Trump 'armada' announcement (Jan 28) → IRGC Hormuz incident (Feb 3) → strike warnings (Feb 19)",
-  narrative: "Unlike most conflicts in this dataset, the Iran buildup was heavily telegraphed. Trump publicly announced naval deployments, issued ultimatums, and set deadlines. Markets showed a dramatic sector rotation rather than a broad decline — energy stocks surged 22% YTD while tech fell 3%. The S&P's flat performance masked violent internal rotation between war-beneficiary and war-casualty sectors. Oil prices rose above $72/bbl and gold hit record levels near $5,000/oz.",
+  catalyst: "Trump 'armada' (Jan 28) → IRGC Hormuz incident (Feb 3) → strike warnings (Feb 19) → US/Israel strikes (Feb 28)",
+  narrative: "The Iran buildup was the most publicly telegraphed of any conflict in this dataset. Trump announced naval deployments a month in advance and issued explicit deadlines. The S&P's ~flat buildup masked violent internal rotation: energy surged 22% YTD while tech fell 3%. Oil climbed from $65 to $72/bbl and gold hit $5,594 on Jan 29 — a record. When the strikes came, the broad index dropped only 0.43% on the day, but the conflict then dragged the S&P down another ~8% over four weeks as Iran blockaded the Strait of Hormuz and oil surged past $128.",
 };
 
 // ── GLOBAL MARKETS ───────────────────────────────────────────
-// Source: CNBC, Seeking Alpha (Feb 28, 2026)
-// Only day-1 reactions available — all indices TBD
-// Analysts expected 1-2%+ global decline on Monday (Mar 2) open
+// Data through Apr 15, 2026. Declines shown are peak-to-trough
+// estimates from pre-war close; daysToRecover marked null where
+// index has not yet clearly recrossed pre-war level.
+// Sources: CNBC, Al Jazeera, Fortune, NPR
 export const iranGlobalMarkets = {
   conflict: "Iran",
   label: "Iran War (2026)",
-  dataQuality: "minimal",   // literally day 1
+  dataQuality: "medium",
   marketCapRanking: ["NYSE", "NASDAQ", "TSE", "LSE", "Euronext", "Frankfurt", "HKEX"],
-  narrative: "The conflict began on a Friday (Feb 28), limiting initial market reaction to the final trading hours. S&P fell 0.43%, DJIA dropped 521 pts (-1.3%), and NASDAQ slid 0.92%. Futures indicated further selling (Dow futures -622 pts after close). Analysts broadly expected 'rough and risk-off' opens across global markets on Monday. Asian markets (especially those reliant on Middle Eastern oil via Strait of Hormuz) expected to be hardest hit. Iran retaliated with missile strikes across the region (Israel, Bahrain, Saudi Arabia, Qatar, UAE, Iraq), dramatically expanding the conflict's scope.",
+  narrative: "The conflict that nearly shut down the Strait of Hormuz produced a surprisingly orderly global selloff. Asian markets were hit hardest — the Nikkei plunged more than 7% intraday on the first post-strike session (closing −5.2%) on oil-import fears; Korea's KOSPI had the worst regional decline. European indices fell less (FTSE 100 −1.9%, DAX −2.6% on initial reaction) as UK energy majors benefited from the oil spike. By mid-April, Brent had retreated from its Apr 2 peak of $128 toward $94, and US indices had recouped all war losses — the S&P 500 and NASDAQ hit new all-time highs on Apr 15 despite an active US naval blockade of Iranian ports.",
   indices: [
-    // All preliminary day-1 data only
-    { id: "S&P 500", decline: 0.43, daysToBottom: null, daysToRecover: null, confidence: "exact", note: "Day-1 only; futures indicate further decline Mon", isPositive: false, caveat: "Incomplete — conflict just began" },
-    { id: "DJIA", decline: 1.3, daysToBottom: null, daysToRecover: null, confidence: "exact", note: "Dropped 521 pts; futures down additional 622 pts", isPositive: false, caveat: "Incomplete — conflict just began" },
-    // Other indices did not yet have a trading session after strikes
-    // Monday Mar 2 data will be critical
+    { id: "S&P 500", decline: 8.2, daysToBottom: 21, daysToRecover: 32, confidence: "exact", note: "6878.88 → 6316.91 → 7022.95 ATH (Apr 15)", isPositive: false, caveat: null },
+    { id: "DJIA", decline: 8.0, daysToBottom: 21, daysToRecover: 33, confidence: "approx", note: "Dropped 521 pts on Feb 28; full recovery by mid-April", isPositive: false, caveat: null },
+    { id: "Nikkei 225", decline: 10.0, daysToBottom: 18, daysToRecover: null, confidence: "approx", note: "Intraday -7% on Mar 9; closed -5.2% at 52,728 — worst regional reaction due to oil import dependence", isPositive: false, caveat: "Closing-basis estimate; partial recovery by Apr 15" },
+    { id: "FTSE 100", decline: 5.0, daysToBottom: 15, daysToRecover: 28, confidence: "approx", note: "Shallower decline — UK energy majors (Shell, BP) cushioned the index", isPositive: false, caveat: null },
+    { id: "DAX", decline: 7.0, daysToBottom: 18, daysToRecover: null, confidence: "approx", note: "Germany exposed via industrial energy costs; reached 22,983 on worst day", isPositive: false, caveat: null },
+    { id: "CAC 40", decline: 7.0, daysToBottom: 18, daysToRecover: null, confidence: "approx", note: null, isPositive: false, caveat: null },
+    { id: "Hang Seng", decline: 8.0, daysToBottom: 20, daysToRecover: null, confidence: "approx", note: "Fell 4%+ on Mar 23 Trump ultimatum; closed 24,382 on worst day", isPositive: false, caveat: "Pre-existing China tech/property drag" },
   ],
 };
 
 // ── COMMODITY & SAFE HAVEN DATA ──────────────────────────────
-// This is unique to the Iran conflict — oil/gold are central to the story
-// Source: CNN Business, Seeking Alpha, CNBC
+// Confirmed data through Apr 15, 2026
+// Sources: CNBC, Bloomberg, EIA STEO, Finance Magnates, Trading Economics
 export const iranCommodities = {
   oil: {
-    priceBeforeStrikes: 72,          // WTI crude $/barrel (approx)
-    direction: "surging",
-    straitOfHormuzRisk: "high",      // Iran controls chokepoint for 20% of global oil
-    narrative: "Iran is the 4th-largest OPEC producer. The Strait of Hormuz handles ~20% of global oil trade. Iran retaliated with strikes across the Gulf region, raising fears of supply disruption. Oil could spike above $100 if Hormuz is disrupted.",
+    priceBeforeStrikes: 72,           // Brent, Feb 27
+    peakPrice: 128,                   // Apr 2 daily Brent
+    currentPrice: 94,                 // Apr 14–15 range
+    direction: "retreating from peak",
+    straitOfHormuzRisk: "active blockade",
+    narrative: "Brent surged from $72 pre-strikes to peak near $128/bbl on Apr 2 after Iran closed the Strait of Hormuz on Mar 4 and began charging >$1M per transit. The April 8 ceasefire triggered a selloff, but Apr 12 ceasefire-talks collapse and Apr 13 US naval blockade kept prices elevated. Current Brent ~$94 — still 30% above pre-war. EIA projects $115 peak in Q2 2026, falling to $88 by Q4.",
   },
   gold: {
-    februaryGain: 11,               // +11% in February alone
-    level: "approaching $5,000/oz", // near all-time record
-    narrative: "Classic risk-off safe haven buying. Gold surged 11% in February as tensions escalated, approaching $5,000/oz.",
+    preWarPrice: 5594,                // Jan 29 ATH
+    currentPrice: 4730,               // Apr 14
+    marchDecline: -11.5,              // counter-intuitive — gold FELL during the war
+    narrative: "Gold's behavior was the biggest surprise. After hitting an all-time high of $5,594.82 on Jan 29, gold FELL 11.5% during March as the war escalated — driven by portfolio liquidation to cover margin calls during the broader market turmoil. By April it had stabilized in the $4,700–4,800 range, well below its pre-war peak. Central banks were net sellers, reversing years of accumulation.",
   },
   sectors: {
-    winners: ["Energy (+22% YTD)", "Defense/Aerospace (LMT, BA, RTX)", "Gold miners"],
-    losers: ["Tech (-3% YTD)", "Airlines", "Consumer discretionary"],
+    winners: ["Energy (+22% YTD)", "Defense/Aerospace (LMT, BA, RTX)", "Shipping & insurance"],
+    losers: ["Airlines", "Consumer discretionary", "Asian export-sensitive tech"],
   },
-};
-
-// ── CPI DATA ─────────────────────────────────────────────────
-// Source: FRED CPIAUCSL, BLS
-// Very limited — only T-2 through T=0 available, and T=0 is barely started
-export const iranCpi = {
-  conflict: "Iran",
-  label: "Iran War (2026)",
-  startYear: 2026,
-  series: [
-    { t: -2, year: 2024, value: 2.9 },
-    { t: -1, year: 2025, value: 2.8 },   // approx (latest available)
-    { t: 0,  year: 2026, value: 2.4 },   // Jan 2026 reading (only 1 month)
-    // T+1 through T+10 (2027–2036): not available
-    // If oil spikes significantly, expect CPI to rise
-    // Analyst estimates suggest 3.5–5.0% if conflict is prolonged
+  timeline: [
+    { date: "2026-02-28", event: "US/Israel strikes on Iranian targets" },
+    { date: "2026-03-04", event: "Iran closes Strait of Hormuz; oil tops $100" },
+    { date: "2026-03-09", event: "Asian markets plunge; Nikkei -5.2% close" },
+    { date: "2026-03-23", event: "Trump ultimatum — Asian markets tumble again" },
+    { date: "2026-03-30", event: "S&P 500 2026 low (6,316.91)" },
+    { date: "2026-04-02", event: "Brent crude peaks ~$128/bbl" },
+    { date: "2026-04-08", event: "Two-week ceasefire (Pakistan-mediated)" },
+    { date: "2026-04-12", event: "Vance announces talks collapse in Islamabad" },
+    { date: "2026-04-13", event: "US Navy imposes blockade of Iranian ports" },
+    { date: "2026-04-15", event: "S&P 500 & NASDAQ hit new all-time highs" },
   ],
 };
-
-// ── DEBT/GDP DATA ────────────────────────────────────────────
-// Source: FRED GFDGDPA188S
-// Only pre-conflict baseline available
-export const iranDebtGdp = {
-  conflict: "Iran",
-  label: "Iran War (2026)",
-  startYear: 2026,
-  series: [
-    { t: -2, year: 2024, value: 122.3 },
-    { t: -1, year: 2025, value: 124.0 },  // est.
-    { t: 0,  year: 2026, value: null },    // TBD — war spending not yet budgeted
-    // If conflict is sustained, expect significant increase
-    // Iraq/Afghanistan cost ~$8T total over 20 years
-  ],
-};
-
-// ── FISCAL SUMMARY ───────────────────────────────────────────
-export const iranFiscalSummary = {
-  conflict: "Iran",
-  peakCpi: null,           // TBD
-  debtGdpDelta: null,      // TBD
-  narrative: "Too early to assess. The fiscal impact will depend entirely on conflict duration and scope. Key variables: (1) oil price trajectory — if Strait of Hormuz is disrupted, energy-driven inflation could push CPI to 4–5%+; (2) defense spending escalation; (3) whether the conflict triggers a recession. For context, the Iraq/Afghanistan wars cost an estimated $8 trillion over two decades. The US enters this conflict with debt/GDP already at ~124%, far higher than the 55% at the start of the Iraq War.",
-};
-
-// ── COST OF LIVING DATA ──────────────────────────────────────
-// Source: BLS CPI avg prices, FRED MSPUS, NCES, KBB
-// 2026 prices (pre-conflict baseline, early 2026)
-// CPI multiplier: ~0.95 (to convert 2026 → 2024 dollars)
-export const iranCostOfLiving = {
-  era: "Iran",
-  year: 2026,
-  cpiMultiplier: 0.95,
-  items: {
-    home:    { nominal: 430000,  adjusted: 408500 },
-    car:     { nominal: 49500,   adjusted: 47025 },
-    tuition: { nominal: 11800,   adjusted: 11210 },
-    income:  { nominal: 87000,   adjusted: 82650 },
-    milk:    { nominal: 4.40,    adjusted: 4.18 },
-    eggs:    { nominal: 4.50,    adjusted: 4.28 },   // egg prices remain elevated
-    gas:     { nominal: 3.40,    adjusted: 3.23 },   // pre-conflict; expect spike
-    bread:   { nominal: 2.15,    adjusted: 2.04 },
-  },
-};
-
-// ── TOTAL DEBT ADDITIONS ─────────────────────────────────────
-// Source: FRED GFDEBTN (nominal USD, billions)
-export const iranDebtTimeline = [
-  { year: 2025, debt: 36200.00 },   // approx
-  { year: 2026, debt: 37500.00 },   // est. — will rise if war spending materializes
-];
 
 // ── CONFLICT MARKER ──────────────────────────────────────────
 export const iranMarker = { year: 2026, label: "Iran" };
 
-// ── KEY UNKNOWNS & DATA GAPS ─────────────────────────────────
-// As of Feb 28, 2026 (day 1 of conflict):
-//
-// 1. SCOPE: Is this a limited strike campaign or a full-scale war?
-//    Iran has already retaliated with strikes across the Gulf region.
-//
-// 2. STRAIT OF HORMUZ: If disrupted, oil could spike to $100+/bbl,
-//    triggering global recession fears. This is the single biggest
-//    market risk variable.
-//
-// 3. MARKET DATA: We only have Friday afternoon's reaction.
-//    Monday Mar 2 will be the first full global trading day.
-//    Asian markets (Japan, Hong Kong, South Korea) especially
-//    vulnerable due to oil import dependence.
-//
-// 4. DURATION: Every data field (decline, daysToBottom, daysToRecover)
-//    is TBD until the conflict arc becomes clear.
-//
-// 5. FISCAL: War costs, CPI impact, and debt trajectory all depend
-//    on duration and escalation level.
-//
-// RECOMMENDATION: Revisit and update this file weekly as data emerges.
-// The first meaningful update should be after Mar 2 (Monday) trading.
+// ── NOTES ON LONG-HORIZON DATA ───────────────────────────────
+// CPI, debt/GDP, fiscal summary, cost of living, and wealth
+// distribution are intentionally NOT included here. Per user
+// direction (2026-04-16), Iran is wired only into short-horizon
+// panels — reaction, buildup, and global markets. The long-
+// horizon effects of this conflict won't be readable until 2027+.

@@ -11,6 +11,7 @@ export const sp500Data = [
   { conflict: "2008 Crisis", label: "2008 Financial Crisis (Lehman)", date: "Sep 15, 2008", decline: 46.1, daysToBottom: 123, daysToRecover: 881 },
   { conflict: "COVID", label: "COVID-19 Pandemic (2020)", date: "Feb 19, 2020", decline: 33.9, daysToBottom: 23, daysToRecover: 105 },
   { conflict: "Russia-Ukraine", label: "Russia-Ukraine War (2022)", date: "Feb 24, 2022", decline: 15.4, daysToBottom: 160, daysToRecover: 456 },
+  { conflict: "Iran", label: "Iran War (2026)", date: "Feb 28, 2026", decline: 8.2, daysToBottom: 21, daysToRecover: 32 },
 ];
 
 export const nasdaqData = [
@@ -22,6 +23,7 @@ export const nasdaqData = [
   { conflict: "2008 Crisis", label: "2008 Financial Crisis (Lehman)", date: "Sep 15, 2008", decline: 41.8, daysToBottom: 123, daysToRecover: 583, preClose: 2261.18, bottomClose: 1316.12 },
   { conflict: "COVID", label: "COVID-19 Pandemic (2020)", date: "Feb 19, 2020", decline: 30.1, daysToBottom: 23, daysToRecover: 54, preClose: 9817.18, bottomClose: 6860.67 },
   { conflict: "Russia-Ukraine", label: "Russia-Ukraine War (2022)", date: "Feb 24, 2022", decline: 25.4, daysToBottom: 160, daysToRecover: 530, preClose: 13037.49, bottomClose: 10321.39 },
+  { conflict: "Iran", label: "Iran War (2026)", date: "Feb 28, 2026", decline: 8.1, daysToBottom: 21, daysToRecover: 32, preClose: 22800, bottomClose: 20948.36 },
 ];
 
 // Pre-war buildup data — market performance in the lead-up to each conflict
@@ -136,6 +138,14 @@ export const preWarData = [
     spStart: 4482.73, spEnd: 4225.50, nqStart: 14340.26, nqEnd: 13037.49,
     catalyst: "US intelligence warned of imminent invasion (late Jan) → Russia invaded Feb 24",
     narrative: "The most telegraphed invasion in modern history. US intelligence publicly predicted Russia's attack weeks in advance. Markets sold off 8.6% in the S&P as troop buildups were confirmed by satellite imagery, but the actual invasion on Feb 24 caused only a brief 2-day dip before markets stabilized. The larger selloff through 2022 was driven by Fed rate hikes to combat inflation, not the war itself.",
+  },
+  {
+    conflict: "Iran", label: "Iran War (2026)",
+    period: "Jan 28 – Feb 27, 2026", days: 22,
+    spChange: 0.7, nqChange: -3.0, surprise: false,
+    spStart: null, spEnd: 6878.88, nqStart: null, nqEnd: null,
+    catalyst: "Trump 'armada' (Jan 28) → IRGC Hormuz incident (Feb 3) → strike warnings (Feb 19) → US/Israel strikes (Feb 28)",
+    narrative: "The most publicly telegraphed buildup in this dataset. Trump announced naval deployments a month in advance and set explicit deadlines. Headline indices barely moved (S&P +0.7% YTD) but internals rotated violently: energy +22% YTD, defense rallying, tech −3% YTD. Oil climbed from $65 to $72/bbl, gold hit an all-time $5,594 on Jan 29. When strikes came, the S&P dropped only 0.43% on the day — the real 8% decline unfolded over the four weeks after, as Iran blockaded Hormuz and Brent surged past $128.",
   },
 ];
 
@@ -347,6 +357,22 @@ export const globalMarketsData = [
       { id: "Hang Seng", decline: 22.0, daysToBottom: 200, daysToRecover: null, confidence: "exact", note: "Continued drag from China tech/property crises", isPositive: false, caveat: "Pre-existing China headwinds" },
     ],
   },
+  {
+    conflict: "Iran",
+    label: "Iran War (2026)",
+    dataQuality: "medium",
+    marketCapRanking: ["NYSE", "NASDAQ", "TSE", "LSE", "Euronext", "Frankfurt", "HKEX"],
+    narrative: "The conflict that nearly shut down the Strait of Hormuz produced a surprisingly orderly global selloff. Asian markets were hit hardest — the Nikkei plunged more than 7% intraday on the first post-strike session (closing −5.2% at 52,728) on oil-import fears; Korea's KOSPI had the worst regional decline. European indices fell less (FTSE 100 −1.9%, DAX −2.6% on initial reaction) as UK energy majors benefited from the oil spike. By mid-April, Brent had retreated from its Apr 2 peak of $128 toward $94, and US indices had recouped all war losses — the S&P 500 and NASDAQ hit new all-time highs on Apr 15 despite an active US naval blockade of Iranian ports.",
+    indices: [
+      { id: "S&P 500", decline: 8.2, daysToBottom: 21, daysToRecover: 32, confidence: "exact", note: "Pre-war 6878.88 → trough 6316.91 (Mar 30) → ATH 7022.95 (Apr 15)", isPositive: false, caveat: null },
+      { id: "DJIA", decline: 8.0, daysToBottom: 21, daysToRecover: 33, confidence: "approx", note: "Dropped 521 pts on Feb 28; full recovery by mid-April", isPositive: false, caveat: null },
+      { id: "Nikkei 225", decline: 10.0, daysToBottom: 18, daysToRecover: null, confidence: "approx", note: "Intraday −7% on Mar 9; closed −5.2% at 52,728 — worst regional reaction", isPositive: false, caveat: "Closing-basis estimate; partial recovery by Apr 15" },
+      { id: "FTSE 100", decline: 5.0, daysToBottom: 15, daysToRecover: 28, confidence: "approx", note: "Shallower decline — UK energy majors (Shell, BP) cushioned the index", isPositive: false, caveat: null },
+      { id: "DAX", decline: 7.0, daysToBottom: 18, daysToRecover: null, confidence: "approx", note: "Reached 22,983 on worst day; Germany exposed via industrial energy costs", isPositive: false, caveat: null },
+      { id: "CAC 40", decline: 7.0, daysToBottom: 18, daysToRecover: null, confidence: "approx", note: null, isPositive: false, caveat: null },
+      { id: "Hang Seng", decline: 8.0, daysToBottom: 20, daysToRecover: null, confidence: "approx", note: "Fell 4%+ on Mar 23 Trump ultimatum; closed 24,382 on worst day", isPositive: false, caveat: "Pre-existing China tech/property drag" },
+    ],
+  },
 ];
 
 // ── FISCAL IMPACT DATA ─────────────────────────────────────
@@ -366,6 +392,7 @@ export const fiscalConflictColors = {
   "2008 Crisis": "#14B8A6",
   COVID: "#06B6D4",
   "Russia-Ukraine": "#E11D48",
+  Iran: "#FBBF24",
 };
 
 export const cpiData = [
@@ -607,7 +634,7 @@ export const debtGdpData = [
 // Flattened for Recharts — one row per time point, column per conflict
 export const BASE_CONFLICTS = [
   "WWII", "Korea", "Cuban Missile", "Vietnam", "Oil Embargo",
-  "Black Monday", "Gulf War", "9/11", "Iraq", "Russia-Ukraine"
+  "Black Monday", "Gulf War", "9/11", "Iraq", "Russia-Ukraine", "Iran"
 ];
 export const EXTRA_EVENTS = {
   COVID: "COVID-19 (2020)",
