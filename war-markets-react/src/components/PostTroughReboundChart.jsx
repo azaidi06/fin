@@ -66,8 +66,10 @@ export default function PostTroughReboundChart() {
       </p>
       {hasIran && (
         <p style={{ fontSize: 12, color: "#FBBF24", marginBottom: 16, lineHeight: 1.5 }}>
-          Iran trough (Mar 30, 2026) → <strong>+{iranRow.w1}%</strong> after 1 week, <strong>+{iranRow.w2}%</strong> after 2 weeks,
-          <em> while the war is still active</em>. Two-week gain ranks with 9/11 and early phases of the 2008 Crisis.
+          Iran trough (Mar 30, 2026) → <strong>+{iranRow.w2}%</strong> after 2 weeks,<em> while the war is still active</em>.
+          Cleared its pre-war close in just <strong>11 trading days</strong> — the 3rd-fastest recovery phase on record,
+          behind only the Cuban Missile Crisis and the Iraq War (both 6d), and beating COVID (82d), 9/11 (21d),
+          and Russia-Ukraine (296d). Unlike those, Iran's rebound is happening with no Fed stimulus and an active naval blockade still in place.
         </p>
       )}
 
@@ -80,7 +82,7 @@ export default function PostTroughReboundChart() {
             tick={{ fill: "#94A3B8", fontSize: 12 }}
             tickFormatter={v => `W${v}`}
             type="number"
-            domain={[1, 26]}
+            domain={[2, 26]}
             ticks={postTroughWeeks}
           />
           <YAxis

@@ -20,21 +20,21 @@ export const sp500Data = [
 // Source: Yahoo Finance ^GSPC daily closes; trough identified as local min
 // within a ±10-day window of event + daysToBottom.
 // Generated once by scripts/compute_post_trough_returns.mjs (2026-04-16).
-export const postTroughWeeks = [1, 2, 3, 4, 6, 8, 13, 26];
+export const postTroughWeeks = [2, 4, 6, 8, 10, 12, 16, 26];
 export const postTroughReturns = {
-  "WWII":           { troughDate: "1942-04-28", troughClose: 7.47,    w1: 4.4,  w2: 6.3,  w3: 5.9,  w4: 7.1,  w6: 12.3, w8: 10.4, w13: 15.4, w26: 24.5 },
-  "Korea":          { troughDate: "1950-07-17", troughClose: 16.68,   w1: 4.8,  w2: 7.0,  w3: 10.4, w4: 9.7,  w6: 11.1, w8: 13.1, w13: 20.0, w26: 27.5 },
-  "Cuban Missile":  { troughDate: "1962-10-23", troughClose: 53.49,   w1: 5.7,  w2: 9.8,  w3: 12.5, w4: 13.7, w6: 17.6, w8: 17.4, w13: 23.8, w26: 30.8 },
-  "Vietnam":        { troughDate: "1964-09-01", troughClose: 82.18,   w1: 1.1,  w2: 1.3,  w3: 2.1,  w4: 2.4,  w6: 3.2,  w8: 3.1,  w13: 2.6,  w26: 5.3 },
-  "Oil Embargo":    { troughDate: "1974-10-03", troughClose: 62.28,   w1: 12.1, w2: 14.3, w3: 12.7, w4: 18.7, w6: 17.3, w8: 12.3, w13: 14.0, w26: 34.5 },
-  "Black Monday":   { troughDate: "1987-12-04", troughClose: 223.92,  w1: 5.1,  w2: 11.3, w3: 9.7,  w4: 15.5, w6: 11.3, w8: 14.1, w13: 20.2, w26: 21.1 },
-  "Gulf War":       { troughDate: "1990-10-11", troughClose: 295.46,  w1: 3.5,  w2: 5.0,  w3: 3.9,  w4: 4.1,  w6: 6.6,  w8: 10.9, w13: 6.2,  w26: 31.5 },
-  "9/11":           { troughDate: "2001-09-21", troughClose: 965.80,  w1: 7.8,  w2: 10.9, w3: 13.0, w4: 11.1, w6: 12.6, w8: 17.9, w13: 18.5, w26: 18.7 },
-  "Iraq":           { troughDate: "2003-03-31", troughClose: 848.18,  w1: 3.7,  w2: 4.4,  w3: 7.5,  w4: 8.2,  w6: 11.1, w8: 12.4, w13: 17.2, w26: 21.4 },
-  "2008 Crisis":    { troughDate: "2009-03-09", troughClose: 676.53,  w1: 11.4, w2: 21.6, w3: 16.4, w4: 23.5, w6: 25.7, w8: 33.6, w13: 38.8, w26: 54.1 },
-  "COVID":          { troughDate: "2020-03-23", troughClose: 2237.40, w1: 17.4, w2: 19.1, w3: 27.2, w4: 22.3, w6: 28.2, w8: 30.6, w13: 36.3, w26: 47.4 },
-  "Russia-Ukraine": { troughDate: "2022-10-12", troughClose: 3577.03, w1: 3.3,  w2: 7.1,  w3: 5.1,  w4: 4.8,  w6: 12.6, w8: 10.8, w13: 11.6, w26: 15.5 },
-  "Iran":           { troughDate: "2026-03-30", troughClose: 6343.72, w1: 4.3,  w2: 9.8,  w3: null, w4: null, w6: null, w8: null, w13: null, w26: null },
+  "WWII":           { troughDate: "1942-04-28", troughClose: 7.47,    w2: 6.3,  w4: 7.1,  w6: 12.3, w8: 10.4, w10: 13.9, w12: 17.4, w16: 16.9, w26: 24.5 },
+  "Korea":          { troughDate: "1950-07-17", troughClose: 16.68,   w2: 7.0,  w4: 9.7,  w6: 11.1, w8: 13.1, w10: 14.7, w12: 18.6, w16: 18.6, w26: 27.5 },
+  "Cuban Missile":  { troughDate: "1962-10-23", troughClose: 53.49,   w2: 9.8,  w4: 13.7, w6: 17.6, w8: 17.4, w10: 19.9, w12: 22.0, w16: 24.4, w26: 30.8 },
+  "Vietnam":        { troughDate: "1964-09-01", troughClose: 82.18,   w2: 1.3,  w4: 2.4,  w6: 3.2,  w8: 3.1,  w10: 3.7,  w12: 3.6,  w16: 2.3,  w26: 5.3 },
+  "Oil Embargo":    { troughDate: "1974-10-03", troughClose: 62.28,   w2: 14.3, w4: 18.7, w6: 17.3, w8: 12.3, w10: 7.7,  w12: 7.8,  w16: 22.1, w26: 34.5 },
+  "Black Monday":   { troughDate: "1987-12-04", troughClose: 223.92,  w2: 11.3, w4: 15.5, w6: 11.3, w8: 14.1, w10: 15.8, w12: 19.7, w16: 15.3, w26: 21.1 },
+  "Gulf War":       { troughDate: "1990-10-11", troughClose: 295.46,  w2: 5.0,  w4: 4.1,  w6: 6.6,  w8: 10.9, w10: 12.3, w12: 6.6,  w16: 18.9, w26: 31.5 },
+  "9/11":           { troughDate: "2001-09-21", troughClose: 965.80,  w2: 10.9, w4: 11.1, w6: 12.6, w8: 17.9, w10: 17.0, w12: 17.5, w16: 16.7, w26: 18.7 },
+  "Iraq":           { troughDate: "2003-03-31", troughClose: 848.18,  w2: 4.4,  w4: 8.2,  w6: 11.1, w8: 12.4, w10: 17.6, w12: 15.0, w16: 15.7, w26: 21.4 },
+  "2008 Crisis":    { troughDate: "2009-03-09", troughClose: 676.53,  w2: 21.6, w4: 23.5, w6: 25.7, w8: 33.6, w10: 34.2, w12: 37.7, w16: 36.5, w26: 54.1 },
+  "COVID":          { troughDate: "2020-03-23", troughClose: 2237.40, w2: 19.1, w4: 22.3, w6: 28.2, w8: 30.6, w10: 39.6, w12: 39.2, w16: 43.7, w26: 47.4 },
+  "Russia-Ukraine": { troughDate: "2022-10-12", troughClose: 3577.03, w2: 7.1,  w4: 4.8,  w6: 12.6, w8: 10.8, w10: 6.9,  w12: 8.8,  w16: 16.4, w26: 15.5 },
+  "Iran":           { troughDate: "2026-03-30", troughClose: 6343.72, w2: 9.8,  w4: null, w6: null, w8: null, w10: null, w12: null, w16: null, w26: null },
 };
 
 export const nasdaqData = [

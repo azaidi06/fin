@@ -11,6 +11,8 @@ export default function ComparisonPanel() {
   const sharedConflicts = useMemo(() => {
     const filtered500 = filterData(sp500Data);
     const filteredNQ = filterData(nasdaqData);
+    const recoveryPhase = (toBottom, toRecoverTotal) =>
+      toBottom != null && toRecoverTotal != null ? toRecoverTotal - toBottom : null;
     return filtered500
       .filter(sp => filteredNQ.some(nq => nq.conflict === sp.conflict))
       .map(sp => {
@@ -22,8 +24,9 @@ export default function ComparisonPanel() {
           nqDecline: nq.decline,
           spDaysToBottom: sp.daysToBottom,
           nqDaysToBottom: nq.daysToBottom,
-          spDaysToRecover: sp.daysToRecover,
-          nqDaysToRecover: nq.daysToRecover,
+          // Recovery phase = trading days from bottom back to pre-war level
+          spRecoveryPhase: recoveryPhase(sp.daysToBottom, sp.daysToRecover),
+          nqRecoveryPhase: recoveryPhase(nq.daysToBottom, nq.daysToRecover),
           ratio: (nq.decline / sp.decline).toFixed(2),
         };
       });
@@ -63,10 +66,10 @@ export default function ComparisonPanel() {
               </div>
 
               <div style={{ marginBottom: 10 }}>
-                <p style={{ fontSize: 11, color: "#64748B", textTransform: "uppercase", letterSpacing: "0.05em", marginBottom: 4 }}>Days to Recover</p>
+                <p style={{ fontSize: 11, color: "#64748B", textTransform: "uppercase", letterSpacing: "0.05em", marginBottom: 4 }}>Recovery Phase (bottom → pre-war)</p>
                 <div style={{ display: "flex", justifyContent: "space-between", color: "#CBD5E1" }}>
-                  <span>S&P: {d.spDaysToRecover}d</span>
-                  <span>NQ: {d.nqDaysToRecover}d</span>
+                  <span>S&P: {d.spRecoveryPhase ?? "—"}d</span>
+                  <span>NQ: {d.nqRecoveryPhase ?? "—"}d</span>
                 </div>
               </div>
 

@@ -32,7 +32,7 @@ const CONFLICTS = [
   { key: "Iran",           approxTrough: "2026-03-30" },
 ];
 
-const WEEKS = [1, 2, 3, 4, 6, 8, 13, 26];
+const WEEKS = [2, 4, 6, 8, 10, 12, 16, 26];
 
 function curlJson(url) {
   const out = execFileSync("curl", ["-sS", "-H", "User-Agent: Mozilla/5.0", url], {
@@ -106,7 +106,7 @@ for (const c of CONFLICTS) {
 }
 
 console.log("\n// Paste into src/data/warData.js");
-console.log("export const postTroughWeeks = [1, 2, 3, 4, 6, 8, 13, 26];");
+console.log(`export const postTroughWeeks = [${WEEKS.join(", ")}];`);
 console.log("export const postTroughReturns = {");
 for (const r of results) {
   if (r.error) { console.log(`  // ${r.key}: ERROR ${r.error}`); continue; }

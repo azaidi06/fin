@@ -53,10 +53,10 @@ function ConflictCard({ d, maxVal }) {
         {d.label}
       </h3>
 
-      <IndexBlock name="S&P 500" color="#818CF8" bottom={d.spDaysToBottom} recover={d.spDaysToRecover} maxVal={maxVal} />
+      <IndexBlock name="S&P 500" color="#818CF8" bottom={d.spDaysToBottom} recover={d.spRecoveryPhase} maxVal={maxVal} />
 
       {hasNQ ? (
-        <IndexBlock name="NASDAQ" color="#34D399" bottom={d.nqDaysToBottom} recover={d.nqDaysToRecover} maxVal={maxVal} />
+        <IndexBlock name="NASDAQ" color="#34D399" bottom={d.nqDaysToBottom} recover={d.nqRecoveryPhase} maxVal={maxVal} />
       ) : (
         <div style={{ fontSize: 11, color: "#475569", fontStyle: "italic", marginTop: 4 }}>
           NASDAQ not yet trading
@@ -76,6 +76,10 @@ export default function TimelineChart() {
   const combinedData = useMemo(() => {
     const filtered500 = filterData(sp500Data);
     const filteredNQ = filterData(nasdaqData);
+    // daysToRecover in the source data is total days from EVENT; the
+    // recovery phase alone (bottom → back to pre-war level) is the diff.
+    const recoveryPhase = (toBottom, toRecoverTotal) =>
+      toBottom != null && toRecoverTotal != null ? toRecoverTotal - toBottom : null;
     return filtered500.map(sp => {
       const nq = filteredNQ.find(n => n.conflict === sp.conflict);
       return {
@@ -86,8 +90,8 @@ export default function TimelineChart() {
         nqDecline: nq ? nq.decline : null,
         spDaysToBottom: sp.daysToBottom,
         nqDaysToBottom: nq ? nq.daysToBottom : null,
-        spDaysToRecover: sp.daysToRecover,
-        nqDaysToRecover: nq ? nq.daysToRecover : null,
+        spRecoveryPhase: recoveryPhase(sp.daysToBottom, sp.daysToRecover),
+        nqRecoveryPhase: nq ? recoveryPhase(nq.daysToBottom, nq.daysToRecover) : null,
       };
     });
   }, [filterData]);
@@ -122,7 +126,7 @@ export default function TimelineChart() {
       </div>
 
       <p style={{ fontSize: 11, color: "#64748B", textAlign: "center", marginTop: 12, fontStyle: "italic" }}>
-        Bars scaled to {CAP} days max. WWII recovery (917d) extends beyond scale.
+        Bars scaled to {CAP} days max. Oil Embargo recovery (1,435d) and WWII recovery (774d) extend beyond scale.
       </p>
     </section>
   );
