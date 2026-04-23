@@ -1,20 +1,13 @@
 {
-  "updatedAt": "2026-04-23T21:03:38.485Z",
-  "source": "AV:11+Google:2+CoinGecko:3",
+  "updatedAt": "2026-04-23T21:30:31.020Z",
+  "source": "AV:11+Google:1+CoinGecko:3",
   "assets": [
-    {
-      "symbol": "NDX",
-      "name": "NASDAQ",
-      "price": 24438.5,
-      "change1d": -0.89,
-      "change7d": 0
-    },
     {
       "symbol": "BTC",
       "name": "Bitcoin",
-      "price": 77853,
-      "change1d": -0.87,
-      "change7d": 3.47
+      "price": 77894,
+      "change1d": -0.98,
+      "change7d": 3.53
     },
     {
       "symbol": "GOLD",
@@ -54,9 +47,9 @@
     {
       "symbol": "AMD",
       "name": "AMD",
-      "price": 305.33,
-      "change1d": 0.62,
-      "change7d": 9.73
+      "price": 303.46,
+      "change1d": 6.67,
+      "change7d": 17.57
     },
     {
       "symbol": "AAOI",
@@ -103,16 +96,16 @@
     {
       "symbol": "ETH",
       "name": "Ethereum",
-      "price": 2324.52,
-      "change1d": -2.92,
-      "change7d": -1.53
+      "price": 2323.85,
+      "change1d": -3.14,
+      "change7d": -1.56
     },
     {
       "symbol": "SOL",
       "name": "Solana",
-      "price": 85.61,
-      "change1d": -1.77,
-      "change7d": -4.92
+      "price": 85.72,
+      "change1d": -1.97,
+      "change7d": -4.79
     }
   ]
 }
