@@ -1,27 +1,104 @@
 {
-  "updatedAt": "2026-05-06T20:02:41.782Z",
-  "source": "CoinGecko:3",
+  "updatedAt": "2026-05-06T20:30:59.177Z",
+  "source": "AV:11+CoinGecko:3",
   "assets": [
     {
       "symbol": "BTC",
       "name": "Bitcoin",
-      "price": 81485,
-      "change1d": -0.23,
-      "change7d": 8.02
+      "price": 81571,
+      "change1d": -0.1,
+      "change7d": 8.13
+    },
+    {
+      "symbol": "GOLD",
+      "name": "Gold (GLD)",
+      "price": 430.84,
+      "change1d": 3.01,
+      "change7d": 3.22
+    },
+    {
+      "symbol": "NVDA",
+      "name": "NVIDIA",
+      "price": 207.83,
+      "change1d": 5.77,
+      "change7d": -0.68
+    },
+    {
+      "symbol": "TSLA",
+      "name": "Tesla",
+      "price": 398.73,
+      "change1d": 2.4,
+      "change7d": 6.96
+    },
+    {
+      "symbol": "META",
+      "name": "Meta",
+      "price": 612.88,
+      "change1d": 1.31,
+      "change7d": -8.41
+    },
+    {
+      "symbol": "GOOGL",
+      "name": "Alphabet",
+      "price": 398.04,
+      "change1d": 2.47,
+      "change7d": 13.75
+    },
+    {
+      "symbol": "AMD",
+      "name": "AMD",
+      "price": 421.39,
+      "change1d": 18.61,
+      "change7d": 25
+    },
+    {
+      "symbol": "AAOI",
+      "name": "Applied Optoelectronics",
+      "price": 178.54,
+      "change1d": -1.12,
+      "change7d": 16.82
+    },
+    {
+      "symbol": "AXTI",
+      "name": "AXT Inc",
+      "price": 104.83,
+      "change1d": -2.53,
+      "change7d": 47.5
+    },
+    {
+      "symbol": "AAPL",
+      "name": "Apple",
+      "price": 287.51,
+      "change1d": 1.17,
+      "change7d": 6.42
+    },
+    {
+      "symbol": "MSFT",
+      "name": "Microsoft",
+      "price": 413.96,
+      "change1d": 0.63,
+      "change7d": -2.47
+    },
+    {
+      "symbol": "AMZN",
+      "name": "Amazon",
+      "price": 274.99,
+      "change1d": 0.53,
+      "change7d": 4.54
     },
     {
       "symbol": "ETH",
       "name": "Ethereum",
-      "price": 2349.94,
-      "change1d": -1.05,
-      "change7d": 5.28
+      "price": 2353.01,
+      "change1d": -1.21,
+      "change7d": 5.42
     },
     {
       "symbol": "SOL",
       "name": "Solana",
-      "price": 89.24,
-      "change1d": 3.02,
-      "change7d": 8.59
+      "price": 89.45,
+      "change1d": 3.09,
+      "change7d": 8.85
     }
   ]
 }
