@@ -3,20 +3,16 @@ import {
   BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip,
   ResponsiveContainer, Cell,
 } from "recharts";
-import { costOfLivingData, sourceUrls, sourceLabels } from "../data/warData";
+import { costOfLivingData, sourceUrls, sourceLabels, fiscalConflictColors } from "../data/warData";
 import { TooltipSourceLink } from "./SourceLink";
 import { useEventToggle } from "../context/EventToggleContext";
 
 const card = { background: "#1E293B", border: "1px solid #334155", borderRadius: 12, padding: 24, marginBottom: 32 };
 const innerCard = { background: "#0F172A", border: "1px solid #334155", borderRadius: 10, padding: 20 };
 
-const eraColors = {
-  WWII: "#EF4444", Korea: "#F59E0B", Vietnam: "#10B981",
-  "Oil Embargo": "#F97316", "Black Monday": "#A855F7",
-  "Gulf War": "#6366F1", "9/11": "#EC4899", Iraq: "#3B82F6",
-  "2008 Crisis": "#14B8A6", COVID: "#06B6D4",
-  "Russia-Ukraine": "#E11D48", Today: "#8B5CF6",
-};
+// Pull from shared semantic war color map so each conflict
+// reads the same hue here as in fiscal/global/wealth charts.
+const eraColors = fiscalConflictColors;
 
 const itemLabels = {
   home: "Median Home", car: "New Car", tuition: "College Tuition", income: "Annual Income",
@@ -181,13 +177,32 @@ export default function CostOfLivingPanel() {
       </p>
 
       {/* Era color legend */}
-      <div style={{ display: "flex", flexWrap: "wrap", gap: 12, marginBottom: 20, justifyContent: "center" }}>
+      <div style={{ display: "flex", flexWrap: "wrap", gap: 12, marginBottom: 12, justifyContent: "center" }}>
         {Object.entries(activeEraColors).map(([era, color]) => (
           <div key={era} style={{ display: "flex", alignItems: "center", gap: 5 }}>
             <span style={{ width: 10, height: 10, borderRadius: 2, background: color }} />
             <span style={{ fontSize: 11, color: "#94A3B8" }}>{era}</span>
           </div>
         ))}
+      </div>
+
+      {/* 2024-USD inflation-adjusted indicator */}
+      <div style={{
+        display: "inline-flex",
+        alignItems: "center",
+        gap: 6,
+        padding: "4px 10px",
+        marginBottom: 20,
+        borderRadius: 999,
+        background: "rgba(99,102,241,0.12)",
+        border: "1px solid rgba(99,102,241,0.32)",
+        fontSize: 11,
+        fontWeight: 600,
+        color: "#A5B4FC",
+        letterSpacing: "0.04em",
+      }}>
+        <span style={{ width: 6, height: 6, borderRadius: 3, background: "#A5B4FC" }} />
+        ALL VALUES IN 2024 USD · CPI-U adjusted
       </div>
 
       {/* ── BIG PURCHASES ── */}

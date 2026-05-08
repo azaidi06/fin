@@ -202,6 +202,111 @@ function CustomTooltip({ active, payload, label, hoveredConflict, sourceKey }) {
   );
 }
 
+// Small-multiples replacement for the overlaid CPI line view.
+// One mini-chart per war so the user reads the *shape* of each
+// conflict's inflation trajectory without trying to detangle 7+
+// lines from each other. Uses the shared `fiscalConflictColors`
+// so each war keeps the same hue across the app.
+function SmallMultiplesLineChart({ title, subtitle, data, conflicts, yTickFormatter, sourceKey }) {
+  // Compute a shared y-domain so panels are visually comparable.
+  const yDomain = useMemo(() => {
+    let min = Infinity, max = -Infinity;
+    for (const row of data) {
+      for (const c of conflicts) {
+        const v = row[c];
+        if (v == null) continue;
+        if (v < min) min = v;
+        if (v > max) max = v;
+      }
+    }
+    if (!isFinite(min) || !isFinite(max)) return [0, 1];
+    const pad = (max - min) * 0.08 || 1;
+    return [Math.floor(min - pad), Math.ceil(max + pad)];
+  }, [data, conflicts]);
+
+  return (
+    <div style={innerCard}>
+      <h3 style={{ fontSize: 15, fontWeight: 600, color: "#E2E8F0", marginBottom: 4 }}>{title}</h3>
+      <p style={{ fontSize: 11, color: "#64748B", marginBottom: 16 }}>{subtitle}</p>
+      <div
+        style={{
+          display: "grid",
+          gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))",
+          gap: 10,
+        }}
+      >
+        {conflicts.map((c) => {
+          const color = fiscalConflictColors[c] || "#94A3B8";
+          return (
+            <div
+              key={c}
+              style={{
+                background: "#0B1220",
+                border: "1px solid #1E293B",
+                borderRadius: 8,
+                padding: "10px 10px 6px",
+              }}
+            >
+              <div style={{ display: "flex", alignItems: "center", gap: 6, marginBottom: 4 }}>
+                <span style={{ width: 8, height: 8, borderRadius: 2, background: color, flexShrink: 0 }} />
+                <span style={{ fontSize: 11, fontWeight: 600, color: "#E2E8F0" }}>{c}</span>
+              </div>
+              <ResponsiveContainer width="100%" height={110}>
+                <LineChart data={data} margin={{ top: 4, right: 6, left: 0, bottom: 0 }}>
+                  <CartesianGrid strokeDasharray="3 3" stroke="#334155" opacity={0.25} vertical={false} />
+                  <XAxis
+                    dataKey="tLabel"
+                    stroke="#334155"
+                    tick={{ fill: "#64748B", fontSize: 9 }}
+                    axisLine={false}
+                    tickLine={false}
+                    interval="preserveStartEnd"
+                  />
+                  <YAxis
+                    stroke="#334155"
+                    tickFormatter={yTickFormatter || (v => `${v}%`)}
+                    tick={{ fill: "#64748B", fontSize: 9 }}
+                    axisLine={false}
+                    tickLine={false}
+                    domain={yDomain}
+                    width={28}
+                  />
+                  <Tooltip
+                    cursor={{ stroke: "#475569", strokeDasharray: "3 3" }}
+                    content={({ active, payload, label }) => {
+                      if (!active || !payload?.length) return null;
+                      const v = payload[0].value;
+                      return (
+                        <div style={{ background: "#1E293B", border: "1px solid #334155", borderRadius: 6, padding: "6px 10px", fontSize: 11, color: "#F8FAFC" }}>
+                          <strong>{label}</strong>: {v != null ? `${v}%` : "—"}
+                        </div>
+                      );
+                    }}
+                  />
+                  <ReferenceLine x="T=0" stroke="#F8FAFC" strokeDasharray="4 4" strokeOpacity={0.35} />
+                  <Line
+                    type="monotone"
+                    dataKey={c}
+                    stroke={color}
+                    strokeWidth={2}
+                    dot={{ r: 2, fill: color, strokeWidth: 0 }}
+                    activeDot={{ r: 4, strokeWidth: 0 }}
+                    connectNulls
+                    isAnimationActive
+                  />
+                </LineChart>
+              </ResponsiveContainer>
+            </div>
+          );
+        })}
+      </div>
+      <p style={{ fontSize: 10, color: "#475569", marginTop: 8, marginBottom: 0, textAlign: "right" }}>
+        Source: see <strong style={{ color: "#64748B" }}>{sourceKey}</strong>
+      </p>
+    </div>
+  );
+}
+
 function FiscalChart({ title, subtitle, data, conflicts, yLabel, yDomain, yTickFormatter, sourceKey }) {
   const [hoveredConflict, setHoveredConflict] = useState(null);
   const [hiddenConflicts, setHiddenConflicts] = useState([]);
@@ -644,13 +749,11 @@ export default function FiscalImpactPanel() {
 
       <DebtVelocitySection />
 
-      <FiscalChart
+      <SmallMultiplesLineChart
         title="CPI Inflation Trajectory"
-        subtitle="Year-over-year CPI change (%) — T-2 through T+5 relative to conflict start"
+        subtitle="One panel per conflict — YoY CPI change, T-2 through T+5 relative to war start. Shared y-axis for cross-conflict comparison."
         data={cpiChart}
         conflicts={activeConflicts}
-        yLabel="CPI YoY %"
-        yDomain={["auto", "auto"]}
         sourceKey="cpi"
       />
 

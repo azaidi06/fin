@@ -13,7 +13,7 @@ export default function DataTable({ title, color, data, sourceKey }) {
         {title}
       </h3>
       <div style={{ overflowX: "auto" }}>
-        <table style={{ width: "100%", borderCollapse: "collapse" }}>
+        <table className="num" style={{ width: "100%", borderCollapse: "collapse" }}>
           <thead>
             <tr>
               <th style={th}>Conflict</th>

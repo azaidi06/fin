@@ -1,5 +1,6 @@
 import { useState, useRef, useEffect } from "react";
 import Header from "./components/Header";
+import AppSwitcher from "./components/AppSwitcher";
 import HomePage from "./components/HomePage";
 import BuildupPanel from "./components/BuildupPanel";
 import DrawdownChart from "./components/DrawdownChart";
@@ -28,17 +29,22 @@ const tabs = [
   { id: "methodology", label: "Methodology" },
 ];
 
+// Capex-style indigo-glow tab button. Inactive tabs are muted slate;
+// active uses indigo-500/20 fill, A5B4FC text, soft glow ring.
 const tabBtn = (active) => ({
-  padding: "10px 24px",
-  fontSize: 14,
-  fontWeight: active ? 600 : 400,
-  color: active ? "#F8FAFC" : "#94A3B8",
-  background: active ? "#334155" : "transparent",
+  padding: "10px 18px",
+  fontSize: 13,
+  fontWeight: 600,
+  fontFamily: "inherit",
+  whiteSpace: "nowrap",
+  color: active ? "#A5B4FC" : "#94A3B8",
+  background: active ? "rgba(99,102,241,0.20)" : "transparent",
   border: "1px solid",
-  borderColor: active ? "#475569" : "transparent",
+  borderColor: active ? "rgba(99,102,241,0.40)" : "transparent",
   borderRadius: 8,
   cursor: "pointer",
-  transition: "all 0.15s ease",
+  transition: "all 0.18s ease",
+  boxShadow: active ? "0 0 14px rgba(99,102,241,0.20)" : "none",
 });
 
 const sourceCategory = { marginBottom: 12 };
@@ -187,7 +193,10 @@ function AppInner() {
 
   return (
     <div className="page-root min-h-screen px-4 py-10 sm:px-6 lg:px-8" style={{ color: "#F8FAFC" }}>
-      <div className="max-w-[960px] mx-auto">
+      <div className="max-w-[960px] lg:max-w-[1200px] mx-auto">
+        <div className="flex justify-end mb-4">
+          <AppSwitcher />
+        </div>
         <Header compact={activeTab === "home"} onGoHome={activeTab !== "home" ? goHome : undefined} />
 
         {activeTab === "home" ? (
@@ -199,25 +208,80 @@ function AppInner() {
           </div>
         ) : (
           <>
-            {/* Tab bar */}
-            <div style={{ display: "flex", gap: 8, marginBottom: 32, justifyContent: "center", flexWrap: "wrap" }}>
+            {/* Breadcrumb (out of the tab pill row) */}
+            <nav
+              aria-label="breadcrumb"
+              style={{ display: "flex", alignItems: "center", gap: 6, marginBottom: 14, fontSize: 12, color: "#64748B" }}
+            >
               <button
-                style={{
-                  ...tabBtn(false),
-                  display: "flex",
-                  alignItems: "center",
-                  gap: 6,
-                }}
                 onClick={goHome}
+                style={{
+                  display: "inline-flex",
+                  alignItems: "center",
+                  gap: 4,
+                  background: "transparent",
+                  border: "none",
+                  cursor: "pointer",
+                  color: "#94A3B8",
+                  padding: "4px 6px",
+                  borderRadius: 6,
+                  fontFamily: "inherit",
+                  fontSize: 12,
+                  transition: "color 0.15s, background 0.15s",
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.color = "#F8FAFC";
+                  e.currentTarget.style.background = "rgba(255,255,255,0.04)";
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.color = "#94A3B8";
+                  e.currentTarget.style.background = "transparent";
+                }}
               >
-                ← Home
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
+                  <polyline points="15 18 9 12 15 6" />
+                </svg>
+                Home
               </button>
-              {tabs.map(t => (
-                <button key={t.id} style={tabBtn(activeTab === t.id)} onClick={() => setActiveTab(t.id)}>
-                  {t.label}
-                </button>
-              ))}
-              <FilterDropdown />
+              <span style={{ opacity: 0.4 }}>/</span>
+              <span style={{ color: "#CBD5E1" }}>Money + War</span>
+              <span style={{ opacity: 0.4 }}>/</span>
+              <span style={{ color: "#F8FAFC", fontWeight: 600 }}>
+                {tabs.find(t => t.id === activeTab)?.label || "Live Markets"}
+              </span>
+            </nav>
+
+            {/* Tab bar — sticky, indigo-glow active state */}
+            <div className="sticky-tabbar" style={{ marginBottom: 28 }}>
+              <div
+                role="tablist"
+                aria-label="Sections"
+                style={{
+                  display: "flex",
+                  gap: 4,
+                  padding: 4,
+                  background: "rgba(30, 41, 59, 0.55)",
+                  borderRadius: 12,
+                  border: "1px solid rgba(255,255,255,0.06)",
+                  overflowX: "auto",
+                  flexWrap: "nowrap",
+                }}
+              >
+                {tabs.map(t => (
+                  <button
+                    key={t.id}
+                    role="tab"
+                    aria-selected={activeTab === t.id}
+                    style={{ ...tabBtn(activeTab === t.id), flex: "0 0 auto" }}
+                    onClick={() => setActiveTab(t.id)}
+                  >
+                    {t.label}
+                  </button>
+                ))}
+                <div style={{ marginLeft: "auto", flexShrink: 0 }}>
+                  <FilterDropdown />
+                </div>
+              </div>
             </div>
 
             {/* Post-Conflict Reaction tab */}
@@ -227,10 +291,50 @@ function AppInner() {
                 <PostTroughReboundChart />
                 <TimelineChart />
                 <ComparisonPanel />
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-10">
-                  <DataTable title="S&P 500" color="#6366F1" data={filteredSp500} sourceKey="sp500" />
-                  <DataTable title="NASDAQ" color="#10B981" data={filteredNasdaq} sourceKey="nasdaq" />
-                </div>
+                <details
+                  style={{
+                    background: "#1E293B",
+                    border: "1px solid #334155",
+                    borderRadius: 12,
+                    marginBottom: 32,
+                    overflow: "hidden",
+                  }}
+                >
+                  <summary
+                    style={{
+                      cursor: "pointer",
+                      padding: "14px 20px",
+                      listStyle: "none",
+                      display: "flex",
+                      alignItems: "center",
+                      gap: 10,
+                      userSelect: "none",
+                    }}
+                  >
+                    <span style={{
+                      fontSize: 11,
+                      fontWeight: 700,
+                      color: "#A5B4FC",
+                      background: "rgba(99,102,241,0.16)",
+                      padding: "3px 8px",
+                      borderRadius: 4,
+                      textTransform: "uppercase",
+                      letterSpacing: "0.08em",
+                    }}>
+                      Raw Data
+                    </span>
+                    <span style={{ fontSize: 13, color: "#F8FAFC", fontWeight: 600 }}>
+                      Show source tables
+                    </span>
+                    <span style={{ fontSize: 12, color: "#64748B", marginLeft: "auto" }}>
+                      S&amp;P 500 + NASDAQ — for verification
+                    </span>
+                  </summary>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6 num" style={{ padding: 20, paddingTop: 4 }}>
+                    <DataTable title="S&P 500" color="#6366F1" data={filteredSp500} sourceKey="sp500" />
+                    <DataTable title="NASDAQ" color="#10B981" data={filteredNasdaq} sourceKey="nasdaq" />
+                  </div>
+                </details>
               </>
             )}
 

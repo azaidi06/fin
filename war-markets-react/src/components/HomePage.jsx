@@ -63,7 +63,7 @@ function AnimatedStat({ value, color }) {
   }, [value]);
 
   return (
-    <div style={{ fontSize: 20, fontWeight: 700, color, lineHeight: 1 }}>
+    <div style={{ fontSize: 36, fontWeight: 700, color, lineHeight: 1, fontVariantNumeric: "tabular-nums", letterSpacing: "-0.02em" }}>
       {display}
     </div>
   );
@@ -75,7 +75,7 @@ function BarSparkline({ values, color, width = 120, height = 32, animated = fals
   const max = Math.max(...values.map(Math.abs));
   const barW = (width - (values.length - 1) * 2) / values.length;
   return (
-    <svg width={width} height={height} style={{ opacity: 0.7, display: "block" }}>
+    <svg width="100%" height={height} viewBox={`0 0 ${width} ${height}`} preserveAspectRatio="none" style={{ opacity: 0.7, display: "block" }}>
       {values.map((v, i) => {
         const barH = (Math.abs(v) / max) * height;
         return (
@@ -101,7 +101,7 @@ function SignedBarSparkline({ values, color, width = 120, height = 32, animated 
   const mid = height / 2;
   const barW = (width - (values.length - 1) * 2) / values.length;
   return (
-    <svg width={width} height={height} style={{ opacity: 0.7, display: "block" }}>
+    <svg width="100%" height={height} viewBox={`0 0 ${width} ${height}`} preserveAspectRatio="none" style={{ opacity: 0.7, display: "block" }}>
       {/* zero line */}
       <line x1={0} y1={mid} x2={width} y2={mid} stroke="#475569" strokeWidth={0.5} />
       {values.map((v, i) => {
@@ -141,7 +141,7 @@ function LineSparkline({ values, color, width = 120, height = 32, animated = fal
   const pathLength = width * 1.5;
 
   return (
-    <svg width={width} height={height} style={{ opacity: 0.7, display: "block" }}>
+    <svg width="100%" height={height} viewBox={`0 0 ${width} ${height}`} preserveAspectRatio="none" style={{ opacity: 0.7, display: "block" }}>
       <polyline
         points={points}
         fill="none"
@@ -161,7 +161,7 @@ function GroupedBarSparkline({ groups, color, width = 120, height = 32, animated
   const groupW = (width - (groups.length - 1) * 4) / groups.length;
   let barIndex = 0;
   return (
-    <svg width={width} height={height} style={{ opacity: 0.7, display: "block" }}>
+    <svg width="100%" height={height} viewBox={`0 0 ${width} ${height}`} preserveAspectRatio="none" style={{ opacity: 0.7, display: "block" }}>
       {groups.map((bars, gi) => {
         const barW = (groupW - (bars.length - 1)) / bars.length;
         const gx = gi * (groupW + 4);
@@ -190,8 +190,8 @@ function GroupedBarSparkline({ groups, color, width = 120, height = 32, animated
 
 /* ── Card sparkline map ── */
 function CardSparkline({ id, color, filterData, activeConflicts, isTablet }) {
-  const w = 120;
-  const h = isTablet ? 24 : 32;
+  const w = 240;
+  const h = isTablet ? 28 : 38;
 
   const reactionValues = useMemo(() => filterData(sp500Data).map(d => d.decline), [filterData]);
   const buildupValues = useMemo(() => filterData(preWarData).map(d => d.spChange), [filterData]);
@@ -503,18 +503,6 @@ const cards = [
   },
 ];
 
-const badge = (color) => ({
-  fontSize: 9,
-  fontWeight: 600,
-  color,
-  background: `${color}1F`,
-  padding: "2px 8px",
-  borderRadius: 4,
-  textTransform: "uppercase",
-  letterSpacing: "0.05em",
-  alignSelf: "flex-start",
-});
-
 /* ── Glow orb helper ── */
 function GlowOrb({ color, size, top, left, delay }) {
   return (
@@ -544,7 +532,7 @@ export default function HomePage({ onSelect }) {
   const isTablet = useIsTablet();
 
   return (
-    <div style={{ maxWidth: 900, margin: "0 auto", position: "relative", overflow: "hidden" }}>
+    <div style={{ margin: "0 auto", position: "relative", overflow: "hidden" }}>
       {/* Ambient glow orbs */}
       <GlowOrb color="#6366F1" size={400} top="-10%" left="-10%" delay={0} />
       <GlowOrb color="#8B5CF6" size={350} top="30%" left="40%" delay={3} />
@@ -553,27 +541,8 @@ export default function HomePage({ onSelect }) {
       {/* Ticker strip — compact market glance */}
       <TickerStrip assets={assets} updatedAt={updatedAt} loading={loading} />
 
-      {/* Intro paragraph */}
-      <p className="landing-intro" style={{
-        fontSize: 14,
-        color: "#94A3B8",
-        lineHeight: 1.75,
-        maxWidth: 720,
-        margin: "0 auto 28px",
-        textAlign: "center",
-      }}>
-        The recovery of markets after a shock are not a measure of societal resilience, but rather
-        a byproduct of how modern crises are financed. Because governments have shifted from funding
-        emergencies through taxation and shared sacrifice to relying on debt and central bank
-        intervention, a market "recovery" now functions as a massive wealth transfer mechanism.
-        Wall Street always bounces back, but the method of that bounce-back inflates the assets of
-        the top 1% while quietly eroding the purchasing power and economic standing of everyone else.
-        In 1978, the top 0.1% held 7% of American wealth, the most equal the country has ever been.
-        By 2024, they're back to 20%, approaching 1929 levels.
-      </p>
-
       <div className="bento-grid">
-        {/* Content cards */}
+        {/* Content cards — eyebrow / big stat / sparkline rhythm */}
         {cards.map((c, i) => (
           <button
             key={c.id}
@@ -581,6 +550,7 @@ export default function HomePage({ onSelect }) {
             style={{
               "--card-glow": `linear-gradient(135deg, ${c.color}4D, transparent 60%)`,
               boxShadow: "none",
+              gap: 10,
             }}
             onClick={() => onSelect(c.id === "debt" ? "fiscal" : c.id)}
             onMouseEnter={(e) => {
@@ -590,58 +560,57 @@ export default function HomePage({ onSelect }) {
               e.currentTarget.style.boxShadow = "none";
             }}
           >
-            {/* Color dot + title row */}
-            <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+            {/* Eyebrow — color dot + small uppercase title (was 15px h3) */}
+            <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
               <div
                 style={{
-                  width: 10,
-                  height: 10,
-                  borderRadius: 3,
+                  width: 8,
+                  height: 8,
+                  borderRadius: 2,
                   background: c.color,
                   flexShrink: 0,
                 }}
               />
-              <h3 style={{ fontSize: 15, fontWeight: 600, color: "#F8FAFC", margin: 0 }}>
+              <span
+                style={{
+                  fontSize: 11,
+                  fontWeight: 600,
+                  color: c.color,
+                  textTransform: "uppercase",
+                  letterSpacing: "0.08em",
+                }}
+              >
                 {c.title}
-              </h3>
+              </span>
             </div>
 
-            {/* Description */}
-            <p style={{ fontSize: 13, color: "#94A3B8", lineHeight: 1.5, margin: 0 }}>
+            {/* Big stat — dominant typography, single-stat layout for rhythm */}
+            <div style={{ minHeight: 56 }}>
+              {c.stat ? (
+                <>
+                  <AnimatedStat value={c.stat} color={c.statColor || c.color} />
+                  <div style={{ fontSize: 11, color: "#64748B", marginTop: 6, fontVariantNumeric: "tabular-nums" }}>
+                    {c.statLabel}
+                  </div>
+                </>
+              ) : (
+                <div style={{ fontSize: 28, color: "#475569", fontWeight: 700, lineHeight: 1 }}>—</div>
+              )}
+            </div>
+
+            {/* Description — secondary */}
+            <p style={{ fontSize: 13, color: "#94A3B8", lineHeight: 1.45, margin: 0 }}>
               {c.desc}
             </p>
 
-            {/* Sparkline */}
+            {/* Sparkline — full-width across the bottom of the card */}
             {c.id !== "methodology" && (
-              <div style={{ marginTop: -4, marginBottom: -4 }}>
-                <CardSparkline id={c.id} color={c.color} filterData={filterData} activeConflicts={activeConflicts} isTablet={isTablet} />
+              <div style={{ marginTop: "auto", paddingTop: 6 }}>
+                <div style={{ width: "100%" }}>
+                  <CardSparkline id={c.id} color={c.color} filterData={filterData} activeConflicts={activeConflicts} isTablet={isTablet} />
+                </div>
               </div>
             )}
-
-            {/* Stat + tag row */}
-            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-end", marginTop: 4 }}>
-              {c.stat ? (
-                <div style={{ display: "flex", gap: 14, alignItems: "flex-end" }}>
-                  <div>
-                    <AnimatedStat value={c.stat} color={c.statColor || c.color} />
-                    <div style={{ fontSize: 10, color: "#64748B", marginTop: 2 }}>
-                      {c.statLabel}
-                    </div>
-                  </div>
-                  {c.stat2 && (
-                    <div>
-                      <AnimatedStat value={c.stat2} color={c.stat2Color || c.color} />
-                      <div style={{ fontSize: 10, color: "#64748B", marginTop: 2 }}>
-                        {c.statLabel2}
-                      </div>
-                    </div>
-                  )}
-                </div>
-              ) : (
-                <div />
-              )}
-              {!c.stat2 && <span style={badge(c.color)}>{c.tag}</span>}
-            </div>
           </button>
         ))}
       </div>
@@ -649,6 +618,67 @@ export default function HomePage({ onSelect }) {
       {/* Compact live market preview — click to expand */}
       <hr className="glow-divider" style={{ marginTop: 32, marginBottom: 28 }} />
       <LiveMarketCompact assets={assets} updatedAt={updatedAt} loading={loading} onExpand={() => onSelect("markets")} />
+
+      {/* Thesis essay — moved BELOW the grid, behind a disclosure */}
+      <details
+        className="glass-card"
+        style={{
+          marginTop: 24,
+          cursor: "pointer",
+          padding: 0,
+          background: "rgba(30, 41, 59, 0.4)",
+        }}
+      >
+        <summary
+          style={{
+            padding: "16px 24px",
+            listStyle: "none",
+            display: "flex",
+            alignItems: "center",
+            gap: 10,
+            cursor: "pointer",
+            userSelect: "none",
+          }}
+        >
+          <span style={{
+            fontSize: 11,
+            fontWeight: 700,
+            color: "#A5B4FC",
+            background: "rgba(99,102,241,0.16)",
+            padding: "3px 8px",
+            borderRadius: 4,
+            textTransform: "uppercase",
+            letterSpacing: "0.08em",
+          }}>
+            Thesis
+          </span>
+          <span style={{ fontSize: 14, color: "#F8FAFC", fontWeight: 600 }}>
+            Why this exists
+          </span>
+          <span style={{ fontSize: 12, color: "#64748B", marginLeft: "auto" }}>
+            Read the argument
+          </span>
+        </summary>
+        <p
+          className="landing-intro"
+          style={{
+            fontSize: 14,
+            color: "#CBD5E1",
+            lineHeight: 1.75,
+            margin: 0,
+            padding: "0 24px 24px",
+          }}
+        >
+          The recovery of markets after a shock are not a measure of societal resilience, but rather
+          a byproduct of how modern crises are financed. Because governments have shifted from funding
+          emergencies through taxation and shared sacrifice to relying on debt and central bank
+          intervention, a market "recovery" now functions as a massive wealth transfer mechanism.
+          Wall Street always bounces back, but the method of that bounce-back inflates the assets of
+          the top 1% while quietly eroding the purchasing power and economic standing of everyone else.
+          In 1978, the top 0.1% held 7% of American wealth, the most equal the country has ever been.
+          By 2024, they're back to 20%, approaching 1929 levels.
+        </p>
+      </details>
     </div>
   );
 }

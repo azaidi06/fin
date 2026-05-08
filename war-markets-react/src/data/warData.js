@@ -402,6 +402,9 @@ export const globalMarketsData = [
 // CPI YoY% — annual averages from BLS / FRED CPIAUCSL (pre-1947: Minneapolis Fed historical tables)
 // Debt/GDP% — FRED series GFDGDPA188S (federal debt as % of GDP, annual)
 
+// Semantic war color map — single source of truth. Imported by every
+// chart so a given conflict is the same hue across the whole app.
+// Mirrors `src/theme/tokens.js#colors.wars`.
 export const fiscalConflictColors = {
   WWII: "#EF4444",
   Korea: "#F59E0B",
@@ -416,6 +419,8 @@ export const fiscalConflictColors = {
   COVID: "#06B6D4",
   "Russia-Ukraine": "#E11D48",
   Iran: "#FBBF24",
+  Afghanistan: "#F472B6",
+  Today: "#8B5CF6",
 };
 
 export const cpiData = [

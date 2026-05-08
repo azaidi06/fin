@@ -1,5 +1,28 @@
 @import "tailwindcss";
 
+/* ── Tabular-nums utility for numeric tables ── */
+.num,
+.num td,
+.num th {
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: "tnum" 1;
+}
+
+/* ── Sticky tab bar (used on tabbed views) ── */
+.sticky-tabbar {
+  position: sticky;
+  top: 0;
+  z-index: 30;
+  padding: 8px 0;
+  background: linear-gradient(180deg, rgba(15, 23, 42, 0.92), rgba(15, 23, 42, 0.7));
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+  margin-left: -8px;
+  margin-right: -8px;
+  padding-left: 8px;
+  padding-right: 8px;
+}
+
 /* ── Animated background gradient ── */
 @keyframes gradientShift {
   0%   { background-position: 0% 50%; }
@@ -202,6 +225,14 @@ body::after {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 14px;
+}
+
+/* Wider grid above 1100px gets 4 columns so cards breathe */
+@media (min-width: 1100px) {
+  .bento-grid {
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+  }
 }
 
 /* ── Ticker strip ── */

@@ -50,7 +50,7 @@ export default function DrawdownChart() {
     <section style={card}>
       <h2 style={{ fontSize: 20, fontWeight: 600, color: "#F8FAFC", marginBottom: 4 }}>Maximum Drawdown by Conflict</h2>
       <p style={{ fontSize: 13, color: "#94A3B8", marginBottom: 20 }}>Peak-to-trough decline from the pre-war close</p>
-      <ResponsiveContainer width="100%" height={Math.max(combinedData.length * 55, 300)}>
+      <ResponsiveContainer width="100%" height={Math.max(combinedData.length * 78, 460)}>
         <BarChart data={combinedData} layout="vertical" margin={{ top: 5, right: 50, left: 10, bottom: 5 }}>
           <CartesianGrid strokeDasharray="3 3" stroke="#475569" opacity={0.25} horizontal={false} />
           <XAxis type="number" tickFormatter={(v) => `${v}%`} stroke="#475569"
@@ -59,8 +59,8 @@ export default function DrawdownChart() {
             tick={{ fill: "#CBD5E1", fontSize: 12 }} axisLine={false} tickLine={false} />
           <Tooltip content={<CustomTooltip />} cursor={{ fill: "rgba(99,102,241,0.06)" }} wrapperStyle={{ pointerEvents: "auto" }} />
           <Legend wrapperStyle={{ fontSize: 12, color: "#CBD5E1", paddingTop: 8 }} iconType="square" iconSize={10} />
-          <Bar dataKey="spDecline" name="S&P 500" fill="#6366F1" radius={[0, 5, 5, 0]} barSize={14} />
-          <Bar dataKey="nqDecline" name="NASDAQ" fill="#10B981" radius={[0, 5, 5, 0]} barSize={14} />
+          <Bar dataKey="spDecline" name="S&P 500" fill="#6366F1" radius={[0, 5, 5, 0]} barSize={20} />
+          <Bar dataKey="nqDecline" name="NASDAQ" fill="#10B981" radius={[0, 5, 5, 0]} barSize={20} />
         </BarChart>
       </ResponsiveContainer>
     </section>
