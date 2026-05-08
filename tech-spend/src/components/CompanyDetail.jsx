@@ -6,14 +6,22 @@ import {
   YAxis,
   CartesianGrid,
   Tooltip,
+  Legend,
   ResponsiveContainer,
 } from "recharts";
 import { colors, companyColor } from "../theme/tokens";
 import { formatCurrency, formatPercent } from "../utils/formatters";
+import {
+  getCapex,
+  getRd,
+  getSga,
+  annualEntry,
+  getOpexAnnual,
+  getTotalTechSpendAnnual,
+} from "../utils/dataShape";
 
 function CustomTooltip({ active, payload, label }) {
   if (!active || !payload?.length) return null;
-  const d = payload[0];
   return (
     <div
       style={{
@@ -22,14 +30,64 @@ function CustomTooltip({ active, payload, label }) {
         borderRadius: 10,
         padding: "12px 16px",
         backdropFilter: "blur(12px)",
+        minWidth: 180,
       }}
     >
-      <p style={{ fontSize: 13, fontWeight: 600, color: colors.text, margin: "0 0 4px" }}>{label}</p>
-      <p className="num" style={{ fontSize: 12, color: d.color, margin: 0 }}>
-        {formatCurrency(d.value, { unit: "B", digits: 2 })}
-      </p>
+      <p style={{ fontSize: 13, fontWeight: 600, color: colors.text, margin: "0 0 6px" }}>{label}</p>
+      {payload.map((p) => (
+        <div key={p.dataKey} style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 4 }}>
+          <span style={{ width: 10, height: 2, background: p.color, flexShrink: 0 }} />
+          <span style={{ fontSize: 12, color: colors.textSubtle, minWidth: 56 }}>{p.name}</span>
+          <span className="num" style={{ fontSize: 12, fontWeight: 600, color: p.color }}>
+            {formatCurrency(p.value, { unit: "B", digits: 2 })}
+          </span>
+        </div>
+      ))}
     </div>
   );
+}
+
+/**
+ * Build a quarterly time series with capex/rd/sga aligned by period key.
+ */
+function buildQuarterlySeries(company) {
+  const map = {};
+  const add = (metric, key) => {
+    if (!metric) return;
+    metric.quarterly.forEach((q) => {
+      const periodKey = q.period;
+      if (!map[periodKey]) {
+        map[periodKey] = {
+          period: periodKey,
+          label: `${q.calendarYear} Q${q.calendarQuarter}`,
+          calendarYear: q.calendarYear,
+          calendarQuarter: q.calendarQuarter,
+        };
+      }
+      map[periodKey][key] = q.valueBillions;
+    });
+  };
+  add(getCapex(company), "capex");
+  add(getRd(company), "rd");
+  add(getSga(company), "sga");
+  return Object.values(map).sort((a, b) => {
+    if (a.calendarYear !== b.calendarYear) return a.calendarYear - b.calendarYear;
+    return a.calendarQuarter - b.calendarQuarter;
+  });
+}
+
+function lighten(hex, amount = 0.4) {
+  // Mix the hex color toward white by `amount`. Returns rgb() string.
+  const m = /^#?([0-9a-f]{6})$/i.exec(hex);
+  if (!m) return hex;
+  const v = parseInt(m[1], 16);
+  let r = (v >> 16) & 0xff;
+  let g = (v >> 8) & 0xff;
+  let b = v & 0xff;
+  r = Math.round(r + (255 - r) * amount);
+  g = Math.round(g + (255 - g) * amount);
+  b = Math.round(b + (255 - b) * amount);
+  return `rgb(${r}, ${g}, ${b})`;
 }
 
 export default function CompanyDetail({ data }) {
@@ -40,18 +98,26 @@ export default function CompanyDetail({ data }) {
     [data, selected]
   );
 
-  const quarterlyData = useMemo(() => {
+  const quarterlyData = useMemo(() => (company ? buildQuarterlySeries(company) : []), [company]);
+
+  const annualYears = useMemo(() => {
     if (!company) return [];
-    return company.quarterly.map((q) => ({
-      period: q.period,
-      label: `${q.calendarYear} Q${q.calendarQuarter}`,
-      value: q.valueBillions,
-    }));
+    const set = new Set();
+    ["capex", "rd", "sga"].forEach((m) => {
+      (company.metrics?.[m]?.annual || []).forEach((a) => set.add(a.calendarYear));
+    });
+    return [...set].sort((a, b) => b - a);
   }, [company]);
 
   const color = companyColor(selected);
+  const rdColor = lighten(color, 0.45);
+  const sgaColor = lighten(color, 0.7);
 
   if (!company) return null;
+
+  const capexSrc = getCapex(company)?.source;
+  const rdSrc = getRd(company)?.source;
+  const sgaSrc = getSga(company)?.source;
 
   return (
     <div className="card-enter card-enter-0">
@@ -59,10 +125,10 @@ export default function CompanyDetail({ data }) {
         Company Details
       </h2>
       <p style={{ fontSize: 13, color: colors.textMuted, marginBottom: 24 }}>
-        Quarterly and annual capital expenditure breakdown.
+        Quarterly and annual breakdown — CapEx, R&amp;D, and SG&amp;A.
       </p>
 
-      {/* Phase 2D: pill-row company picker (replaces native <select>) */}
+      {/* Pill-row company picker */}
       <div
         role="tablist"
         aria-label="Select company"
@@ -98,13 +164,13 @@ export default function CompanyDetail({ data }) {
         })}
       </div>
 
-      {/* Quarterly line chart */}
+      {/* Quarterly multi-line chart */}
       <div
         className="glass-card"
         style={{ padding: 20, marginBottom: 24, "--card-glow": `linear-gradient(135deg, ${color}4D, transparent 60%)` }}
       >
         <h3 style={{ fontSize: 14, fontWeight: 600, color: colors.text, marginBottom: 16 }}>
-          Quarterly Capex — {company.name}
+          Quarterly CapEx, R&amp;D, SG&amp;A — {company.name}
         </h3>
         <ResponsiveContainer width="100%" height={340}>
           <LineChart data={quarterlyData} margin={{ top: 10, right: 10, left: 0, bottom: 0 }}>
@@ -126,16 +192,45 @@ export default function CompanyDetail({ data }) {
               tickFormatter={(v) => `$${v}B`}
             />
             <Tooltip content={<CustomTooltip />} />
+            <Legend wrapperStyle={{ fontSize: 11, color: colors.textMuted }} iconType="plainline" iconSize={16} />
             <Line
               type="monotone"
-              dataKey="value"
+              dataKey="capex"
+              name="CapEx"
               stroke={color}
-              strokeWidth={2}
+              strokeWidth={2.25}
               dot={false}
               activeDot={{ r: 4, fill: color, stroke: "#0F172A", strokeWidth: 2 }}
+              connectNulls
+            />
+            <Line
+              type="monotone"
+              dataKey="rd"
+              name="R&D"
+              stroke={rdColor}
+              strokeWidth={2}
+              dot={false}
+              activeDot={{ r: 4, fill: rdColor, stroke: "#0F172A", strokeWidth: 2 }}
+              connectNulls
+            />
+            <Line
+              type="monotone"
+              dataKey="sga"
+              name="SG&A"
+              stroke={sgaColor}
+              strokeWidth={2}
+              strokeDasharray="4 3"
+              dot={false}
+              activeDot={{ r: 4, fill: sgaColor, stroke: "#0F172A", strokeWidth: 2 }}
+              connectNulls
             />
           </LineChart>
         </ResponsiveContainer>
+        <div style={{ marginTop: 12, fontSize: 10, color: colors.textGhost, lineHeight: 1.5 }}>
+          Source: SEC EDGAR XBRL — CapEx: <span className="num">{capexSrc || "—"}</span>
+          {" / "}R&amp;D: <span className="num">{rdSrc || "n/a (Amazon does not tag R&D under us-gaap)"}</span>
+          {" / "}SG&amp;A: <span className="num">{sgaSrc || "—"}</span>
+        </div>
       </div>
 
       {/* Annual data table */}
@@ -144,34 +239,50 @@ export default function CompanyDetail({ data }) {
         style={{ padding: 0, overflow: "hidden", "--card-glow": `linear-gradient(135deg, ${color}4D, transparent 60%)` }}
       >
         <div style={{ padding: "16px 20px 8px", fontSize: 14, fontWeight: 600, color: colors.text }}>
-          Annual Capex — {company.name}
+          Annual Tech Spend — {company.name}
         </div>
         <div style={{ overflowX: "auto" }}>
           <table className="num" style={{ width: "100%", borderCollapse: "collapse", fontSize: 12 }}>
             <thead>
               <tr style={{ borderBottom: "1px solid rgba(255,255,255,0.06)" }}>
                 <th style={{ padding: "10px 16px", textAlign: "left", color: colors.textFaint, fontWeight: 600 }}>Year</th>
-                <th style={{ padding: "10px 16px", textAlign: "right", color: colors.textFaint, fontWeight: 600 }}>Capex ($B)</th>
-                <th style={{ padding: "10px 16px", textAlign: "right", color: colors.textFaint, fontWeight: 600 }}>YoY Growth</th>
+                <th style={{ padding: "10px 16px", textAlign: "right", color: colors.textFaint, fontWeight: 600 }}>CapEx ($B)</th>
+                <th style={{ padding: "10px 16px", textAlign: "right", color: colors.textFaint, fontWeight: 600 }}>R&amp;D ($B)</th>
+                <th style={{ padding: "10px 16px", textAlign: "right", color: colors.textFaint, fontWeight: 600 }}>SG&amp;A ($B)</th>
+                <th style={{ padding: "10px 16px", textAlign: "right", color: colors.textFaint, fontWeight: 600 }}>Total ($B)</th>
+                <th style={{ padding: "10px 16px", textAlign: "right", color: colors.textFaint, fontWeight: 600 }}>CapEx YoY</th>
               </tr>
             </thead>
             <tbody>
-              {[...company.annual].reverse().map((a) => {
-                const g = a.yoyGrowthPct;
+              {annualYears.map((year) => {
+                const cx = annualEntry(getCapex(company), year);
+                const rd = annualEntry(getRd(company), year);
+                const sga = annualEntry(getSga(company), year);
+                const total = getTotalTechSpendAnnual(company, year);
+                const g = cx?.yoyGrowthPct;
                 return (
-                  <tr key={a.calendarYear} style={{ borderBottom: "1px solid rgba(255,255,255,0.04)" }}>
-                    <td style={{ padding: "10px 16px", fontWeight: 600, color: colors.text }}>
-                      {a.calendarYear}
+                  <tr key={year} style={{ borderBottom: "1px solid rgba(255,255,255,0.04)" }}>
+                    <td style={{ padding: "10px 16px", fontWeight: 600, color: colors.text }}>{year}</td>
+                    <td style={{ padding: "10px 16px", textAlign: "right", color, fontWeight: 600 }}>
+                      {cx ? formatCurrency(cx.valueBillions, { unit: "B", digits: 2 }) : "—"}
+                    </td>
+                    <td style={{ padding: "10px 16px", textAlign: "right", color: rdColor, fontWeight: 500 }}>
+                      {rd ? formatCurrency(rd.valueBillions, { unit: "B", digits: 2 }) : "—"}
+                    </td>
+                    <td style={{ padding: "10px 16px", textAlign: "right", color: sgaColor, fontWeight: 500 }}>
+                      {sga ? formatCurrency(sga.valueBillions, { unit: "B", digits: 2 }) : "—"}
                     </td>
                     <td
                       style={{
                         padding: "10px 16px",
                         textAlign: "right",
-                        color,
-                        fontWeight: 600,
+                        color: colors.text,
+                        fontWeight: 700,
+                        opacity: total.partial ? 0.7 : 1,
                       }}
+                      title={total.partial ? "Partial — at least one component missing" : undefined}
                     >
-                      {formatCurrency(a.valueBillions, { unit: "B", digits: 2 })}
+                      {total.value != null ? formatCurrency(total.value, { unit: "B", digits: 2 }) : "—"}
                     </td>
                     <td
                       style={{

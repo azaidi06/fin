@@ -1,6 +1,12 @@
 import { useState, useEffect, useRef } from "react";
 import { colors, companyColor, gradients } from "../theme/tokens";
 import { formatCurrency, formatPercent } from "../utils/formatters";
+import {
+  getCapex,
+  getLatestOpex,
+  getLatestTechSpend,
+  getStackedSparkline,
+} from "../utils/dataShape";
 
 /* ── Animated counter ── */
 function AnimatedStat({ value, prefix = "", suffix = "", color, decimals = 1, fontSize = 22, fontWeight = 700 }) {
@@ -37,27 +43,49 @@ function AnimatedStat({ value, prefix = "", suffix = "", color, decimals = 1, fo
   );
 }
 
-/* ── Bar sparkline for company cards ── */
-function BarSparkline({ values, color, globalMax, width = 120, height = 32 }) {
-  const max = globalMax ?? Math.max(...values.map(Math.abs));
+/* ── Stacked bar sparkline (capex bottom, opex top) ── */
+function StackedBarSparkline({ rows, capexColor, opexColor, globalMax, width = 130, height = 36 }) {
+  const max = globalMax ?? Math.max(...rows.map((r) => r.capex + r.opex), 1);
   if (!max || max === 0) return null;
-  const barW = (width - (values.length - 1) * 2) / values.length;
+  const barW = (width - (rows.length - 1) * 2) / rows.length;
   return (
-    <svg width={width} height={height} style={{ opacity: 0.85, display: "block" }}>
-      {values.map((v, i) => {
-        const barH = Math.max((Math.abs(v) / max) * height, 1);
+    <svg width={width} height={height} style={{ display: "block" }}>
+      {rows.map((r, i) => {
+        const totalH = ((r.capex + r.opex) / max) * height;
+        const capexH = (r.capex / max) * height;
+        const opexH = (r.opex / max) * height;
+        const x = i * (barW + 2);
+        const yCapex = height - capexH;
+        const yOpex = height - totalH;
+        const minSeg = 1;
         return (
-          <rect
-            key={i}
-            className="sparkline-bar"
-            style={{ animationDelay: `${i * 60}ms` }}
-            x={i * (barW + 2)}
-            y={height - barH}
-            width={barW}
-            height={barH}
-            rx={2}
-            fill={color}
-          />
+          <g key={r.year}>
+            {opexH > 0 && (
+              <rect
+                className="sparkline-bar"
+                style={{ animationDelay: `${i * 60}ms` }}
+                x={x}
+                y={yOpex}
+                width={barW}
+                height={Math.max(opexH, minSeg)}
+                rx={1.5}
+                fill={opexColor}
+                opacity={0.55}
+              />
+            )}
+            {capexH > 0 && (
+              <rect
+                className="sparkline-bar"
+                style={{ animationDelay: `${i * 60}ms` }}
+                x={x}
+                y={yCapex}
+                width={barW}
+                height={Math.max(capexH, minSeg)}
+                rx={1.5}
+                fill={capexColor}
+              />
+            )}
+          </g>
         );
       })}
     </svg>
@@ -112,23 +140,31 @@ function IconTrendUp({ color }) {
 export default function OverviewCards({ data }) {
   const { companies, summary } = data;
 
-  // Get last 5 annual values for sparklines
-  const getSparklineValues = (company) => {
-    const annual = company.annual || [];
-    return annual.slice(-5).map((a) => a.valueBillions);
-  };
+  // Stacked-sparkline values per company (last 5 years).
+  const sparklineRows = companies.map((c) => getStackedSparkline(c, 5));
 
-  // Phase 2C: global sparkline max so cross-card comparisons are valid
+  // Global max for cross-card comparable sparklines (use total capex+opex).
   const globalSparklineMax = Math.max(
-    ...companies.flatMap((c) => getSparklineValues(c).map(Math.abs)),
+    ...sparklineRows.flatMap((rows) => rows.map((r) => r.capex + r.opex)),
     1
   );
 
-  const topSpenderCompany = companies.find((c) => c.ticker === summary.topSpender);
-  const topSpenderColor = companyColor(summary.topSpender, colors.text);
-  const fastestGrowerCompany = companies.find((c) => c.ticker === summary.fastestGrower);
-  const fastestGrowerColor = companyColor(summary.fastestGrower, colors.success);
-  const fastestGrowerPct = fastestGrowerCompany?.latestAnnual?.yoyGrowthPct;
+  // Headline data
+  const totalTech = summary.totalLatestAnnualTechSpendBillions
+    ?? ((summary.totalLatestAnnualCapexBillions || 0) + (summary.totalLatestAnnualOpexBillions || 0));
+  const totalCapex = summary.totalLatestAnnualCapexBillions || 0;
+  const totalOpex = summary.totalLatestAnnualOpexBillions
+    ?? ((summary.totalLatestAnnualRdBillions || 0) + (summary.totalLatestAnnualSgaBillions || 0));
+
+  const topTicker = summary.topTechSpender || summary.topCapexSpender;
+  const topCompany = companies.find((c) => c.ticker === topTicker);
+  const topColor = companyColor(topTicker, colors.text);
+  const topTech = topCompany ? getLatestTechSpend(topCompany) : { value: null };
+
+  const fastestTicker = summary.fastestCapexGrower || summary.fastestGrower;
+  const fastestCompany = companies.find((c) => c.ticker === fastestTicker);
+  const fastestColor = companyColor(fastestTicker, colors.success);
+  const fastestPct = getCapex(fastestCompany)?.latestAnnual?.yoyGrowthPct;
 
   return (
     <div style={{ position: "relative", overflow: "hidden" }}>
@@ -136,26 +172,28 @@ export default function OverviewCards({ data }) {
       <GlowOrb color="#FF9900" size={350} top="30%" left="60%" delay={3} />
       <GlowOrb color={colors.companies.NVDA} size={400} top="70%" left="20%" delay={6} />
 
-      {/* Phase 2A: Headline strip — visually distinct from per-company cards */}
+      {/* Headline strip */}
       <div className="headline-strip">
-        {/* Total Capex */}
+        {/* Total Tech Spend */}
         <div
           className="headline-card card-enter card-enter-0"
           style={{ background: `${gradients.headlineTotal}, rgba(15, 23, 42, 0.6)` }}
         >
           <div className="headline-eyebrow">
             <span className="headline-icon"><IconSigma color={colors.indigoSoft} /></span>
-            Total Annual Capex
+            Total Tech Spend
           </div>
           <AnimatedStat
-            value={summary.totalLatestAnnualCapexBillions}
+            value={totalTech}
             prefix="$"
             suffix="B"
             color={colors.text}
             fontSize={52}
             fontWeight={800}
           />
-          <div className="headline-sub">Combined across {companies.length} companies</div>
+          <div className="headline-sub num">
+            {formatCurrency(totalCapex, { unit: "B", digits: 0 })} CapEx + {formatCurrency(totalOpex, { unit: "B", digits: 0 })} OpEx
+          </div>
         </div>
 
         {/* Top Spender */}
@@ -172,20 +210,20 @@ export default function OverviewCards({ data }) {
             style={{
               fontSize: 52,
               fontWeight: 800,
-              color: topSpenderColor,
+              color: topColor,
               lineHeight: 1.05,
               letterSpacing: "-0.02em",
               marginTop: 4,
             }}
           >
-            {summary.topSpender}
+            {topTicker || "—"}
           </span>
           <div className="headline-sub num">
-            {formatCurrency(topSpenderCompany?.latestAnnual?.valueBillions, { unit: "B" })} in latest year
+            {formatCurrency(topTech.value, { unit: "B" })} tech spend in latest year
           </div>
         </div>
 
-        {/* Fastest Grower */}
+        {/* Highest Growth (CapEx YoY) */}
         <div
           className="headline-card card-enter card-enter-2"
           style={{ background: `${gradients.headlineGrowth}, rgba(15, 23, 42, 0.6)` }}
@@ -199,16 +237,16 @@ export default function OverviewCards({ data }) {
             style={{
               fontSize: 52,
               fontWeight: 800,
-              color: fastestGrowerColor,
+              color: fastestColor,
               lineHeight: 1.05,
               letterSpacing: "-0.02em",
               marginTop: 4,
             }}
           >
-            {summary.fastestGrower}
+            {fastestTicker || "—"}
           </span>
           <div className="headline-sub num">
-            {formatPercent(fastestGrowerPct, { digits: 0 })} YoY growth
+            {formatPercent(fastestPct, { digits: 0 })} CapEx YoY
           </div>
         </div>
       </div>
@@ -216,11 +254,14 @@ export default function OverviewCards({ data }) {
       {/* Per-company cards */}
       <div className="bento-grid">
         {companies.map((company, i) => {
-          const la = company.latestAnnual;
+          const capex = getCapex(company);
+          const la = capex?.latestAnnual;
           const growth = la?.yoyGrowthPct;
           const isPositive = growth != null && growth >= 0;
           const color = companyColor(company.ticker);
-          const sparkValues = getSparklineValues(company);
+          const opexColor = colors.indigoSoft;
+          const opex = getLatestOpex(company);
+          const sparkRows = sparklineRows[i];
 
           return (
             <div
@@ -237,39 +278,87 @@ export default function OverviewCards({ data }) {
                 <span style={{ fontSize: 12, color: colors.textFaint }}>{company.name}</span>
               </div>
 
-              {/* Phase 2B: dollar value + YoY pill side-by-side, same line */}
-              <div style={{ display: "flex", alignItems: "baseline", justifyContent: "space-between", gap: 8, flexWrap: "wrap" }}>
-                <AnimatedStat
-                  value={la?.valueBillions || 0}
-                  prefix="$"
-                  suffix="B"
-                  color={color}
-                  fontSize={26}
-                  fontWeight={700}
-                />
+              {/* CapEx row */}
+              <div style={{ display: "flex", alignItems: "baseline", justifyContent: "space-between", gap: 8 }}>
+                <div style={{ display: "flex", alignItems: "baseline", gap: 8 }}>
+                  <span style={{ fontSize: 10, fontWeight: 600, color: colors.textFaint, letterSpacing: "0.08em", textTransform: "uppercase" }}>
+                    CapEx
+                  </span>
+                  <AnimatedStat
+                    value={la?.valueBillions || 0}
+                    prefix="$"
+                    suffix="B"
+                    color={color}
+                    fontSize={22}
+                    fontWeight={700}
+                  />
+                </div>
                 {growth != null && (
                   <span
                     className="num"
                     style={{
-                      fontSize: 18,
+                      fontSize: 13,
                       fontWeight: 700,
                       color: isPositive ? colors.success : colors.danger,
                       letterSpacing: "-0.01em",
                     }}
                   >
-                    {formatPercent(growth, { digits: 1 })}
+                    {formatPercent(growth, { digits: 0 })}
+                  </span>
+                )}
+              </div>
+
+              {/* OpEx row */}
+              <div style={{ display: "flex", alignItems: "baseline", justifyContent: "space-between", gap: 8 }}>
+                <div style={{ display: "flex", alignItems: "baseline", gap: 8 }}>
+                  <span style={{ fontSize: 10, fontWeight: 600, color: colors.textFaint, letterSpacing: "0.08em", textTransform: "uppercase" }}>
+                    OpEx
+                  </span>
+                  <AnimatedStat
+                    value={opex.value || 0}
+                    prefix="$"
+                    suffix="B"
+                    color={opexColor}
+                    fontSize={22}
+                    fontWeight={700}
+                  />
+                </div>
+                {opex.partial && (
+                  <span
+                    className="num"
+                    title="Missing R&D or SG&A — partial total"
+                    style={{ fontSize: 11, color: colors.warning, fontWeight: 600 }}
+                  >
+                    partial
                   </span>
                 )}
               </div>
 
               {/* CY label below */}
-              <div className="num" style={{ fontSize: 10, color: colors.textFaint, marginTop: -4 }}>
-                CY{la?.calendarYear || "—"} &middot; YoY
+              <div className="num" style={{ fontSize: 10, color: colors.textFaint }}>
+                CY{la?.calendarYear || "—"} &middot; CapEx YoY
               </div>
 
-              {/* Sparkline (normalized to global max) */}
-              {sparkValues.length > 0 && (
-                <BarSparkline values={sparkValues} color={color} globalMax={globalSparklineMax} />
+              {/* Stacked sparkline (capex bottom, opex top) */}
+              {sparkRows.length > 0 && (
+                <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                  <StackedBarSparkline
+                    rows={sparkRows}
+                    capexColor={color}
+                    opexColor={opexColor}
+                    globalMax={globalSparklineMax}
+                  />
+                  <div style={{ display: "flex", flexDirection: "column", gap: 2 }}>
+                    <div style={{ display: "flex", alignItems: "center", gap: 4 }}>
+                      <span style={{ width: 6, height: 6, borderRadius: 1, background: color }} />
+                      <span style={{ fontSize: 9, color: colors.textFaint }}>CapEx</span>
+                    </div>
+                    <div style={{ display: "flex", alignItems: "center", gap: 4 }}>
+                      <span style={{ width: 6, height: 6, borderRadius: 1, background: opexColor, opacity: 0.55 }} />
+                      <span style={{ fontSize: 9, color: colors.textFaint }}>OpEx</span>
+                    </div>
+                  </div>
+                </div>
               )}
             </div>
           );

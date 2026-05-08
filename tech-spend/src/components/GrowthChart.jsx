@@ -1,4 +1,4 @@
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import {
   BarChart,
   Bar,
@@ -11,10 +11,17 @@ import {
 } from "recharts";
 import { colors, companyColor } from "../theme/tokens";
 import { formatPercent } from "../utils/formatters";
+import { getCapex, getRd, getSga, annualEntry, getOpexAnnual } from "../utils/dataShape";
 
-function CustomTooltip({ active, payload }) {
+const MODES = [
+  { id: "capex", label: "CapEx YoY" },
+  { id: "opex", label: "OpEx YoY" },
+];
+
+function CustomTooltip({ active, payload, mode }) {
   if (!active || !payload?.length) return null;
   const d = payload[0].payload;
+  const label = mode === "opex" ? "OpEx YoY" : "CapEx YoY";
   return (
     <div
       style={{
@@ -32,33 +39,81 @@ function CustomTooltip({ active, payload }) {
         className="num"
         style={{ fontSize: 12, color: d.growth >= 0 ? colors.success : colors.danger, margin: 0 }}
       >
-        {formatPercent(d.growth, { digits: 1 })} YoY
+        {formatPercent(d.growth, { digits: 1 })} {label}
       </p>
+      {d.partial && (
+        <p style={{ fontSize: 11, color: colors.warning, margin: "4px 0 0" }}>
+          partial — one OpEx component missing
+        </p>
+      )}
     </div>
   );
 }
 
+/**
+ * Compute an OpEx YoY % for a given year on a company.
+ * Returns { growth: number|null, partial: bool } where partial is true when
+ * one of R&D/SG&A is missing for the comparison.
+ */
+function opexYoY(company, year) {
+  const cur = getOpexAnnual(company, year);
+  const prev = getOpexAnnual(company, year - 1);
+  if (cur.value == null || prev.value == null || prev.value === 0) {
+    return { growth: null, partial: cur.partial || prev.partial };
+  }
+  const growth = ((cur.value - prev.value) / prev.value) * 100;
+  return { growth, partial: cur.partial || prev.partial };
+}
+
 export default function GrowthChart({ data }) {
+  const [mode, setMode] = useState("capex");
+
   const growthData = useMemo(() => {
     return data.companies
-      .map((c) => ({
-        ticker: c.ticker,
-        name: c.name,
-        growth: c.latestAnnual?.yoyGrowthPct ?? 0,
-        year: c.latestAnnual?.calendarYear,
-      }))
+      .map((c) => {
+        let growth, year, partial = false;
+        if (mode === "capex") {
+          const la = getCapex(c)?.latestAnnual;
+          growth = la?.yoyGrowthPct ?? null;
+          year = la?.calendarYear;
+        } else {
+          // Use the latest year present in either rd or sga
+          const yearsRd = (getRd(c)?.annual || []).map((a) => a.calendarYear);
+          const yearsSga = (getSga(c)?.annual || []).map((a) => a.calendarYear);
+          const latest = Math.max(...yearsRd, ...yearsSga, -Infinity);
+          if (Number.isFinite(latest)) {
+            const r = opexYoY(c, latest);
+            growth = r.growth;
+            partial = r.partial;
+            year = latest;
+          } else {
+            growth = null;
+          }
+        }
+        return {
+          ticker: c.ticker,
+          name: c.name,
+          growth: growth ?? 0,
+          rawGrowth: growth,
+          year,
+          partial,
+        };
+      })
+      .filter((d) => d.rawGrowth != null)
       .sort((a, b) => b.growth - a.growth);
-  }, [data]);
+  }, [data, mode]);
 
-  // Historical growth table data — last 5 years
-  const historyData = useMemo(() => {
-    const years = new Set();
+  // Historical years (last 6 calendar years)
+  const historyYears = useMemo(() => {
+    const set = new Set();
     data.companies.forEach((c) => {
-      c.annual.forEach((a) => {
-        if (a.yoyGrowthPct != null && a.calendarYear >= 2020) years.add(a.calendarYear);
+      ["capex", "rd", "sga"].forEach((m) => {
+        (c.metrics?.[m]?.annual || []).forEach((a) => {
+          if (a.calendarYear >= 2020) set.add(a.calendarYear);
+        });
       });
     });
-    return [...years].sort((a, b) => b - a);
+    return [...set].sort((a, b) => b - a);
   }, [data]);
 
   return (
@@ -66,9 +121,48 @@ export default function GrowthChart({ data }) {
       <h2 style={{ fontSize: 20, fontWeight: 700, color: colors.text, marginBottom: 8 }}>
         Year-over-Year Growth
       </h2>
-      <p style={{ fontSize: 13, color: colors.textMuted, marginBottom: 24 }}>
-        Latest annual capex growth rate by company.
+      <p style={{ fontSize: 13, color: colors.textMuted, marginBottom: 16 }}>
+        Latest annual {mode === "opex" ? "OpEx (R&D + SG&A)" : "CapEx"} growth rate by company.
       </p>
+
+      {/* Mode toggle */}
+      <div
+        role="tablist"
+        aria-label="Growth metric"
+        style={{
+          display: "inline-flex",
+          gap: 4,
+          marginBottom: 16,
+          padding: 4,
+          background: "rgba(30, 41, 59, 0.4)",
+          borderRadius: 10,
+          border: "1px solid rgba(255,255,255,0.06)",
+        }}
+      >
+        {MODES.map((m) => (
+          <button
+            key={m.id}
+            role="tab"
+            aria-selected={mode === m.id}
+            onClick={() => setMode(m.id)}
+            style={{
+              padding: "6px 14px",
+              borderRadius: 7,
+              border: "none",
+              cursor: "pointer",
+              fontSize: 12,
+              fontWeight: 600,
+              fontFamily: "inherit",
+              transition: "all 0.2s ease",
+              background: mode === m.id ? "rgba(99,102,241,0.2)" : "transparent",
+              color: mode === m.id ? "#A5B4FC" : "#64748B",
+              boxShadow: mode === m.id ? "0 0 12px rgba(99,102,241,0.15)" : "none",
+            }}
+          >
+            {m.label}
+          </button>
+        ))}
+      </div>
 
       {/* Horizontal bar chart */}
       <div
@@ -93,13 +187,13 @@ export default function GrowthChart({ data }) {
               tickLine={false}
               width={50}
             />
-            <Tooltip content={<CustomTooltip />} cursor={{ fill: "rgba(255,255,255,0.03)" }} />
+            <Tooltip content={<CustomTooltip mode={mode} />} cursor={{ fill: "rgba(255,255,255,0.03)" }} />
             <Bar dataKey="growth" radius={[0, 4, 4, 0]} maxBarSize={28}>
               {growthData.map((entry) => (
                 <Cell
                   key={entry.ticker}
                   fill={entry.growth >= 0 ? colors.success : colors.danger}
-                  fillOpacity={0.8}
+                  fillOpacity={entry.partial ? 0.5 : 0.8}
                 />
               ))}
             </Bar>
@@ -107,20 +201,20 @@ export default function GrowthChart({ data }) {
         </ResponsiveContainer>
       </div>
 
-      {/* Historical growth table */}
+      {/* Historical growth table — CapEx and OpEx side by side */}
       <div
         className="glass-card"
         style={{ padding: 0, overflow: "hidden", "--card-glow": "linear-gradient(135deg, #818CF84D, transparent 60%)" }}
       >
         <div style={{ padding: "16px 20px 8px", fontSize: 14, fontWeight: 600, color: colors.text }}>
-          Historical YoY Growth (%)
+          Historical YoY Growth (%) — {mode === "opex" ? "OpEx (R&D + SG&A)" : "CapEx"}
         </div>
         <div style={{ overflowX: "auto" }}>
           <table className="num" style={{ width: "100%", borderCollapse: "collapse", fontSize: 12 }}>
             <thead>
               <tr style={{ borderBottom: "1px solid rgba(255,255,255,0.06)" }}>
                 <th style={{ padding: "10px 16px", textAlign: "left", color: colors.textFaint, fontWeight: 600 }}>Company</th>
-                {historyData.map((year) => (
+                {historyYears.map((year) => (
                   <th
                     key={year}
                     style={{ padding: "10px 12px", textAlign: "right", color: colors.textFaint, fontWeight: 600 }}
@@ -138,9 +232,15 @@ export default function GrowthChart({ data }) {
                   >
                     {c.ticker}
                   </td>
-                  {historyData.map((year) => {
-                    const annualEntry = c.annual.find((a) => a.calendarYear === year);
-                    const g = annualEntry?.yoyGrowthPct;
+                  {historyYears.map((year) => {
+                    let g, partial = false;
+                    if (mode === "capex") {
+                      g = annualEntry(getCapex(c), year)?.yoyGrowthPct ?? null;
+                    } else {
+                      const r = opexYoY(c, year);
+                      g = r.growth;
+                      partial = r.partial;
+                    }
                     return (
                       <td
                         key={year}
@@ -149,7 +249,9 @@ export default function GrowthChart({ data }) {
                           textAlign: "right",
                           fontWeight: 500,
                           color: g == null ? colors.textGhost : g >= 0 ? colors.success : colors.danger,
+                          opacity: partial ? 0.65 : 1,
                         }}
+                        title={partial ? "Partial — missing one OpEx component" : undefined}
                       >
                         {g != null ? formatPercent(g, { digits: 1 }) : "—"}
                       </td>
