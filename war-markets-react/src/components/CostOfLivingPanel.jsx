@@ -28,7 +28,7 @@ const fmtUsd = (v) => v >= 1000 ? `$${(v / 1000).toFixed(0)}K` : `$${v.toFixed(2
 const fmtNominal = (v) => v >= 100 ? `$${v.toLocaleString()}` : `$${v.toFixed(2)}`;
 
 // Short era labels for compact charts
-const eraShort = { WWII: "WW2", Korea: "Korea", "Cuban Missile": "Cuba", Vietnam: "Viet.", "Oil Embargo": "Oil '73", "Black Monday": "Blk Mon", "Gulf War": "Gulf", "9/11": "9/11", Iraq: "Iraq", "2008 Crisis": "'08", COVID: "COVID", "Russia-Ukraine": "Russ.", Today: "Today" };
+const eraShort = { WWII: "WW2", Korea: "Korea", "Cuban Missile": "Cuba", Vietnam: "Viet.", "Oil Embargo": "Oil '73", "Black Monday": "Blk Mon", "Gulf War": "Gulf", "9/11": "9/11", Iraq: "Iraq", "2008 Crisis": "'08", COVID: "COVID", "Russia-Ukraine": "Russ.", Today: "Today", Iran: "Iran '26" };
 
 function ItemTooltip({ active, payload, itemKey }) {
   if (!active || !payload?.length) return null;
@@ -118,10 +118,31 @@ function SourceIcon({ sourceKey }) {
 function EraCard({ d }) {
   const allItems = Object.entries(d.items);
   return (
-    <div style={{ background: "#0F172A", border: "1px solid #334155", borderRadius: 10, padding: 20 }}>
-      <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 6 }}>
+    <div style={{
+      background: "#0F172A",
+      border: "1px solid #334155",
+      borderRadius: 10,
+      padding: 20,
+      ...(d.preliminary ? { backgroundImage: "repeating-linear-gradient(135deg, rgba(251,191,36,0.04) 0 8px, transparent 8px 16px)" } : {}),
+    }}>
+      <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 6, gap: 8, flexWrap: "wrap" }}>
         <h3 style={{ fontWeight: 600, color: "#E2E8F0", fontSize: 14 }}>
           {d.era} <span style={{ color: "#64748B", fontWeight: 400 }}>({d.year})</span>
+          {d.preliminary && (
+            <span style={{
+              fontSize: 9,
+              fontWeight: 700,
+              color: "#FBBF24",
+              background: "rgba(251,191,36,0.14)",
+              padding: "2px 6px",
+              borderRadius: 4,
+              textTransform: "uppercase",
+              letterSpacing: "0.05em",
+              marginLeft: 8,
+            }}>
+              Preliminary
+            </span>
+          )}
         </h3>
         <span style={{ fontSize: 10, color: "#94A3B8", background: "#1E293B", border: "1px solid #334155", borderRadius: 6, padding: "2px 8px" }}>
           CPI ×{d.cpiMultiplier}
@@ -239,6 +260,25 @@ export default function CostOfLivingPanel() {
           <EraCard key={d.year} d={d} />
         ))}
       </div>
+
+      {filteredData.some(d => d.preliminary) && (
+        <div style={{
+          display: "inline-flex",
+          alignItems: "center",
+          gap: 8,
+          marginTop: 16,
+          padding: "5px 12px",
+          borderRadius: 999,
+          background: "rgba(251,191,36,0.12)",
+          border: "1px solid rgba(251,191,36,0.32)",
+          fontSize: 11,
+          color: "#FBBF24",
+          letterSpacing: "0.02em",
+        }}>
+          <span style={{ width: 6, height: 6, borderRadius: 3, background: "#FBBF24" }} />
+          Iran 2026 figures are preliminary (snapshot Apr 15, 2026; CPI multiplier estimated from 2024 baseline + 5% cumulative inflation).
+        </div>
+      )}
 
       <p style={{ fontSize: 11, color: "#64748B", textAlign: "center", marginTop: 16, fontStyle: "italic" }}>
         Sources: BLS CPI-U (inflation adjustment), Census Bureau (housing), EIA (gasoline), USDA (food), NCES (tuition), BLS (income).

@@ -422,10 +422,31 @@ function FiscalCard({ d }) {
   const color = fiscalConflictColors[d.conflict];
   const debtPositive = d.debtGdpDelta > 0;
   return (
-    <div style={{ background: "#0F172A", border: "1px solid #334155", borderRadius: 10, padding: 20 }}>
+    <div style={{
+      background: "#0F172A",
+      border: "1px solid #334155",
+      borderRadius: 10,
+      padding: 20,
+      ...(d.preliminary ? { backgroundImage: "repeating-linear-gradient(135deg, rgba(251,191,36,0.04) 0 8px, transparent 8px 16px)" } : {}),
+    }}>
       <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 12 }}>
         <span style={{ width: 10, height: 10, borderRadius: 3, background: color, flexShrink: 0 }} />
         <h3 style={{ fontWeight: 600, color: "#E2E8F0", fontSize: 14 }}>{d.conflict}</h3>
+        {d.preliminary && (
+          <span style={{
+            fontSize: 9,
+            fontWeight: 700,
+            color: "#FBBF24",
+            background: "rgba(251,191,36,0.14)",
+            padding: "2px 6px",
+            borderRadius: 4,
+            textTransform: "uppercase",
+            letterSpacing: "0.05em",
+            marginLeft: "auto",
+          }}>
+            Preliminary
+          </span>
+        )}
       </div>
 
       <div style={{ display: "flex", gap: 16, marginBottom: 12 }}>
@@ -772,6 +793,25 @@ export default function FiscalImpactPanel() {
           <FiscalCard key={d.conflict} d={d} />
         ))}
       </div>
+
+      {filteredSummary.some(d => d.preliminary) && (
+        <div style={{
+          display: "inline-flex",
+          alignItems: "center",
+          gap: 8,
+          marginTop: 12,
+          padding: "5px 12px",
+          borderRadius: 999,
+          background: "rgba(251,191,36,0.12)",
+          border: "1px solid rgba(251,191,36,0.32)",
+          fontSize: 11,
+          color: "#FBBF24",
+          letterSpacing: "0.02em",
+        }}>
+          <span style={{ width: 6, height: 6, borderRadius: 3, background: "#FBBF24" }} />
+          Iran 2026 figures are preliminary (6 weeks of data; through Apr 15, 2026). Long-horizon CPI / debt / GDP effects will not be readable until 2027+.
+        </div>
+      )}
 
       <p style={{ fontSize: 11, color: "#64748B", textAlign: "center", marginTop: 16, fontStyle: "italic" }}>
         CPI data: BLS / FRED CPIAUCSL (post-1947), Minneapolis Fed historical tables (pre-1947). Debt/GDP: FRED GFDGDPA188S.

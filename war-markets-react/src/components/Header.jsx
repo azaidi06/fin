@@ -6,6 +6,8 @@ const stats = [
   "21.3× — CPI multiplier since 1941",
   "917 days — Longest market recovery",
   "5 global indices tracked",
+  "−7.8% — S&P 500 in Iran War (2026, 21 trading days)",
+  "32 days — Fastest S&P recovery to ATH after a shooting war (Iran 2026)",
 ];
 
 export default function Header({ compact, onGoHome }) {

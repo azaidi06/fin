@@ -150,6 +150,19 @@ const eventContext = {
     ],
     keyTakeaway: "In a world of real-time intelligence sharing, well-telegraphed invasions lose their market shock value. The bigger risk to portfolios was the Fed's response to inflation, not Russian tanks.",
   },
+  Iran: {
+    type: "Regional War",
+    era: "Feb – Apr 2026",
+    summary: "The most telegraphed shooting war in modern history — Trump announced naval deployments a month before the strikes. The S&P fell 7.8% over 21 trading days, then recovered to a new all-time high by Apr 15, just 32 trading days after the trough. The fastest full recovery to ATH after a shooting war on record.",
+    whyItMatters: [
+      "Headline indices barely moved during the buildup (S&P +0.7% YTD into Feb 27) but internals rotated violently — energy +22% YTD, defense rallying, tech −3% YTD",
+      "Drawdown was faster but shallower than historical wars: 21 trading days to bottom, ~7.8% deep — vs. WWII (143 days, −20%) or Gulf War (71 days, −16.9%)",
+      "Strait of Hormuz blockade was the real economic risk channel: Brent crude surged from $72 to a peak of ~$128/bbl on Apr 2, retracing to ~$94 by mid-April",
+      "Recovery to ATH within 6 weeks of the trough is unprecedented for a shooting war — markets treated this as an oil shock to be re-priced, not an existential conflict",
+      "Gold's behavior was the surprise: after hitting a $5,594 ATH on Jan 29, gold FELL 11.5% during the war as portfolios sold safe-haven positions to cover margin calls",
+    ],
+    keyTakeaway: "When a buildup is fully telegraphed, the headline drop is small but sector rotation is violent. The Iran war showed that modern markets can absorb a major regional conflict in weeks — provided the central oil shock is contained and the Fed doesn't have to step in.",
+  },
 };
 
 /* ── Color mapping from existing data ── */
@@ -166,6 +179,7 @@ const eventColors = {
   "2008 Crisis": "#14B8A6",
   COVID: "#06B6D4",
   "Russia-Ukraine": "#E11D48",
+  Iran: "#FBBF24",
 };
 
 const typeIcons = {

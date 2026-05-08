@@ -541,6 +541,60 @@ export default function HomePage({ onSelect }) {
       {/* Ticker strip — compact market glance */}
       <TickerStrip assets={assets} updatedAt={updatedAt} loading={loading} />
 
+      {/* Latest event — Iran 2026 highlight strip */}
+      <button
+        onClick={() => onSelect("events")}
+        className="glass-card"
+        style={{
+          width: "100%",
+          marginBottom: 16,
+          padding: "14px 18px",
+          display: "flex",
+          alignItems: "center",
+          gap: 14,
+          cursor: "pointer",
+          background: "linear-gradient(90deg, rgba(251,191,36,0.10), rgba(251,191,36,0.02) 60%, transparent)",
+          border: "1px solid rgba(251,191,36,0.32)",
+          textAlign: "left",
+          color: "#F8FAFC",
+          flexWrap: "wrap",
+        }}
+        onMouseEnter={(e) => { e.currentTarget.style.boxShadow = "0 8px 32px rgba(251,191,36,0.20)"; }}
+        onMouseLeave={(e) => { e.currentTarget.style.boxShadow = "none"; }}
+      >
+        <span style={{
+          fontSize: 10,
+          fontWeight: 700,
+          color: "#FBBF24",
+          background: "rgba(251,191,36,0.18)",
+          padding: "3px 8px",
+          borderRadius: 4,
+          textTransform: "uppercase",
+          letterSpacing: "0.08em",
+          flexShrink: 0,
+        }}>
+          Latest event
+        </span>
+        <span style={{ fontSize: 14, fontWeight: 600, color: "#F8FAFC", flexShrink: 0 }}>
+          Iran 2026 — short, sharp, fully recovered
+        </span>
+        <span style={{ display: "flex", gap: 18, marginLeft: "auto", flexWrap: "wrap" }}>
+          <span style={{ display: "inline-flex", flexDirection: "column", alignItems: "flex-start" }}>
+            <span style={{ fontSize: 9, color: "#64748B", textTransform: "uppercase", letterSpacing: "0.05em" }}>S&P drop</span>
+            <span style={{ fontSize: 14, fontWeight: 700, color: "#EF4444", fontVariantNumeric: "tabular-nums" }}>−7.8%</span>
+          </span>
+          <span style={{ display: "inline-flex", flexDirection: "column", alignItems: "flex-start" }}>
+            <span style={{ fontSize: 9, color: "#64748B", textTransform: "uppercase", letterSpacing: "0.05em" }}>To trough</span>
+            <span style={{ fontSize: 14, fontWeight: 700, color: "#FBBF24", fontVariantNumeric: "tabular-nums" }}>21d</span>
+          </span>
+          <span style={{ display: "inline-flex", flexDirection: "column", alignItems: "flex-start" }}>
+            <span style={{ fontSize: 9, color: "#64748B", textTransform: "uppercase", letterSpacing: "0.05em" }}>To ATH</span>
+            <span style={{ fontSize: 14, fontWeight: 700, color: "#34D399", fontVariantNumeric: "tabular-nums" }}>32d</span>
+          </span>
+          <span style={{ fontSize: 18, color: "#64748B", alignSelf: "center" }}>›</span>
+        </span>
+      </button>
+
       <div className="bento-grid">
         {/* Content cards — eyebrow / big stat / sparkline rhythm */}
         {cards.map((c, i) => (

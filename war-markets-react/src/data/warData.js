@@ -539,6 +539,15 @@ export const cpiData = [
       { t: 8, year: 2030, value: 2.0 },  { t: 9, year: 2031, value: 2.0 },
       { t: 10, year: 2032, value: 2.0 },
     ] },
+  // Iran 2026 — preliminary. Only T-2..T+0 populated (data through Apr 15, 2026).
+  // Future years intentionally null — too early to project. Brent crude spike from
+  // $72 → ~$128 → ~$94 (Apr 14) implies a modest CPI tick over the 6-week window;
+  // using 2.8% as a placeholder (slightly above 2025) until 2026 annual CPI prints.
+  { conflict: "Iran", label: "Iran War (2026)", startYear: 2026, preliminary: true,
+    series: [
+      { t: -2, year: 2024, value: 2.9 }, { t: -1, year: 2025, value: 2.8 },
+      { t: 0, year: 2026, value: 2.8 },
+    ] },
 ];
 
 export const debtGdpData = [
@@ -657,6 +666,14 @@ export const debtGdpData = [
       { t: 8, year: 2030, value: 134.0 },  { t: 9, year: 2031, value: 136.0 },
       { t: 10, year: 2032, value: 138.0 },
     ] },
+  // Iran 2026 — preliminary. Only T-2..T+0 populated.
+  // Defense spending bump modest in scope (US not at full mobilization);
+  // 2026 debt/GDP tracking the existing baseline (~126%).
+  { conflict: "Iran", label: "Iran War (2026)", startYear: 2026, preliminary: true,
+    series: [
+      { t: -2, year: 2024, value: 122.3 }, { t: -1, year: 2025, value: 124.0 },
+      { t: 0, year: 2026, value: 126.0 },
+    ] },
 ];
 
 // Flattened for Recharts — one row per time point, column per conflict
@@ -734,6 +751,8 @@ export const fiscalSummary = [
     narrative: "COVID triggered the largest single-year debt spike since WWII — debt/GDP jumped 21 points in 2020 alone as the government spent over $5 trillion on pandemic relief (CARES Act, PPP, enhanced unemployment, stimulus checks). Inflation was initially suppressed by demand collapse (1.2% in 2020), but exploded to 8.0% by 2022 — the highest since 1981 — driven by supply chain disruptions, labor shortages, and the lagged effect of massive monetary expansion. The Fed's response (rate hikes from 0% to 5.5%) was the most aggressive tightening cycle since Volcker." },
   { conflict: "Russia-Ukraine", peakCpi: 8.0, debtGdpDelta: 2.6,
     narrative: "The war's fiscal impact was modest compared to prior conflicts. Energy price spikes drove CPI to 8.0% in 2022 — the highest since 1981 — but this was largely a continuation of COVID-era inflation. The Fed's aggressive rate hikes (0% → 5.5% in 16 months) tamed inflation but increased debt service costs. Debt/GDP actually fell initially as nominal GDP surged with inflation, but is projected to resume climbing." },
+  { conflict: "Iran", peakCpi: 2.8, debtGdpDelta: 0, preliminary: true,
+    narrative: "PRELIMINARY (6 weeks of data, through Apr 15, 2026). Annual CPI for 2026 will not print until Jan 2027 — placeholder shown is 2.8% baseline, slightly above 2025's 2.8% pace. Brent crude spiked from $72 to a peak of ~$128/bbl on Apr 2 before retracing toward $94 by mid-April; the channel for inflation is the oil pass-through, not domestic war spending. Defense outlays rose modestly; debt/GDP impact below the threshold of significance over a 6-week conflict. Long-horizon fiscal effects won't be readable until 2027+." },
 ];
 
 // ── COST OF LIVING DATA ────────────────────────────────────
@@ -906,6 +925,24 @@ export const costOfLivingData = [
       eggs:    { nominal: 3.20,   adjusted: 3.20 },
       gas:     { nominal: 3.52,   adjusted: 3.52 },
       bread:   { nominal: 2.09,   adjusted: 2.09 },
+    },
+  },
+  // Iran 2026 — preliminary. Single 2026 data point (Apr 15 snapshot).
+  // CPI ×0.95 reflects ~5% cumulative inflation from 2024 → mid-2026.
+  // Nominal prices nudged up via 2024 baseline × 1.05; gas elevated
+  // by Brent's peak-to-current spike ($72 → ~$94, ~30% above pre-war).
+  // Income figure tracks 2024 wage index assuming ~3% YoY through Apr 2026.
+  {
+    era: "Iran", year: 2026, cpiMultiplier: 0.95, preliminary: true,
+    items: {
+      home:    { nominal: 437600, adjusted: 415720 },
+      car:     { nominal: 50400,  adjusted: 47880 },
+      tuition: { nominal: 11710,  adjusted: 11125 },
+      income:  { nominal: 88830,  adjusted: 84389 },
+      milk:    { nominal: 4.42,   adjusted: 4.20 },
+      eggs:    { nominal: 3.32,   adjusted: 3.15 },
+      gas:     { nominal: 4.15,   adjusted: 3.94 },
+      bread:   { nominal: 2.18,   adjusted: 2.07 },
     },
   },
 ];
