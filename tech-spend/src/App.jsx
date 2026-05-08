@@ -10,7 +10,7 @@ import { formatDate } from "./utils/formatters";
 
 const TABS = [
   { id: "overview", label: "Overview" },
-  { id: "annual", label: "Annual Spending" },
+  { id: "annual", label: "Annual Spend" },
   { id: "growth", label: "YoY Growth" },
   { id: "company", label: "Company Details" },
   { id: "accounting", label: "Under the Hood" },
@@ -21,7 +21,7 @@ export default function App() {
   const [data, setData] = useState(null);
 
   useEffect(() => {
-    fetch("./capex-data.json")
+    fetch("./tech-spend-data.json")
       .then((r) => r.json())
       .then(setData)
       .catch(console.error);
@@ -30,7 +30,7 @@ export default function App() {
   if (!data) {
     return (
       <div style={{ minHeight: "100vh", display: "flex", alignItems: "center", justifyContent: "center" }}>
-        <p style={{ color: "#64748B", fontSize: 14 }}>Loading capex data...</p>
+        <p style={{ color: "#64748B", fontSize: 14 }}>Loading tech-spend data...</p>
       </div>
     );
   }

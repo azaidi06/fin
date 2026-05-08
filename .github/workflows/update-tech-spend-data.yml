@@ -1,4 +1,4 @@
-name: Update Capex Data
+name: Update Tech Spend Data
 
 on:
   schedule:
@@ -19,13 +19,13 @@ jobs:
         with:
           node-version: 20
 
-      - name: Fetch capex data
-        run: node scripts/fetch_capex_data.mjs
-        working-directory: capex
+      - name: Fetch tech-spend data
+        run: node scripts/fetch_tech_spend_data.mjs
+        working-directory: tech-spend
 
       - name: Commit and push if changed
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add capex/public/capex-data.json
-          git diff --cached --quiet || (git commit -m "Update capex data" && git push)
+          git add tech-spend/public/tech-spend-data.json
+          git diff --cached --quiet || (git commit -m "Update tech-spend data" && git push)

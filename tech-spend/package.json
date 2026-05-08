@@ -1,12 +1,12 @@
 {
-  "name": "capex",
+  "name": "tech-spend",
   "private": true,
   "version": "1.0.0",
   "type": "module",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "fetch": "node scripts/fetch_capex_data.mjs",
+    "fetch": "node scripts/fetch_tech_spend_data.mjs",
     "preview": "vite preview"
   },
   "dependencies": {

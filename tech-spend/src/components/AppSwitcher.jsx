@@ -1,10 +1,10 @@
 const APPS = [
   { id: "war-markets", label: "Money + War", href: "/" },
-  { id: "capex", label: "AI Capex", href: "/capex/" },
+  { id: "tech-spend", label: "Tech Spend", href: "/tech-spend/" },
   { id: "options", label: "Options", href: "https://options-dashboard.duckdns.org" },
 ];
 
-const CURRENT = "capex";
+const CURRENT = "tech-spend";
 
 export default function AppSwitcher() {
   return (

@@ -1,11 +1,11 @@
 import { useState, useEffect } from "react";
 
 const stats = [
-  "$406B — Total AI Capex (2025)",
-  "AMZN — Top Spender ($132B)",
-  "ORCL — Fastest Grower (+209%)",
-  "8 companies tracked via SEC EDGAR",
-  "74% — Google YoY capex growth",
+  "Total tech spend across 8 hyperscalers — CapEx + OpEx",
+  "AMZN — Top CapEx spender",
+  "ORCL — Fastest CapEx grower (+209%)",
+  "Tracked via SEC EDGAR XBRL filings",
+  "Updated daily from 10-Qs and 10-Ks",
 ];
 
 export default function Header({ compact, onGoHome }) {
@@ -31,16 +31,16 @@ export default function Header({ compact, onGoHome }) {
         onClick={onGoHome}
         style={{ cursor: onGoHome ? "pointer" : undefined }}
       >
-        AI Capex Tracker
+        Tech Spend
       </h1>
       {compact ? (
         <p className="text-lg sm:text-xl" style={{ color: "#CBD5E1" }}>
-          Capital Expenditure Across Big Tech
+          CapEx + OpEx Across Big Tech
         </p>
       ) : (
         <>
           <p className="text-lg sm:text-xl mb-3" style={{ color: "#CBD5E1" }}>
-            Capital Expenditure Across Big Tech
+            CapEx + OpEx Across Big Tech
           </p>
           <p
             className="mt-4 text-sm font-semibold"
