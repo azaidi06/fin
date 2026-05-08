@@ -1,18 +1,9 @@
 import { useState, useEffect, useRef } from "react";
-
-const COMPANY_COLORS = {
-  MSFT: "#00A4EF",
-  GOOGL: "#4285F4",
-  AMZN: "#FF9900",
-  META: "#0668E1",
-  AAPL: "#A2AAAD",
-  NVDA: "#76B900",
-  ORCL: "#F80000",
-  TSLA: "#CC0000",
-};
+import { colors, companyColor, gradients } from "../theme/tokens";
+import { formatCurrency, formatPercent } from "../utils/formatters";
 
 /* ── Animated counter ── */
-function AnimatedStat({ value, prefix = "", suffix = "", color, decimals = 1 }) {
+function AnimatedStat({ value, prefix = "", suffix = "", color, decimals = 1, fontSize = 22, fontWeight = 700 }) {
   const [display, setDisplay] = useState("0");
   const rafRef = useRef(null);
 
@@ -37,19 +28,22 @@ function AnimatedStat({ value, prefix = "", suffix = "", color, decimals = 1 }) 
   }, [value, decimals]);
 
   return (
-    <span style={{ fontSize: 22, fontWeight: 700, color, lineHeight: 1, fontVariantNumeric: "tabular-nums" }}>
+    <span
+      className="num"
+      style={{ fontSize, fontWeight, color, lineHeight: 1, letterSpacing: "-0.02em" }}
+    >
       {prefix}{display}{suffix}
     </span>
   );
 }
 
 /* ── Bar sparkline for company cards ── */
-function BarSparkline({ values, color, width = 120, height = 32 }) {
-  const max = Math.max(...values.map(Math.abs));
-  if (max === 0) return null;
+function BarSparkline({ values, color, globalMax, width = 120, height = 32 }) {
+  const max = globalMax ?? Math.max(...values.map(Math.abs));
+  if (!max || max === 0) return null;
   const barW = (width - (values.length - 1) * 2) / values.length;
   return (
-    <svg width={width} height={height} style={{ opacity: 0.7, display: "block" }}>
+    <svg width={width} height={height} style={{ opacity: 0.85, display: "block" }}>
       {values.map((v, i) => {
         const barH = Math.max((Math.abs(v) / max) * height, 1);
         return (
@@ -91,6 +85,30 @@ function GlowOrb({ color, size, top, left, delay }) {
   );
 }
 
+/* ── Inline icons ── */
+function IconSigma({ color }) {
+  return (
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M5 4h14v3l-7 5 7 5v3H5l7-8L5 4z" />
+    </svg>
+  );
+}
+function IconCrown({ color }) {
+  return (
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M3 7l4 5 5-7 5 7 4-5v11H3V7z" />
+    </svg>
+  );
+}
+function IconTrendUp({ color }) {
+  return (
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <polyline points="3 17 9 11 13 15 21 7" />
+      <polyline points="14 7 21 7 21 14" />
+    </svg>
+  );
+}
+
 export default function OverviewCards({ data }) {
   const { companies, summary } = data;
 
@@ -100,124 +118,158 @@ export default function OverviewCards({ data }) {
     return annual.slice(-5).map((a) => a.valueBillions);
   };
 
+  // Phase 2C: global sparkline max so cross-card comparisons are valid
+  const globalSparklineMax = Math.max(
+    ...companies.flatMap((c) => getSparklineValues(c).map(Math.abs)),
+    1
+  );
+
+  const topSpenderCompany = companies.find((c) => c.ticker === summary.topSpender);
+  const topSpenderColor = companyColor(summary.topSpender, colors.text);
+  const fastestGrowerCompany = companies.find((c) => c.ticker === summary.fastestGrower);
+  const fastestGrowerColor = companyColor(summary.fastestGrower, colors.success);
+  const fastestGrowerPct = fastestGrowerCompany?.latestAnnual?.yoyGrowthPct;
+
   return (
     <div style={{ position: "relative", overflow: "hidden" }}>
-      <GlowOrb color="#6366F1" size={400} top="-10%" left="-10%" delay={0} />
+      <GlowOrb color={colors.indigo} size={400} top="-10%" left="-10%" delay={0} />
       <GlowOrb color="#FF9900" size={350} top="30%" left="60%" delay={3} />
-      <GlowOrb color="#76B900" size={400} top="70%" left="20%" delay={6} />
+      <GlowOrb color={colors.companies.NVDA} size={400} top="70%" left="20%" delay={6} />
 
-      {/* Summary cards */}
-      <div className="bento-grid" style={{ marginBottom: 24 }}>
-        {/* Total Annual Capex */}
+      {/* Phase 2A: Headline strip — visually distinct from per-company cards */}
+      <div className="headline-strip">
+        {/* Total Capex */}
         <div
-          className="glass-card card-enter card-enter-0"
-          style={{ "--card-glow": "linear-gradient(135deg, #6366F14D, transparent 60%)" }}
+          className="headline-card card-enter card-enter-0"
+          style={{ background: `${gradients.headlineTotal}, rgba(15, 23, 42, 0.6)` }}
         >
-          <div style={{ fontSize: 11, fontWeight: 600, color: "#64748B", textTransform: "uppercase", letterSpacing: "0.05em" }}>
+          <div className="headline-eyebrow">
+            <span className="headline-icon"><IconSigma color={colors.indigoSoft} /></span>
             Total Annual Capex
           </div>
           <AnimatedStat
             value={summary.totalLatestAnnualCapexBillions}
             prefix="$"
             suffix="B"
-            color="#A5B4FC"
+            color={colors.text}
+            fontSize={52}
+            fontWeight={800}
           />
-          <div style={{ fontSize: 12, color: "#94A3B8" }}>Combined across 8 companies</div>
+          <div className="headline-sub">Combined across {companies.length} companies</div>
         </div>
 
         {/* Top Spender */}
         <div
-          className="glass-card card-enter card-enter-1"
-          style={{ "--card-glow": "linear-gradient(135deg, #FF99004D, transparent 60%)" }}
+          className="headline-card card-enter card-enter-1"
+          style={{ background: `${gradients.headlineTop}, rgba(15, 23, 42, 0.6)` }}
         >
-          <div style={{ fontSize: 11, fontWeight: 600, color: "#64748B", textTransform: "uppercase", letterSpacing: "0.05em" }}>
+          <div className="headline-eyebrow">
+            <span className="headline-icon"><IconCrown color="#FBBF24" /></span>
             Top Spender
           </div>
-          <span style={{ fontSize: 22, fontWeight: 700, color: COMPANY_COLORS[summary.topSpender] || "#F8FAFC" }}>
+          <span
+            className="num"
+            style={{
+              fontSize: 52,
+              fontWeight: 800,
+              color: topSpenderColor,
+              lineHeight: 1.05,
+              letterSpacing: "-0.02em",
+              marginTop: 4,
+            }}
+          >
             {summary.topSpender}
           </span>
-          <div style={{ fontSize: 12, color: "#94A3B8" }}>
-            ${companies.find((c) => c.ticker === summary.topSpender)?.latestAnnual?.valueBillions?.toFixed(1) || "—"}B in latest year
+          <div className="headline-sub num">
+            {formatCurrency(topSpenderCompany?.latestAnnual?.valueBillions, { unit: "B" })} in latest year
           </div>
         </div>
 
         {/* Fastest Grower */}
         <div
-          className="glass-card card-enter card-enter-2"
-          style={{ "--card-glow": "linear-gradient(135deg, #34D3994D, transparent 60%)" }}
+          className="headline-card card-enter card-enter-2"
+          style={{ background: `${gradients.headlineGrowth}, rgba(15, 23, 42, 0.6)` }}
         >
-          <div style={{ fontSize: 11, fontWeight: 600, color: "#64748B", textTransform: "uppercase", letterSpacing: "0.05em" }}>
-            Fastest Grower
+          <div className="headline-eyebrow">
+            <span className="headline-icon"><IconTrendUp color={colors.success} /></span>
+            Highest Growth
           </div>
-          <span style={{ fontSize: 22, fontWeight: 700, color: "#34D399" }}>
+          <span
+            className="num"
+            style={{
+              fontSize: 52,
+              fontWeight: 800,
+              color: fastestGrowerColor,
+              lineHeight: 1.05,
+              letterSpacing: "-0.02em",
+              marginTop: 4,
+            }}
+          >
             {summary.fastestGrower}
           </span>
-          <div style={{ fontSize: 12, color: "#94A3B8" }}>
-            +{companies.find((c) => c.ticker === summary.fastestGrower)?.latestAnnual?.yoyGrowthPct?.toFixed(0) || "—"}% YoY growth
+          <div className="headline-sub num">
+            {formatPercent(fastestGrowerPct, { digits: 0 })} YoY growth
           </div>
         </div>
       </div>
 
-      {/* Company cards */}
+      {/* Per-company cards */}
       <div className="bento-grid">
         {companies.map((company, i) => {
           const la = company.latestAnnual;
           const growth = la?.yoyGrowthPct;
           const isPositive = growth != null && growth >= 0;
-          const color = COMPANY_COLORS[company.ticker] || "#818CF8";
+          const color = companyColor(company.ticker);
           const sparkValues = getSparklineValues(company);
 
           return (
             <div
               key={company.ticker}
-              className={`glass-card card-enter card-enter-${i + 3}`}
+              className={`glass-card card-enter card-enter-${Math.min(i + 3, 10)}`}
               style={{ "--card-glow": `linear-gradient(135deg, ${color}4D, transparent 60%)` }}
             >
               {/* Ticker + name */}
               <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
                 <div style={{ width: 10, height: 10, borderRadius: 3, background: color, flexShrink: 0 }} />
-                <h3 style={{ fontSize: 15, fontWeight: 700, color: "#F8FAFC", margin: 0 }}>
+                <h3 style={{ fontSize: 15, fontWeight: 700, color: colors.text, margin: 0 }}>
                   {company.ticker}
                 </h3>
-                <span style={{ fontSize: 12, color: "#64748B" }}>{company.name}</span>
+                <span style={{ fontSize: 12, color: colors.textFaint }}>{company.name}</span>
               </div>
 
-              {/* Latest annual capex */}
-              <div style={{ display: "flex", alignItems: "flex-end", justifyContent: "space-between" }}>
-                <div>
-                  <AnimatedStat
-                    value={la?.valueBillions || 0}
-                    prefix="$"
-                    suffix="B"
-                    color={color}
-                  />
-                  <div style={{ fontSize: 10, color: "#64748B", marginTop: 2 }}>
-                    CY{la?.calendarYear || "—"}
-                  </div>
-                </div>
-
-                {/* YoY growth badge */}
+              {/* Phase 2B: dollar value + YoY pill side-by-side, same line */}
+              <div style={{ display: "flex", alignItems: "baseline", justifyContent: "space-between", gap: 8, flexWrap: "wrap" }}>
+                <AnimatedStat
+                  value={la?.valueBillions || 0}
+                  prefix="$"
+                  suffix="B"
+                  color={color}
+                  fontSize={26}
+                  fontWeight={700}
+                />
                 {growth != null && (
                   <span
+                    className="num"
                     style={{
-                      fontSize: 12,
-                      fontWeight: 600,
-                      padding: "3px 10px",
-                      borderRadius: 6,
-                      color: isPositive ? "#34D399" : "#EF4444",
-                      background: isPositive ? "rgba(52,211,153,0.1)" : "rgba(239,68,68,0.1)",
-                      border: `1px solid ${isPositive ? "rgba(52,211,153,0.2)" : "rgba(239,68,68,0.2)"}`,
+                      fontSize: 18,
+                      fontWeight: 700,
+                      color: isPositive ? colors.success : colors.danger,
+                      letterSpacing: "-0.01em",
                     }}
                   >
-                    {isPositive ? "+" : ""}
-                    {growth.toFixed(1)}%
+                    {formatPercent(growth, { digits: 1 })}
                   </span>
                 )}
               </div>
 
-              {/* Sparkline */}
+              {/* CY label below */}
+              <div className="num" style={{ fontSize: 10, color: colors.textFaint, marginTop: -4 }}>
+                CY{la?.calendarYear || "—"} &middot; YoY
+              </div>
+
+              {/* Sparkline (normalized to global max) */}
               {sparkValues.length > 0 && (
-                <BarSparkline values={sparkValues} color={color} />
+                <BarSparkline values={sparkValues} color={color} globalMax={globalSparklineMax} />
               )}
             </div>
           );

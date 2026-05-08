@@ -202,55 +202,108 @@ function CapexCashFlowChart() {
   );
 }
 
-/* ── 4. Free cash flow collapse ── */
+/* ── 4. Free cash flow collapse ──
+   Split into two stacked panels: Actuals (2024-2025) on top, Projected (2026E) below.
+   Avoids the prior issue of mixing actual/projected on one axis with three categorical colors. */
 function FCFChart() {
-  const chartData = useMemo(() => {
-    return freeCashFlow
-      .sort((a, b) => b.fcf2025 - a.fcf2025)
-      .map((d) => ({
+  const sorted = useMemo(
+    () => [...freeCashFlow].sort((a, b) => b.fcf2025 - a.fcf2025),
+    []
+  );
+
+  const actualsData = useMemo(
+    () =>
+      sorted.map((d) => ({
         ticker: d.ticker,
         "2024": d.fcf2024,
         "2025": d.fcf2025,
+      })),
+    [sorted]
+  );
+
+  const projectedData = useMemo(
+    () =>
+      sorted.map((d) => ({
+        ticker: d.ticker,
         "2026E": d.fcf2026,
-      }));
-  }, []);
+      })),
+    [sorted]
+  );
 
   return (
-    <ResponsiveContainer width="100%" height={300}>
-      <BarChart data={chartData} margin={{ top: 10, right: 10, left: 0, bottom: 0 }}>
-        <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.06)" />
-        <XAxis
-          dataKey="ticker"
-          tick={{ fill: "#F8FAFC", fontSize: 13, fontWeight: 600 }}
-          axisLine={{ stroke: "rgba(255,255,255,0.1)" }}
-          tickLine={false}
-        />
-        <YAxis
-          tick={{ fill: "#94A3B8", fontSize: 12 }}
-          axisLine={{ stroke: "rgba(255,255,255,0.1)" }}
-          tickLine={false}
-          tickFormatter={(v) => `$${v}B`}
-        />
-        <ReferenceLine y={0} stroke="rgba(255,255,255,0.2)" />
-        <Tooltip
-          contentStyle={tooltipStyle}
-          labelStyle={{ color: "#F8FAFC", fontWeight: 600 }}
-          formatter={(v, name) => [`$${v}B`, `FCF ${name}`]}
-        />
-        <Legend wrapperStyle={{ fontSize: 11 }} iconType="square" iconSize={8} />
-        <Bar dataKey="2024" fill="#34D399" fillOpacity={0.7} radius={[2, 2, 0, 0]} maxBarSize={32} />
-        <Bar dataKey="2025" fill="#818CF8" fillOpacity={0.7} radius={[2, 2, 0, 0]} maxBarSize={32} />
-        <Bar dataKey="2026E" radius={[2, 2, 0, 0]} maxBarSize={32}>
-          {chartData.map((entry) => (
-            <Cell
-              key={entry.ticker}
-              fill={entry["2026E"] < 0 ? "#EF4444" : "#F59E0B"}
-              fillOpacity={0.8}
+    <div style={{ display: "grid", gridTemplateColumns: "1fr", gap: 16 }}>
+      {/* Actuals */}
+      <div>
+        <div style={{ fontSize: 12, fontWeight: 600, color: "#CBD5E1", marginBottom: 8, paddingLeft: 4 }}>
+          Actuals — 2024 vs 2025 ($B FCF)
+        </div>
+        <ResponsiveContainer width="100%" height={240}>
+          <BarChart data={actualsData} margin={{ top: 10, right: 10, left: 0, bottom: 0 }}>
+            <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.06)" />
+            <XAxis
+              dataKey="ticker"
+              tick={{ fill: "#F8FAFC", fontSize: 13, fontWeight: 600 }}
+              axisLine={{ stroke: "rgba(255,255,255,0.1)" }}
+              tickLine={false}
             />
-          ))}
-        </Bar>
-      </BarChart>
-    </ResponsiveContainer>
+            <YAxis
+              tick={{ fill: "#94A3B8", fontSize: 12 }}
+              axisLine={{ stroke: "rgba(255,255,255,0.1)" }}
+              tickLine={false}
+              tickFormatter={(v) => `$${v}B`}
+            />
+            <ReferenceLine y={0} stroke="rgba(255,255,255,0.2)" />
+            <Tooltip
+              contentStyle={tooltipStyle}
+              labelStyle={{ color: "#F8FAFC", fontWeight: 600 }}
+              formatter={(v, name) => [`$${v}B`, `FCF ${name}`]}
+            />
+            <Legend wrapperStyle={{ fontSize: 11 }} iconType="square" iconSize={8} />
+            <Bar dataKey="2024" fill="#34D399" fillOpacity={0.75} radius={[2, 2, 0, 0]} maxBarSize={32} />
+            <Bar dataKey="2025" fill="#818CF8" fillOpacity={0.75} radius={[2, 2, 0, 0]} maxBarSize={32} />
+          </BarChart>
+        </ResponsiveContainer>
+      </div>
+
+      {/* Projected */}
+      <div>
+        <div style={{ fontSize: 12, fontWeight: 600, color: "#CBD5E1", marginBottom: 8, paddingLeft: 4 }}>
+          Projected — 2026E ($B FCF, red bars indicate negative FCF)
+        </div>
+        <ResponsiveContainer width="100%" height={220}>
+          <BarChart data={projectedData} margin={{ top: 10, right: 10, left: 0, bottom: 0 }}>
+            <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.06)" />
+            <XAxis
+              dataKey="ticker"
+              tick={{ fill: "#F8FAFC", fontSize: 13, fontWeight: 600 }}
+              axisLine={{ stroke: "rgba(255,255,255,0.1)" }}
+              tickLine={false}
+            />
+            <YAxis
+              tick={{ fill: "#94A3B8", fontSize: 12 }}
+              axisLine={{ stroke: "rgba(255,255,255,0.1)" }}
+              tickLine={false}
+              tickFormatter={(v) => `$${v}B`}
+            />
+            <ReferenceLine y={0} stroke="rgba(255,255,255,0.3)" />
+            <Tooltip
+              contentStyle={tooltipStyle}
+              labelStyle={{ color: "#F8FAFC", fontWeight: 600 }}
+              formatter={(v) => [`$${v}B`, "FCF 2026E"]}
+            />
+            <Bar dataKey="2026E" radius={[2, 2, 0, 0]} maxBarSize={48}>
+              {projectedData.map((entry) => (
+                <Cell
+                  key={entry.ticker}
+                  fill={entry["2026E"] < 0 ? "#EF4444" : "#F59E0B"}
+                  fillOpacity={0.85}
+                />
+              ))}
+            </Bar>
+          </BarChart>
+        </ResponsiveContainer>
+      </div>
+    </div>
   );
 }
 

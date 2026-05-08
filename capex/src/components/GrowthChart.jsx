@@ -9,17 +9,8 @@ import {
   Cell,
   ResponsiveContainer,
 } from "recharts";
-
-const COMPANY_COLORS = {
-  MSFT: "#00A4EF",
-  GOOGL: "#4285F4",
-  AMZN: "#FF9900",
-  META: "#0668E1",
-  AAPL: "#A2AAAD",
-  NVDA: "#76B900",
-  ORCL: "#F80000",
-  TSLA: "#CC0000",
-};
+import { colors, companyColor } from "../theme/tokens";
+import { formatPercent } from "../utils/formatters";
 
 function CustomTooltip({ active, payload }) {
   if (!active || !payload?.length) return null;
@@ -34,12 +25,14 @@ function CustomTooltip({ active, payload }) {
         backdropFilter: "blur(12px)",
       }}
     >
-      <p style={{ fontSize: 13, fontWeight: 600, color: "#F8FAFC", margin: "0 0 4px" }}>
+      <p style={{ fontSize: 13, fontWeight: 600, color: colors.text, margin: "0 0 4px" }}>
         {d.ticker} — {d.name}
       </p>
-      <p style={{ fontSize: 12, color: d.growth >= 0 ? "#34D399" : "#EF4444", margin: 0 }}>
-        {d.growth >= 0 ? "+" : ""}
-        {d.growth.toFixed(1)}% YoY
+      <p
+        className="num"
+        style={{ fontSize: 12, color: d.growth >= 0 ? colors.success : colors.danger, margin: 0 }}
+      >
+        {formatPercent(d.growth, { digits: 1 })} YoY
       </p>
     </div>
   );
@@ -70,10 +63,10 @@ export default function GrowthChart({ data }) {
 
   return (
     <div className="card-enter card-enter-0">
-      <h2 style={{ fontSize: 20, fontWeight: 700, color: "#F8FAFC", marginBottom: 8 }}>
+      <h2 style={{ fontSize: 20, fontWeight: 700, color: colors.text, marginBottom: 8 }}>
         Year-over-Year Growth
       </h2>
-      <p style={{ fontSize: 13, color: "#94A3B8", marginBottom: 24 }}>
+      <p style={{ fontSize: 13, color: colors.textMuted, marginBottom: 24 }}>
         Latest annual capex growth rate by company.
       </p>
 
@@ -87,7 +80,7 @@ export default function GrowthChart({ data }) {
             <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.06)" horizontal={false} />
             <XAxis
               type="number"
-              tick={{ fill: "#94A3B8", fontSize: 12 }}
+              tick={{ fill: colors.textMuted, fontSize: 12 }}
               axisLine={{ stroke: "rgba(255,255,255,0.1)" }}
               tickLine={false}
               tickFormatter={(v) => `${v}%`}
@@ -95,7 +88,7 @@ export default function GrowthChart({ data }) {
             <YAxis
               type="category"
               dataKey="ticker"
-              tick={{ fill: "#F8FAFC", fontSize: 13, fontWeight: 600 }}
+              tick={{ fill: colors.text, fontSize: 13, fontWeight: 600 }}
               axisLine={{ stroke: "rgba(255,255,255,0.1)" }}
               tickLine={false}
               width={50}
@@ -105,7 +98,7 @@ export default function GrowthChart({ data }) {
               {growthData.map((entry) => (
                 <Cell
                   key={entry.ticker}
-                  fill={entry.growth >= 0 ? "#34D399" : "#EF4444"}
+                  fill={entry.growth >= 0 ? colors.success : colors.danger}
                   fillOpacity={0.8}
                 />
               ))}
@@ -119,16 +112,19 @@ export default function GrowthChart({ data }) {
         className="glass-card"
         style={{ padding: 0, overflow: "hidden", "--card-glow": "linear-gradient(135deg, #818CF84D, transparent 60%)" }}
       >
-        <div style={{ padding: "16px 20px 8px", fontSize: 14, fontWeight: 600, color: "#F8FAFC" }}>
+        <div style={{ padding: "16px 20px 8px", fontSize: 14, fontWeight: 600, color: colors.text }}>
           Historical YoY Growth (%)
         </div>
         <div style={{ overflowX: "auto" }}>
-          <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 12 }}>
+          <table className="num" style={{ width: "100%", borderCollapse: "collapse", fontSize: 12 }}>
             <thead>
               <tr style={{ borderBottom: "1px solid rgba(255,255,255,0.06)" }}>
-                <th style={{ padding: "10px 16px", textAlign: "left", color: "#64748B", fontWeight: 600 }}>Company</th>
+                <th style={{ padding: "10px 16px", textAlign: "left", color: colors.textFaint, fontWeight: 600 }}>Company</th>
                 {historyData.map((year) => (
-                  <th key={year} style={{ padding: "10px 12px", textAlign: "right", color: "#64748B", fontWeight: 600 }}>
+                  <th
+                    key={year}
+                    style={{ padding: "10px 12px", textAlign: "right", color: colors.textFaint, fontWeight: 600 }}
+                  >
                     {year}
                   </th>
                 ))}
@@ -137,7 +133,9 @@ export default function GrowthChart({ data }) {
             <tbody>
               {data.companies.map((c) => (
                 <tr key={c.ticker} style={{ borderBottom: "1px solid rgba(255,255,255,0.04)" }}>
-                  <td style={{ padding: "10px 16px", fontWeight: 600, color: COMPANY_COLORS[c.ticker] }}>
+                  <td
+                    style={{ padding: "10px 16px", fontWeight: 600, color: companyColor(c.ticker) }}
+                  >
                     {c.ticker}
                   </td>
                   {historyData.map((year) => {
@@ -150,11 +148,10 @@ export default function GrowthChart({ data }) {
                           padding: "10px 12px",
                           textAlign: "right",
                           fontWeight: 500,
-                          fontVariantNumeric: "tabular-nums",
-                          color: g == null ? "#475569" : g >= 0 ? "#34D399" : "#EF4444",
+                          color: g == null ? colors.textGhost : g >= 0 ? colors.success : colors.danger,
                         }}
                       >
-                        {g != null ? `${g >= 0 ? "+" : ""}${g.toFixed(1)}%` : "—"}
+                        {g != null ? formatPercent(g, { digits: 1 }) : "—"}
                       </td>
                     );
                   })}

@@ -159,6 +159,95 @@ body::after {
   to { opacity: 1; transform: translateY(0); }
 }
 
+/* ── Tabular numerals utility (column alignment for numeric tables) ── */
+.num {
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: "tnum" 1;
+}
+
+/* ── Headline strip card (3-up summary at top of overview) ── */
+.headline-strip {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 14px;
+  margin-bottom: 24px;
+}
+.headline-card {
+  position: relative;
+  overflow: hidden;
+  border-radius: 18px;
+  padding: 24px 26px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(15, 23, 42, 0.6);
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  transition: transform 0.3s ease, border-color 0.3s ease;
+}
+.headline-card:hover {
+  transform: translateY(-2px);
+  border-color: rgba(255, 255, 255, 0.14);
+}
+.headline-card .headline-eyebrow {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 11px;
+  font-weight: 600;
+  color: #94A3B8;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+.headline-card .headline-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+}
+.headline-card .headline-value {
+  font-size: 52px;
+  font-weight: 800;
+  line-height: 1.05;
+  letter-spacing: -0.02em;
+  margin-top: 4px;
+}
+.headline-card .headline-sub {
+  font-size: 13px;
+  color: #94A3B8;
+  margin-top: 4px;
+}
+
+@media (max-width: 900px) {
+  .headline-strip { grid-template-columns: 1fr; }
+  .headline-card .headline-value { font-size: 40px; }
+}
+
+/* ── Ticker pill row (replaces native <select>) ── */
+.ticker-pill {
+  appearance: none;
+  border: 1px solid transparent;
+  cursor: pointer;
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 600;
+  padding: 8px 14px;
+  border-radius: 999px;
+  transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+  background: rgba(30, 41, 59, 0.55);
+  color: #94A3B8;
+}
+.ticker-pill:hover {
+  background: rgba(51, 65, 85, 0.7);
+  color: #E2E8F0;
+}
+.ticker-pill.is-active {
+  background: rgba(99, 102, 241, 0.2);
+  color: #A5B4FC;
+  border-color: rgba(99, 102, 241, 0.4);
+  box-shadow: 0 0 12px rgba(99, 102, 241, 0.15);
+}
+
 /* ── Recharts customizations ── */
 .recharts-cartesian-grid line {
   stroke: rgba(255, 255, 255, 0.06);

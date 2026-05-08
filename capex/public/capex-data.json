@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-03-02T01:20:12.884Z",
+  "updatedAt": "2026-05-08T20:42:38.509Z",
   "source": "SEC-EDGAR",
   "companies": [
     {
@@ -431,6 +431,14 @@
           "value": 29876000000,
           "valueBillions": 29.88,
           "endDate": "2025-12-31"
+        },
+        {
+          "period": "CY2026Q1",
+          "calendarYear": 2026,
+          "calendarQuarter": 1,
+          "value": 30876000000,
+          "valueBillions": 30.88,
+          "endDate": "2026-03-31"
         }
       ],
       "annual": [
@@ -579,12 +587,12 @@
         }
       ],
       "latestQuarter": {
-        "period": "CY2025Q4",
-        "calendarYear": 2025,
-        "calendarQuarter": 4,
-        "value": 29876000000,
-        "valueBillions": 29.88,
-        "endDate": "2025-12-31"
+        "period": "CY2026Q1",
+        "calendarYear": 2026,
+        "calendarQuarter": 1,
+        "value": 30876000000,
+        "valueBillions": 30.88,
+        "endDate": "2026-03-31"
       },
       "latestAnnual": {
         "period": "CY2025",
@@ -785,6 +793,14 @@
           "value": 17197000000,
           "valueBillions": 17.2,
           "endDate": "2025-03-31"
+        },
+        {
+          "period": "CY2026Q1",
+          "calendarYear": 2026,
+          "calendarQuarter": 1,
+          "value": 35674000000,
+          "valueBillions": 35.67,
+          "endDate": "2026-03-31"
         }
       ],
       "annual": [
@@ -893,12 +909,12 @@
         }
       ],
       "latestQuarter": {
-        "period": "CY2025Q1",
-        "calendarYear": 2025,
+        "period": "CY2026Q1",
+        "calendarYear": 2026,
         "calendarQuarter": 1,
-        "value": 17197000000,
-        "valueBillions": 17.2,
-        "endDate": "2025-03-31"
+        "value": 35674000000,
+        "valueBillions": 35.67,
+        "endDate": "2026-03-31"
       },
       "latestAnnual": {
         "period": "CY2025",
@@ -1115,6 +1131,14 @@
           "value": 35095000000,
           "valueBillions": 35.1,
           "endDate": "2025-09-30"
+        },
+        {
+          "period": "CY2026Q1",
+          "calendarYear": 2026,
+          "calendarQuarter": 1,
+          "value": 44203000000,
+          "valueBillions": 44.2,
+          "endDate": "2026-03-31"
         }
       ],
       "annual": [
@@ -1199,12 +1223,12 @@
         }
       ],
       "latestQuarter": {
-        "period": "CY2025Q3",
-        "calendarYear": 2025,
-        "calendarQuarter": 3,
-        "value": 35095000000,
-        "valueBillions": 35.1,
-        "endDate": "2025-09-30"
+        "period": "CY2026Q1",
+        "calendarYear": 2026,
+        "calendarQuarter": 1,
+        "value": 44203000000,
+        "valueBillions": 44.2,
+        "endDate": "2026-03-31"
       },
       "latestAnnual": {
         "period": "CY2025",
@@ -1333,6 +1357,14 @@
           "value": 12941000000,
           "valueBillions": 12.94,
           "endDate": "2025-03-31"
+        },
+        {
+          "period": "CY2026Q1",
+          "calendarYear": 2026,
+          "calendarQuarter": 1,
+          "value": 18997000000,
+          "valueBillions": 19,
+          "endDate": "2026-03-31"
         }
       ],
       "annual": [
@@ -1465,12 +1497,12 @@
         }
       ],
       "latestQuarter": {
-        "period": "CY2025Q1",
-        "calendarYear": 2025,
+        "period": "CY2026Q1",
+        "calendarYear": 2026,
         "calendarQuarter": 1,
-        "value": 12941000000,
-        "valueBillions": 12.94,
-        "endDate": "2025-03-31"
+        "value": 18997000000,
+        "valueBillions": 19,
+        "endDate": "2026-03-31"
       },
       "latestAnnual": {
         "period": "CY2025",
@@ -2229,6 +2261,14 @@
           "value": 1492000000,
           "valueBillions": 1.49,
           "endDate": "2025-03-31"
+        },
+        {
+          "period": "CY2026Q1",
+          "calendarYear": 2026,
+          "calendarQuarter": 1,
+          "value": 2493000000,
+          "valueBillions": 2.49,
+          "endDate": "2026-03-31"
         }
       ],
       "annual": [
@@ -2369,12 +2409,12 @@
         }
       ],
       "latestQuarter": {
-        "period": "CY2025Q1",
-        "calendarYear": 2025,
+        "period": "CY2026Q1",
+        "calendarYear": 2026,
         "calendarQuarter": 1,
-        "value": 1492000000,
-        "valueBillions": 1.49,
-        "endDate": "2025-03-31"
+        "value": 2493000000,
+        "valueBillions": 2.49,
+        "endDate": "2026-03-31"
       },
       "latestAnnual": {
         "period": "CY2025",

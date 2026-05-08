@@ -1,10 +1,12 @@
 import { useState, useEffect } from "react";
 import Header from "./components/Header";
+import AppSwitcher from "./components/AppSwitcher";
 import OverviewCards from "./components/OverviewCards";
 import AnnualChart from "./components/AnnualChart";
 import GrowthChart from "./components/GrowthChart";
 import CompanyDetail from "./components/CompanyDetail";
 import UnderTheHood from "./components/UnderTheHood";
+import { formatDate } from "./utils/formatters";
 
 const TABS = [
   { id: "overview", label: "Overview" },
@@ -35,11 +37,16 @@ export default function App() {
 
   return (
     <div style={{ minHeight: "100vh", padding: "48px 24px 64px" }}>
-      <div style={{ maxWidth: 1000, margin: "0 auto" }}>
+      <div style={{ maxWidth: 1200, margin: "0 auto" }}>
+        <div style={{ display: "flex", justifyContent: "flex-end", marginBottom: 16 }}>
+          <AppSwitcher />
+        </div>
         <Header compact={tab !== "overview"} onGoHome={() => setTab("overview")} />
 
         {/* Tab bar */}
         <nav
+          role="tablist"
+          aria-label="Sections"
           style={{
             display: "flex",
             gap: 4,
@@ -54,6 +61,8 @@ export default function App() {
           {TABS.map((t) => (
             <button
               key={t.id}
+              role="tab"
+              aria-selected={tab === t.id}
               onClick={() => setTab(t.id)}
               style={{
                 flex: 1,
@@ -86,8 +95,8 @@ export default function App() {
         {/* Footer */}
         <footer style={{ textAlign: "center", marginTop: 48, paddingTop: 24 }}>
           <div className="glow-divider" style={{ marginBottom: 16 }} />
-          <p style={{ fontSize: 11, color: "#475569" }}>
-            Data from SEC EDGAR XBRL filings &middot; Updated {new Date(data.updatedAt).toLocaleDateString()}
+          <p className="num" style={{ fontSize: 11, color: "#475569" }}>
+            Data from SEC EDGAR XBRL filings &middot; Updated {formatDate(data.updatedAt)}
           </p>
         </footer>
       </div>
