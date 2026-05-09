@@ -1,7 +1,7 @@
 const APPS = [
   { id: "war-markets", label: "Money + War", href: "/" },
   { id: "tech-spend", label: "Tech Spend", href: "/tech-spend/" },
-  { id: "options", label: "Options", href: "https://options-dashboard.duckdns.org" },
+  { id: "options", label: "Options", href: "https://app.money4war.com" },
 ];
 
 const CURRENT = "tech-spend";
