@@ -3,6 +3,7 @@ import { sp500Data, preWarData, globalMarketsData, costOfLivingData, totalDebtDa
 import { wealthTimeSeries } from "../data/wealthData";
 import { useEventToggle } from "../context/EventToggleContext";
 
+import { useTheme } from '../theme/ThemeContext';
 /* ── Tablet detection hook ── */
 function useIsTablet() {
   const [t, setT] = useState(
@@ -97,13 +98,14 @@ function BarSparkline({ values, color, width = 120, height = 32, animated = fals
 }
 
 function SignedBarSparkline({ values, color, width = 120, height = 32, animated = false }) {
+  const t = useTheme().tokens;
   const max = Math.max(...values.map(Math.abs));
   const mid = height / 2;
   const barW = (width - (values.length - 1) * 2) / values.length;
   return (
     <svg width="100%" height={height} viewBox={`0 0 ${width} ${height}`} preserveAspectRatio="none" style={{ opacity: 0.7, display: "block" }}>
       {/* zero line */}
-      <line x1={0} y1={mid} x2={width} y2={mid} stroke="#475569" strokeWidth={0.5} />
+      <line x1={0} y1={mid} x2={width} y2={mid} stroke={t.axis} strokeWidth={0.5} />
       {values.map((v, i) => {
         const barH = (Math.abs(v) / max) * (mid - 1);
         const y = v >= 0 ? mid - barH : mid;
@@ -117,7 +119,7 @@ function SignedBarSparkline({ values, color, width = 120, height = 32, animated 
             width={barW}
             height={barH}
             rx={1}
-            fill={v >= 0 ? "#34D399" : "#EF4444"}
+            fill={v >= 0 ? t.greenSoft : t.red}
           />
         );
       })}
@@ -277,6 +279,7 @@ function useMarketData() {
 /* ── Ticker Strip (compact, above cards) ── */
 
 function TickerStrip({ assets, updatedAt, loading }) {
+  const t = useTheme().tokens;
   if (loading || assets.length === 0) return null;
 
   return (
@@ -287,12 +290,12 @@ function TickerStrip({ assets, updatedAt, loading }) {
         const up = (val ?? 0) >= 0;
         return (
           <span key={a.symbol} className="ticker-item">
-            <span style={{ fontSize: 12, fontWeight: 700, color: "#F8FAFC" }}>{a.symbol}</span>
-            <span style={{ fontSize: 12, color: "#CBD5E1" }}>{formatPrice(a.price)}</span>
+            <span style={{ fontSize: 12, fontWeight: 700, color: t.textHigh }}>{a.symbol}</span>
+            <span style={{ fontSize: 12, color: t.textMid }}>{formatPrice(a.price)}</span>
             {has && (
               <span style={{
                 fontSize: 11, fontWeight: 600, padding: "1px 6px", borderRadius: 4,
-                color: up ? "#34D399" : "#EF4444",
+                color: up ? t.greenSoft : t.red,
                 background: up ? "rgba(52,211,153,0.1)" : "rgba(239,68,68,0.1)",
               }}>
                 {up ? "+" : ""}{val.toFixed(1)}%
@@ -304,7 +307,7 @@ function TickerStrip({ assets, updatedAt, loading }) {
       })}
       <span style={{ display: "flex", alignItems: "center", gap: 6, marginLeft: "auto", flexShrink: 0 }}>
         <span className="live-dot" style={{ width: 6, height: 6 }} />
-        <span style={{ fontSize: 10, color: "#64748B" }}>{updatedAt ? timeAgo(updatedAt) : ""}</span>
+        <span style={{ fontSize: 10, color: t.textLow }}>{updatedAt ? timeAgo(updatedAt) : ""}</span>
       </span>
     </div>
   );
@@ -312,6 +315,7 @@ function TickerStrip({ assets, updatedAt, loading }) {
 
 /* ── Compact market row (used in 2-col grid on homepage) ── */
 function MarketRow({ a }) {
+  const t = useTheme().tokens;
   const val = a.change1d ?? null;
   const has = val != null && val !== 0;
   const up = (val ?? 0) >= 0;
@@ -328,15 +332,15 @@ function MarketRow({ a }) {
       onMouseLeave={(e) => { e.currentTarget.style.background = "transparent"; }}
     >
       <div style={{ display: "flex", alignItems: "center", gap: 8, minWidth: 0 }}>
-        <span style={{ fontSize: 12, fontWeight: 700, color: "#F8FAFC", width: 44, flexShrink: 0 }}>{a.symbol}</span>
-        <span style={{ fontSize: 12, fontWeight: 600, color: "#CBD5E1", fontVariantNumeric: "tabular-nums" }}>
+        <span style={{ fontSize: 12, fontWeight: 700, color: t.textHigh, width: 44, flexShrink: 0 }}>{a.symbol}</span>
+        <span style={{ fontSize: 12, fontWeight: 600, color: t.textMid, fontVariantNumeric: "tabular-nums" }}>
           {formatPrice(a.price)}
         </span>
       </div>
       {has ? (
         <span style={{
           fontSize: 11, fontWeight: 600,
-          color: up ? "#34D399" : "#EF4444",
+          color: up ? t.greenSoft : t.red,
           background: up ? "rgba(52,211,153,0.1)" : "rgba(239,68,68,0.1)",
           border: `1px solid ${up ? "rgba(52,211,153,0.2)" : "rgba(239,68,68,0.2)"}`,
           padding: "2px 7px", borderRadius: 5, fontVariantNumeric: "tabular-nums",
@@ -344,7 +348,7 @@ function MarketRow({ a }) {
           {up ? "+" : ""}{val.toFixed(1)}%
         </span>
       ) : (
-        <span style={{ fontSize: 11, color: "#475569", padding: "2px 7px" }}>—</span>
+        <span style={{ fontSize: 11, color: t.axis, padding: "2px 7px" }}>—</span>
       )}
     </div>
   );
@@ -354,6 +358,7 @@ function MarketRow({ a }) {
 const PREVIEW_ROWS = 5; // per column → up to 10 tickers shown
 
 function LiveMarketCompact({ assets, updatedAt, loading, onExpand }) {
+  const t = useTheme().tokens;
   const preview = assets.slice(0, PREVIEW_ROWS * 2);
   const col1 = preview.slice(0, PREVIEW_ROWS);
   const col2 = preview.slice(PREVIEW_ROWS, PREVIEW_ROWS * 2);
@@ -370,8 +375,8 @@ function LiveMarketCompact({ assets, updatedAt, loading, onExpand }) {
       {/* Header */}
       <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 8 }}>
         <span className="live-dot" />
-        <h3 style={{ fontSize: 16, fontWeight: 600, color: "#F8FAFC", margin: 0 }}>Live Markets</h3>
-        <span style={{ fontSize: 10, color: "#64748B", marginLeft: "auto" }}>
+        <h3 style={{ fontSize: 16, fontWeight: 600, color: t.textHigh, margin: 0 }}>Live Markets</h3>
+        <span style={{ fontSize: 10, color: t.textLow, marginLeft: "auto" }}>
           {updatedAt ? timeAgo(updatedAt) : ""}
         </span>
       </div>
@@ -383,7 +388,7 @@ function LiveMarketCompact({ assets, updatedAt, loading, onExpand }) {
           ))}
         </div>
       ) : assets.length === 0 ? (
-        <p style={{ fontSize: 13, color: "#64748B" }}>Market data unavailable</p>
+        <p style={{ fontSize: 13, color: t.textLow }}>Market data unavailable</p>
       ) : (
         <>
           <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "0 16px" }}>
@@ -391,7 +396,7 @@ function LiveMarketCompact({ assets, updatedAt, loading, onExpand }) {
             <div>{col2.map(a => <MarketRow key={a.symbol} a={a} />)}</div>
           </div>
           {remaining > 0 && (
-            <p style={{ fontSize: 12, color: "#64748B", textAlign: "center", marginTop: 8, marginBottom: 0 }}>
+            <p style={{ fontSize: 12, color: t.textLow, textAlign: "center", marginTop: 8, marginBottom: 0 }}>
               +{remaining} more — click to view all
             </p>
           )}
@@ -408,46 +413,46 @@ const cards = [
     id: "reaction",
     title: "Post-Conflict Reaction",
     desc: "How far markets fell and how long recovery took",
-    color: "#6366F1",
+    color: 'var(--c-indigo)',
     stat: "46.1%",
     statLabel: "Worst (2008 Crisis)",
-    statColor: "#EF4444",
+    statColor: 'var(--c-red)',
     stat2: "5.0%",
     statLabel2: "Mildest (Vietnam '64)",
-    stat2Color: "#34D399",
+    stat2Color: 'var(--c-green-soft)',
     tag: "S&P 500 + NASDAQ",
   },
   {
     id: "buildup",
     title: "Pre-War Buildup",
     desc: "Market moves from first escalation to eve of conflict",
-    color: "#10B981",
+    color: 'var(--c-green)',
     stat: "-15.2%",
     statLabel: "Worst (Black Monday)",
-    statColor: "#EF4444",
+    statColor: 'var(--c-red)',
     stat2: "+11.0%",
     statLabel2: "Best (Korea '50)",
-    stat2Color: "#34D399",
+    stat2Color: 'var(--c-green-soft)',
     tag: "Buildup windows",
   },
   {
     id: "global",
     title: "Global Markets",
     desc: "International index reactions to U.S. wars",
-    color: "#F59E0B",
+    color: 'var(--c-amber)',
     stat: "73%",
     statLabel: "Worst (FTSE '73)",
-    statColor: "#EF4444",
+    statColor: 'var(--c-red)',
     stat2: "5.0%",
     statLabel2: "Mildest (FTSE '03)",
-    stat2Color: "#34D399",
+    stat2Color: 'var(--c-green-soft)',
     tag: "FTSE · DAX · Nikkei · HSI",
   },
   {
     id: "fiscal",
     title: "Fiscal Impact",
     desc: "Inflation spikes and federal debt across wartime eras",
-    color: "#EF4444",
+    color: 'var(--c-red)',
     stat: "118%",
     statLabel: "Peak debt/GDP (WWII)",
     tag: "CPI + Debt/GDP",
@@ -456,7 +461,7 @@ const cards = [
     id: "cost",
     title: "Cost of Living",
     desc: "Housing, gas, food, tuition, and income in 2024 dollars",
-    color: "#8B5CF6",
+    color: 'var(--c-violet)',
     stat: "21.3×",
     statLabel: "CPI multiplier since 1941",
     tag: "Adjusted to 2024 USD",
@@ -465,7 +470,7 @@ const cards = [
     id: "debt",
     title: "National Debt",
     desc: "Total US federal debt from WWII to today",
-    color: "#06B6D4",
+    color: 'var(--c-cyan)',
     stat: "$36.2T",
     statLabel: "Total federal debt (2025)",
     tag: "FRED GFDEBTN",
@@ -474,7 +479,7 @@ const cards = [
     id: "wealth",
     title: "Wealth Distribution",
     desc: "How the top 0.1% share shifted with each conflict era",
-    color: "#F472B6",
+    color: 'var(--c-pink-soft)',
     stat: "25%",
     statLabel: "Top 0.1% peak (1929)",
     stat2: "38%",
@@ -485,7 +490,7 @@ const cards = [
     id: "events",
     title: "Event Explainer",
     desc: "Why each event is included and what it reveals about markets",
-    color: "#FB923C",
+    color: 'var(--c-orange-soft)',
     stat: "84",
     statLabel: "Years of data (1941–2025)",
     stat2: "12",
@@ -496,7 +501,7 @@ const cards = [
     id: "methodology",
     title: "Methodology",
     desc: "Formulas, data sources, CPI adjustments, and limitations",
-    color: "#94A3B8",
+    color: 'var(--c-text-mute)',
     stat: null,
     statLabel: null,
     tag: "How we calculate",
@@ -527,6 +532,7 @@ function GlowOrb({ color, size, top, left, delay }) {
 export { formatPrice, timeAgo, useMarketData };
 
 export default function HomePage({ onSelect }) {
+  const t = useTheme().tokens;
   const { filterData, activeConflicts } = useEventToggle();
   const { assets, updatedAt, loading } = useMarketData();
   const isTablet = useIsTablet();
@@ -534,9 +540,9 @@ export default function HomePage({ onSelect }) {
   return (
     <div style={{ margin: "0 auto", position: "relative", overflow: "hidden" }}>
       {/* Ambient glow orbs */}
-      <GlowOrb color="#6366F1" size={400} top="-10%" left="-10%" delay={0} />
-      <GlowOrb color="#8B5CF6" size={350} top="30%" left="40%" delay={3} />
-      <GlowOrb color="#10B981" size={400} top="60%" left="70%" delay={6} />
+      <GlowOrb color={t.indigo} size={400} top="-10%" left="-10%" delay={0} />
+      <GlowOrb color={t.violet} size={350} top="30%" left="40%" delay={3} />
+      <GlowOrb color={t.green} size={400} top="60%" left="70%" delay={6} />
 
       {/* Ticker strip — compact market glance */}
       <TickerStrip assets={assets} updatedAt={updatedAt} loading={loading} />
@@ -556,7 +562,7 @@ export default function HomePage({ onSelect }) {
           background: "linear-gradient(90deg, rgba(251,191,36,0.10), rgba(251,191,36,0.02) 60%, transparent)",
           border: "1px solid rgba(251,191,36,0.32)",
           textAlign: "left",
-          color: "#F8FAFC",
+          color: t.textHigh,
           flexWrap: "wrap",
         }}
         onMouseEnter={(e) => { e.currentTarget.style.boxShadow = "0 8px 32px rgba(251,191,36,0.20)"; }}
@@ -565,7 +571,7 @@ export default function HomePage({ onSelect }) {
         <span style={{
           fontSize: 10,
           fontWeight: 700,
-          color: "#FBBF24",
+          color: t.amberStrong,
           background: "rgba(251,191,36,0.18)",
           padding: "3px 8px",
           borderRadius: 4,
@@ -575,23 +581,23 @@ export default function HomePage({ onSelect }) {
         }}>
           Latest event
         </span>
-        <span style={{ fontSize: 14, fontWeight: 600, color: "#F8FAFC", flexShrink: 0 }}>
+        <span style={{ fontSize: 14, fontWeight: 600, color: t.textHigh, flexShrink: 0 }}>
           Iran 2026 — short, sharp, fully recovered
         </span>
         <span style={{ display: "flex", gap: 18, marginLeft: "auto", flexWrap: "wrap" }}>
           <span style={{ display: "inline-flex", flexDirection: "column", alignItems: "flex-start" }}>
-            <span style={{ fontSize: 9, color: "#64748B", textTransform: "uppercase", letterSpacing: "0.05em" }}>S&P drop</span>
-            <span style={{ fontSize: 14, fontWeight: 700, color: "#EF4444", fontVariantNumeric: "tabular-nums" }}>−7.8%</span>
+            <span style={{ fontSize: 9, color: t.textLow, textTransform: "uppercase", letterSpacing: "0.05em" }}>S&P drop</span>
+            <span style={{ fontSize: 14, fontWeight: 700, color: t.red, fontVariantNumeric: "tabular-nums" }}>−7.8%</span>
           </span>
           <span style={{ display: "inline-flex", flexDirection: "column", alignItems: "flex-start" }}>
-            <span style={{ fontSize: 9, color: "#64748B", textTransform: "uppercase", letterSpacing: "0.05em" }}>To trough</span>
-            <span style={{ fontSize: 14, fontWeight: 700, color: "#FBBF24", fontVariantNumeric: "tabular-nums" }}>21d</span>
+            <span style={{ fontSize: 9, color: t.textLow, textTransform: "uppercase", letterSpacing: "0.05em" }}>To trough</span>
+            <span style={{ fontSize: 14, fontWeight: 700, color: t.amberStrong, fontVariantNumeric: "tabular-nums" }}>21d</span>
           </span>
           <span style={{ display: "inline-flex", flexDirection: "column", alignItems: "flex-start" }}>
-            <span style={{ fontSize: 9, color: "#64748B", textTransform: "uppercase", letterSpacing: "0.05em" }}>To ATH</span>
-            <span style={{ fontSize: 14, fontWeight: 700, color: "#34D399", fontVariantNumeric: "tabular-nums" }}>32d</span>
+            <span style={{ fontSize: 9, color: t.textLow, textTransform: "uppercase", letterSpacing: "0.05em" }}>To ATH</span>
+            <span style={{ fontSize: 14, fontWeight: 700, color: t.greenSoft, fontVariantNumeric: "tabular-nums" }}>32d</span>
           </span>
-          <span style={{ fontSize: 18, color: "#64748B", alignSelf: "center" }}>›</span>
+          <span style={{ fontSize: 18, color: t.textLow, alignSelf: "center" }}>›</span>
         </span>
       </button>
 
@@ -643,17 +649,17 @@ export default function HomePage({ onSelect }) {
               {c.stat ? (
                 <>
                   <AnimatedStat value={c.stat} color={c.statColor || c.color} />
-                  <div style={{ fontSize: 11, color: "#64748B", marginTop: 6, fontVariantNumeric: "tabular-nums" }}>
+                  <div style={{ fontSize: 11, color: t.textLow, marginTop: 6, fontVariantNumeric: "tabular-nums" }}>
                     {c.statLabel}
                   </div>
                 </>
               ) : (
-                <div style={{ fontSize: 28, color: "#475569", fontWeight: 700, lineHeight: 1 }}>—</div>
+                <div style={{ fontSize: 28, color: t.axis, fontWeight: 700, lineHeight: 1 }}>—</div>
               )}
             </div>
 
             {/* Description — secondary */}
-            <p style={{ fontSize: 13, color: "#94A3B8", lineHeight: 1.45, margin: 0 }}>
+            <p style={{ fontSize: 13, color: t.textMute, lineHeight: 1.45, margin: 0 }}>
               {c.desc}
             </p>
 
@@ -697,7 +703,7 @@ export default function HomePage({ onSelect }) {
           <span style={{
             fontSize: 11,
             fontWeight: 700,
-            color: "#A5B4FC",
+            color: t.indigoFaint,
             background: "rgba(99,102,241,0.16)",
             padding: "3px 8px",
             borderRadius: 4,
@@ -706,10 +712,10 @@ export default function HomePage({ onSelect }) {
           }}>
             Thesis
           </span>
-          <span style={{ fontSize: 14, color: "#F8FAFC", fontWeight: 600 }}>
+          <span style={{ fontSize: 14, color: t.textHigh, fontWeight: 600 }}>
             Why this exists
           </span>
-          <span style={{ fontSize: 12, color: "#64748B", marginLeft: "auto" }}>
+          <span style={{ fontSize: 12, color: t.textLow, marginLeft: "auto" }}>
             Read the argument
           </span>
         </summary>
@@ -717,7 +723,7 @@ export default function HomePage({ onSelect }) {
           className="landing-intro"
           style={{
             fontSize: 14,
-            color: "#CBD5E1",
+            color: t.textMid,
             lineHeight: 1.75,
             margin: 0,
             padding: "0 24px 24px",

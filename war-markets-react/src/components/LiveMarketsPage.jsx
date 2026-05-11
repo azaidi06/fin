@@ -1,8 +1,9 @@
 import { useMemo, useState } from "react";
 import { formatPrice, timeAgo, useMarketData } from "./HomePage";
 
-const card = { background: "#1E293B", border: "1px solid #334155", borderRadius: 12, padding: 24, marginBottom: 32 };
-const colHeader = { fontSize: 10, fontWeight: 600, color: "#64748B", textTransform: "uppercase", letterSpacing: "0.05em" };
+import { useTheme } from '../theme/ThemeContext';
+const card = { background: 'var(--c-panel)', border: "1px solid #334155", borderRadius: 12, padding: 24, marginBottom: 32 };
+const colHeader = { fontSize: 10, fontWeight: 600, color: 'var(--c-text-low)', textTransform: "uppercase", letterSpacing: "0.05em" };
 
 // ── Lightweight classifier — assets in market-data.json have no `category`
 // field, so we derive one from the symbol so the table can group rows. The
@@ -33,13 +34,14 @@ const SORT_OPTIONS = [
 ];
 
 function ChangePill({ value }) {
+  const t = useTheme().tokens;
   if (value == null || value === 0) {
     return (
       <span style={{
         display: "inline-block",
         fontSize: 12,
         fontWeight: 500,
-        color: "#475569",
+        color: t.axis,
         background: "rgba(71, 85, 105, 0.15)",
         border: "1px solid rgba(71, 85, 105, 0.25)",
         padding: "2px 8px",
@@ -58,7 +60,7 @@ function ChangePill({ value }) {
       display: "inline-block",
       fontSize: 12,
       fontWeight: 600,
-      color: up ? "#34D399" : "#EF4444",
+      color: up ? t.greenSoft : t.red,
       background: up ? "rgba(52,211,153,0.12)" : "rgba(239,68,68,0.12)",
       border: `1px solid ${up ? "rgba(52,211,153,0.28)" : "rgba(239,68,68,0.28)"}`,
       padding: "2px 8px",
@@ -73,6 +75,7 @@ function ChangePill({ value }) {
 }
 
 function SortHeader({ id, label, sortKey, sortDir, onSort, align = "right", width }) {
+  const t = useTheme().tokens;
   const active = sortKey === id;
   return (
     <button
@@ -83,7 +86,7 @@ function SortHeader({ id, label, sortKey, sortDir, onSort, align = "right", widt
         border: "none",
         padding: 0,
         cursor: "pointer",
-        color: active ? "#A5B4FC" : "#64748B",
+        color: active ? t.indigoFaint : t.textLow,
         textAlign: align,
         width,
         display: "inline-flex",
@@ -102,6 +105,7 @@ function SortHeader({ id, label, sortKey, sortDir, onSort, align = "right", widt
 }
 
 function AssetRow({ a }) {
+  const t = useTheme().tokens;
   return (
     <div
       style={{
@@ -116,16 +120,16 @@ function AssetRow({ a }) {
       onMouseLeave={(e) => { e.currentTarget.style.background = "transparent"; }}
     >
       <div style={{ display: "flex", alignItems: "center", gap: 10, minWidth: 0 }}>
-        <span style={{ fontSize: 14, fontWeight: 700, color: "#F8FAFC", width: 64, flexShrink: 0, fontVariantNumeric: "tabular-nums" }}>
+        <span style={{ fontSize: 14, fontWeight: 700, color: t.textHigh, width: 64, flexShrink: 0, fontVariantNumeric: "tabular-nums" }}>
           {a.symbol}
         </span>
-        <span style={{ fontSize: 13, color: "#64748B", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
+        <span style={{ fontSize: 13, color: t.textLow, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
           {a.name}
         </span>
       </div>
 
       <div style={{ display: "flex", alignItems: "center", gap: 12, flexShrink: 0 }}>
-        <span style={{ fontSize: 14, fontWeight: 600, color: "#CBD5E1", fontVariantNumeric: "tabular-nums", width: 90, textAlign: "right" }}>
+        <span style={{ fontSize: 14, fontWeight: 600, color: t.textMid, fontVariantNumeric: "tabular-nums", width: 90, textAlign: "right" }}>
           {formatPrice(a.price)}
         </span>
         <ChangePill value={a.change1d} />
@@ -136,6 +140,7 @@ function AssetRow({ a }) {
 }
 
 export default function LiveMarketsPage() {
+  const t = useTheme().tokens;
   const { assets, updatedAt, loading } = useMarketData();
   const [query, setQuery] = useState("");
   const [sortKey, setSortKey] = useState("category");
@@ -213,8 +218,8 @@ export default function LiveMarketsPage() {
     <section style={card}>
       <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 16, flexWrap: "wrap" }}>
         <span className="live-dot" />
-        <h2 style={{ fontSize: 20, fontWeight: 600, color: "#F8FAFC", margin: 0 }}>Live Markets</h2>
-        <span style={{ fontSize: 11, color: "#64748B" }}>
+        <h2 style={{ fontSize: 20, fontWeight: 600, color: t.textHigh, margin: 0 }}>Live Markets</h2>
+        <span style={{ fontSize: 11, color: t.textLow }}>
           {updatedAt ? timeAgo(updatedAt) : ""}
         </span>
         <div style={{ marginLeft: "auto", display: "flex", alignItems: "center", gap: 8 }}>
@@ -233,7 +238,7 @@ export default function LiveMarketsPage() {
               strokeLinecap="round"
               strokeLinejoin="round"
               aria-hidden
-              style={{ position: "absolute", left: 10, color: "#64748B", pointerEvents: "none" }}
+              style={{ position: "absolute", left: 10, color: t.textLow, pointerEvents: "none" }}
             >
               <circle cx="11" cy="11" r="7" />
               <line x1="20" y1="20" x2="16.65" y2="16.65" />
@@ -249,7 +254,7 @@ export default function LiveMarketsPage() {
                 borderRadius: 8,
                 padding: "6px 10px 6px 30px",
                 fontSize: 13,
-                color: "#F8FAFC",
+                color: t.textHigh,
                 fontFamily: "inherit",
                 width: 220,
                 outline: "none",
@@ -266,7 +271,7 @@ export default function LiveMarketsPage() {
           ))}
         </div>
       ) : assets.length === 0 ? (
-        <p style={{ fontSize: 13, color: "#64748B" }}>Market data unavailable</p>
+        <p style={{ fontSize: 13, color: t.textLow }}>Market data unavailable</p>
       ) : (
         <div className="num" style={{ display: "flex", flexDirection: "column", gap: 2 }}>
           {/* Column headers (clickable to sort) */}
@@ -288,7 +293,7 @@ export default function LiveMarketsPage() {
 
           {grouped ? (
             grouped.length === 0 ? (
-              <p style={{ fontSize: 13, color: "#64748B", padding: 12 }}>No matches.</p>
+              <p style={{ fontSize: 13, color: t.textLow, padding: 12 }}>No matches.</p>
             ) : (
               grouped.map(([cat, list]) => (
                 <div key={cat} style={{ marginTop: 10 }}>
@@ -303,7 +308,7 @@ export default function LiveMarketsPage() {
                     <span style={{
                       fontSize: 10,
                       fontWeight: 700,
-                      color: "#A5B4FC",
+                      color: t.indigoFaint,
                       background: "rgba(99,102,241,0.16)",
                       padding: "2px 8px",
                       borderRadius: 4,
@@ -312,21 +317,21 @@ export default function LiveMarketsPage() {
                     }}>
                       {cat}
                     </span>
-                    <span style={{ fontSize: 11, color: "#64748B" }}>{list.length}</span>
+                    <span style={{ fontSize: 11, color: t.textLow }}>{list.length}</span>
                   </div>
                   {list.map(a => <AssetRow key={a.symbol} a={a} />)}
                 </div>
               ))
             )
           ) : flat && flat.length === 0 ? (
-            <p style={{ fontSize: 13, color: "#64748B", padding: 12 }}>No matches.</p>
+            <p style={{ fontSize: 13, color: t.textLow, padding: 12 }}>No matches.</p>
           ) : (
             (flat || []).map(a => <AssetRow key={a.symbol} a={a} />)
           )}
         </div>
       )}
 
-      <p style={{ fontSize: 11, color: "#475569", textAlign: "center", marginTop: 16, marginBottom: 0 }}>
+      <p style={{ fontSize: 11, color: t.axis, textAlign: "center", marginTop: 16, marginBottom: 0 }}>
         Prices from Alpha Vantage, Google Finance, and CoinGecko. Refreshes every 5 minutes.
       </p>
     </section>

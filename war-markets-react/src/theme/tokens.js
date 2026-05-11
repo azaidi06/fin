@@ -1,78 +1,154 @@
 // ── Shared theme tokens for war-markets-react ──
 // Single source of truth for the color/typography palette.
-// Wars get a fixed semantic color used across every chart so a
-// given conflict reads the same hue regardless of which view you're in.
+// Two themes: dark (legacy default) and light (neutral stone). Wars get a
+// fixed semantic color used across every chart so a given conflict reads
+// the same hue regardless of which view you're in.
 
-export const colors = {
-  // Page chrome
+const wars = {
+  "WWI": "#A78BFA",
+  "WWII": "#EF4444",
+  "Korea": "#F59E0B",
+  "Vietnam": "#10B981",
+  "Cuban Missile": "#84CC16",
+  "Oil Embargo": "#F97316",
+  "Black Monday": "#A855F7",
+  "GulfWar": "#6366F1",
+  "Gulf War": "#6366F1",
+  "9/11": "#EC4899",
+  "Afghanistan": "#F472B6",
+  "Iraq": "#3B82F6",
+  "2008 Crisis": "#14B8A6",
+  "COVID": "#06B6D4",
+  "Ukraine": "#E11D48",
+  "Russia-Ukraine": "#E11D48",
+  "Iran": "#FBBF24",
+};
+
+export const darkColors = {
   bg: "#0F172A",
   panel: "#1E293B",
   panelInset: "#0F172A",
+  panelGlass: "rgba(30, 41, 59, 0.5)",
   border: "#334155",
   borderSoft: "#1E293B",
-
-  // Three-step text ramp (slate-50 → slate-400 → slate-500)
-  text: {
-    high: "#F8FAFC",
-    mid: "#94A3B8",
-    low: "#64748B",
-  },
-
-  // Accent ramps
+  borderSofter: "rgba(255, 255, 255, 0.06)",
+  textHigh: "#F8FAFC",
+  textHighAlt: "#E2E8F0",
+  textMid: "#CBD5E1",
+  textMute: "#94A3B8",
+  textLow: "#64748B",
+  text: { high: "#F8FAFC", mid: "#94A3B8", low: "#64748B" },
+  axis: "#475569",
+  axisStrong: "#64748B",
+  grid: "#334155",
+  gridFaint: "#1E293B",
   indigo: "#6366F1",
-  indigoSoft: "#A5B4FC",
+  indigoSoft: "#818CF8",
+  indigoFaint: "#A5B4FC",
   violet: "#8B5CF6",
-  green: "#34D399",
+  violetSoft: "#A78BFA",
+  green: "#10B981",
+  greenSoft: "#34D399",
   red: "#EF4444",
-
-  // ── Semantic war / conflict palette ──
-  // One color per conflict, used everywhere. Hues are spaced so no two
-  // wars sit in the same red/orange family. The legacy keys (Cuban Missile,
-  // Oil Embargo, Black Monday, 2008 Crisis, COVID, Russia-Ukraine, Iran)
-  // are also exported so existing data files continue to resolve.
-  wars: {
-    "WWI": "#A78BFA",            // soft violet
-    "WWII": "#EF4444",           // red
-    "Korea": "#F59E0B",          // amber
-    "Vietnam": "#10B981",        // emerald
-    "Cuban Missile": "#84CC16",  // lime
-    "Oil Embargo": "#F97316",    // orange
-    "Black Monday": "#A855F7",   // purple
-    "GulfWar": "#6366F1",        // indigo
-    "Gulf War": "#6366F1",       // indigo (legacy key)
-    "9/11": "#EC4899",           // pink
-    "Afghanistan": "#F472B6",    // rose-pink
-    "Iraq": "#3B82F6",           // blue
-    "2008 Crisis": "#14B8A6",    // teal
-    "COVID": "#06B6D4",          // cyan
-    "Ukraine": "#E11D48",        // crimson
-    "Russia-Ukraine": "#E11D48", // crimson (legacy key)
-    "Iran": "#FBBF24",           // gold
-  },
+  redSoft: "#F87171",
+  amber: "#F59E0B",
+  amberStrong: "#FBBF24",
+  orange: "#F97316",
+  orangeSoft: "#FB923C",
+  blue: "#3B82F6",
+  blueSoft: "#60A5FA",
+  cyan: "#06B6D4",
+  cyanBright: "#22D3EE",
+  pink: "#EC4899",
+  pinkSoft: "#F472B6",
+  purple: "#A855F7",
+  teal: "#14B8A6",
+  lime: "#84CC16",
+  crimson: "#E11D48",
+  tooltipBg: "#334155",
+  tooltipBorder: "#475569",
+  tooltipText: "#F8FAFC",
+  wars,
 };
 
-// Helper: resolve a war color with a sensible fallback.
+export const lightColors = {
+  bg: "#F5F5F4",
+  panel: "#FAFAF9",
+  panelInset: "#FFFFFF",
+  panelGlass: "rgba(255, 255, 255, 0.85)",
+  border: "#D6D3D1",
+  borderSoft: "#E7E5E4",
+  borderSofter: "rgba(28, 25, 23, 0.08)",
+  textHigh: "#1C1917",
+  textHighAlt: "#1C1917",
+  textMid: "#44403C",
+  textMute: "#57534E",
+  textLow: "#78716C",
+  text: { high: "#1C1917", mid: "#57534E", low: "#78716C" },
+  axis: "#A8A29E",
+  axisStrong: "#78716C",
+  grid: "#E7E5E4",
+  gridFaint: "#F5F5F4",
+  indigo: "#4F46E5",
+  indigoSoft: "#4338CA",
+  indigoFaint: "#4F46E5",
+  violet: "#6D28D9",
+  violetSoft: "#6D28D9",
+  green: "#059669",
+  greenSoft: "#047857",
+  red: "#DC2626",
+  redSoft: "#DC2626",
+  amber: "#B45309",
+  amberStrong: "#D97706",
+  orange: "#C2410C",
+  orangeSoft: "#C2410C",
+  blue: "#2563EB",
+  blueSoft: "#1D4ED8",
+  cyan: "#0891B2",
+  cyanBright: "#0E7490",
+  pink: "#BE185D",
+  pinkSoft: "#BE185D",
+  purple: "#7E22CE",
+  teal: "#0F766E",
+  lime: "#4D7C0F",
+  crimson: "#BE123C",
+  tooltipBg: "#FFFFFF",
+  tooltipBorder: "#D6D3D1",
+  tooltipText: "#1C1917",
+  wars,
+};
+
+export const TOKENS_BY_THEME = { dark: darkColors, light: lightColors };
+
+// Legacy export for any modules that still want a static reference.
+// Prefer useTheme() in React; this stays as the dark palette.
+export const colors = {
+  bg: darkColors.bg,
+  panel: darkColors.panel,
+  panelInset: darkColors.panelInset,
+  border: darkColors.border,
+  borderSoft: darkColors.borderSoft,
+  text: darkColors.text,
+  indigo: darkColors.indigo,
+  indigoSoft: darkColors.indigoFaint,
+  violet: darkColors.violet,
+  green: darkColors.greenSoft,
+  red: darkColors.red,
+  wars,
+};
+
 export function warColor(key) {
-  return colors.wars[key] || colors.text.mid;
+  return wars[key] || darkColors.text.mid;
 }
 
-// Common typography rhythm — used across StatCard / table headers.
 export const type = {
   eyebrow: {
     fontSize: 11,
     fontWeight: 600,
-    color: colors.text.mid,
+    color: "var(--c-text-mute)",
     textTransform: "uppercase",
     letterSpacing: "0.08em",
   },
-  metric: {
-    fontSize: 36,
-    fontWeight: 700,
-    lineHeight: 1,
-  },
-  metricLg: {
-    fontSize: 40,
-    fontWeight: 700,
-    lineHeight: 1,
-  },
+  metric: { fontSize: 36, fontWeight: 700, lineHeight: 1 },
+  metricLg: { fontSize: 40, fontWeight: 700, lineHeight: 1 },
 };

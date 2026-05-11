@@ -18,6 +18,7 @@ import PostTroughReboundChart from "./components/PostTroughReboundChart";
 import { sp500Data, nasdaqData, EXTRA_EVENTS } from "./data/warData";
 import { EventToggleProvider, useEventToggle } from "./context/EventToggleContext";
 
+import { useTheme } from './theme/ThemeContext';
 const tabs = [
   { id: "reaction", label: "Post-Conflict Reaction" },
   { id: "buildup", label: "Pre-War Buildup" },
@@ -37,7 +38,7 @@ const tabBtn = (active) => ({
   fontWeight: 600,
   fontFamily: "inherit",
   whiteSpace: "nowrap",
-  color: active ? "#A5B4FC" : "#94A3B8",
+  color: active ? 'var(--c-indigo-faint)' : 'var(--c-text-mute)',
   background: active ? "rgba(99,102,241,0.20)" : "transparent",
   border: "1px solid",
   borderColor: active ? "rgba(99,102,241,0.40)" : "transparent",
@@ -48,10 +49,11 @@ const tabBtn = (active) => ({
 });
 
 const sourceCategory = { marginBottom: 12 };
-const sourceCatLabel = { fontSize: 11, fontWeight: 600, color: "#94A3B8", textTransform: "uppercase", letterSpacing: "0.05em", marginBottom: 4 };
-const sourceList = { fontSize: 11, color: "#64748B", lineHeight: 1.6, margin: 0 };
+const sourceCatLabel = { fontSize: 11, fontWeight: 600, color: 'var(--c-text-mute)', textTransform: "uppercase", letterSpacing: "0.05em", marginBottom: 4 };
+const sourceList = { fontSize: 11, color: 'var(--c-text-low)', lineHeight: 1.6, margin: 0 };
 
 function FilterDropdown() {
+  const t = useTheme().tokens;
   const { toggles, toggle } = useEventToggle();
   const [open, setOpen] = useState(false);
   const ref = useRef(null);
@@ -78,9 +80,9 @@ function FilterDropdown() {
           display: "flex",
           alignItems: "center",
           gap: 6,
-          color: activeCount > 0 ? "#06B6D4" : "#94A3B8",
-          borderColor: open ? "#475569" : "transparent",
-          background: open ? "#334155" : "transparent",
+          color: activeCount > 0 ? t.cyan : t.textMute,
+          borderColor: open ? t.axis : "transparent",
+          background: open ? t.border : "transparent",
         }}
       >
         <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round">
@@ -91,8 +93,8 @@ function FilterDropdown() {
           <span style={{
             fontSize: 10,
             fontWeight: 700,
-            color: "#0F172A",
-            background: "#06B6D4",
+            color: t.bg,
+            background: t.cyan,
             width: 16,
             height: 16,
             borderRadius: "50%",
@@ -110,7 +112,7 @@ function FilterDropdown() {
           position: "absolute",
           top: "calc(100% + 8px)",
           right: 0,
-          background: "#1E293B",
+          background: t.panel,
           border: "1px solid #334155",
           borderRadius: 12,
           padding: 16,
@@ -118,7 +120,7 @@ function FilterDropdown() {
           zIndex: 50,
           boxShadow: "0 12px 40px rgba(0,0,0,0.5)",
         }}>
-          <p style={{ fontSize: 11, fontWeight: 600, color: "#94A3B8", textTransform: "uppercase", letterSpacing: "0.05em", marginBottom: 12 }}>
+          <p style={{ fontSize: 11, fontWeight: 600, color: t.textMute, textTransform: "uppercase", letterSpacing: "0.05em", marginBottom: 12 }}>
             Extra Events
           </p>
           <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
@@ -135,7 +137,7 @@ function FilterDropdown() {
                     padding: 0,
                     fontSize: 13,
                     fontWeight: 500,
-                    color: on ? "#F8FAFC" : "#64748B",
+                    color: on ? t.textHigh : t.textLow,
                     background: "transparent",
                     border: "none",
                     cursor: "pointer",
@@ -148,7 +150,7 @@ function FilterDropdown() {
                     width: 32,
                     height: 18,
                     borderRadius: 9,
-                    background: on ? "#06B6D4" : "#475569",
+                    background: on ? t.cyan : t.axis,
                     position: "relative",
                     transition: "background 0.2s ease",
                     flexShrink: 0,
@@ -160,7 +162,7 @@ function FilterDropdown() {
                       width: 14,
                       height: 14,
                       borderRadius: "50%",
-                      background: "#F8FAFC",
+                      background: t.textHigh,
                       transition: "left 0.2s ease",
                       boxShadow: "0 1px 3px rgba(0,0,0,0.3)",
                     }} />
@@ -170,7 +172,7 @@ function FilterDropdown() {
               );
             })}
           </div>
-          <p style={{ fontSize: 11, color: "#475569", marginTop: 12, lineHeight: 1.4 }}>
+          <p style={{ fontSize: 11, color: t.axis, marginTop: 12, lineHeight: 1.4 }}>
             Toggle non-conflict events to include them across all charts and tables.
           </p>
         </div>
@@ -180,6 +182,7 @@ function FilterDropdown() {
 }
 
 function AppInner() {
+  const t = useTheme().tokens;
   const [activeTab, setActiveTab] = useState("home");
   const { filterData } = useEventToggle();
 
@@ -192,7 +195,7 @@ function AppInner() {
   const filteredNasdaq = filterData(nasdaqData);
 
   return (
-    <div className="page-root min-h-screen px-4 py-10 sm:px-6 lg:px-8" style={{ color: "#F8FAFC" }}>
+    <div className="page-root min-h-screen px-4 py-10 sm:px-6 lg:px-8" style={{ color: t.textHigh }}>
       <div className="max-w-[960px] lg:max-w-[1200px] mx-auto">
         <div className="flex justify-end mb-4">
           <AppSwitcher />
@@ -211,7 +214,7 @@ function AppInner() {
             {/* Breadcrumb (out of the tab pill row) */}
             <nav
               aria-label="breadcrumb"
-              style={{ display: "flex", alignItems: "center", gap: 6, marginBottom: 14, fontSize: 12, color: "#64748B" }}
+              style={{ display: "flex", alignItems: "center", gap: 6, marginBottom: 14, fontSize: 12, color: t.textLow }}
             >
               <button
                 onClick={goHome}
@@ -222,7 +225,7 @@ function AppInner() {
                   background: "transparent",
                   border: "none",
                   cursor: "pointer",
-                  color: "#94A3B8",
+                  color: t.textMute,
                   padding: "4px 6px",
                   borderRadius: 6,
                   fontFamily: "inherit",
@@ -230,11 +233,11 @@ function AppInner() {
                   transition: "color 0.15s, background 0.15s",
                 }}
                 onMouseEnter={(e) => {
-                  e.currentTarget.style.color = "#F8FAFC";
+                  e.currentTarget.style.color = t.textHigh;
                   e.currentTarget.style.background = "rgba(255,255,255,0.04)";
                 }}
                 onMouseLeave={(e) => {
-                  e.currentTarget.style.color = "#94A3B8";
+                  e.currentTarget.style.color = t.textMute;
                   e.currentTarget.style.background = "transparent";
                 }}
               >
@@ -244,9 +247,9 @@ function AppInner() {
                 Home
               </button>
               <span style={{ opacity: 0.4 }}>/</span>
-              <span style={{ color: "#CBD5E1" }}>Money + War</span>
+              <span style={{ color: t.textMid }}>Money + War</span>
               <span style={{ opacity: 0.4 }}>/</span>
-              <span style={{ color: "#F8FAFC", fontWeight: 600 }}>
+              <span style={{ color: t.textHigh, fontWeight: 600 }}>
                 {tabs.find(t => t.id === activeTab)?.label || "Live Markets"}
               </span>
             </nav>
@@ -293,7 +296,7 @@ function AppInner() {
                 <ComparisonPanel />
                 <details
                   style={{
-                    background: "#1E293B",
+                    background: t.panel,
                     border: "1px solid #334155",
                     borderRadius: 12,
                     marginBottom: 32,
@@ -314,7 +317,7 @@ function AppInner() {
                     <span style={{
                       fontSize: 11,
                       fontWeight: 700,
-                      color: "#A5B4FC",
+                      color: t.indigoFaint,
                       background: "rgba(99,102,241,0.16)",
                       padding: "3px 8px",
                       borderRadius: 4,
@@ -323,16 +326,16 @@ function AppInner() {
                     }}>
                       Raw Data
                     </span>
-                    <span style={{ fontSize: 13, color: "#F8FAFC", fontWeight: 600 }}>
+                    <span style={{ fontSize: 13, color: t.textHigh, fontWeight: 600 }}>
                       Show source tables
                     </span>
-                    <span style={{ fontSize: 12, color: "#64748B", marginLeft: "auto" }}>
+                    <span style={{ fontSize: 12, color: t.textLow, marginLeft: "auto" }}>
                       S&amp;P 500 + NASDAQ — for verification
                     </span>
                   </summary>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6 num" style={{ padding: 20, paddingTop: 4 }}>
-                    <DataTable title="S&P 500" color="#6366F1" data={filteredSp500} sourceKey="sp500" />
-                    <DataTable title="NASDAQ" color="#10B981" data={filteredNasdaq} sourceKey="nasdaq" />
+                    <DataTable title="S&P 500" color={t.indigo} data={filteredSp500} sourceKey="sp500" />
+                    <DataTable title="NASDAQ" color={t.green} data={filteredNasdaq} sourceKey="nasdaq" />
                   </div>
                 </details>
               </>
@@ -396,7 +399,7 @@ function AppInner() {
             </div>
 
             {/* Key assumptions note */}
-            <p style={{ fontSize: 11, color: "#475569", textAlign: "center", lineHeight: 1.5 }}>
+            <p style={{ fontSize: 11, color: t.axis, textAlign: "center", lineHeight: 1.5 }}>
               S&P 500 uses DJIA as proxy for pre-1957 conflicts. NASDAQ data available from 1971 onward.
               All cost-of-living prices adjusted to 2024 USD using CPI-U annual average multipliers.
             </p>

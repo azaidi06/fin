@@ -8,26 +8,28 @@ import { MultiSourceTooltip } from "./SourceLink";
 import SourceLink from "./SourceLink";
 import { useEventToggle } from "../context/EventToggleContext";
 
-const card = { background: "#1E293B", border: "1px solid #334155", borderRadius: 12, padding: 24, marginBottom: 32 };
+import { useTheme } from '../theme/ThemeContext';
+const card = { background: 'var(--c-panel)', border: "1px solid #334155", borderRadius: 12, padding: 24, marginBottom: 32 };
 const stripYear = (s) => s.replace(/, \d{4}\)/, ")").replace(/ \(\d{4}\)/, "");
 
 /* ── Custom SVG defs: gradients + glow filter ── */
 function ChartDefs() {
+  const t = useTheme().tokens;
   return (
     <defs>
       {/* S&P 500 gradient: indigo → purple */}
       <linearGradient id="grad-sp-neg" x1="1" y1="0" x2="0" y2="0">
-        <stop offset="0%" stopColor="#6366F1" />
-        <stop offset="100%" stopColor="#A78BFA" />
+        <stop offset="0%" stopColor={t.indigo} />
+        <stop offset="100%" stopColor={t.violetSoft} />
       </linearGradient>
       <linearGradient id="grad-sp-pos" x1="0" y1="0" x2="1" y2="0">
-        <stop offset="0%" stopColor="#818CF8" />
+        <stop offset="0%" stopColor={t.indigoSoft} />
         <stop offset="100%" stopColor="#C4B5FD" />
       </linearGradient>
       {/* NASDAQ gradient: teal → cyan */}
       <linearGradient id="grad-nq-neg" x1="1" y1="0" x2="0" y2="0">
-        <stop offset="0%" stopColor="#14B8A6" />
-        <stop offset="100%" stopColor="#22D3EE" />
+        <stop offset="0%" stopColor={t.teal} />
+        <stop offset="100%" stopColor={t.cyanBright} />
       </linearGradient>
       <linearGradient id="grad-nq-pos" x1="0" y1="0" x2="1" y2="0">
         <stop offset="0%" stopColor="#2DD4BF" />
@@ -36,7 +38,7 @@ function ChartDefs() {
       {/* Neon glow filter */}
       <filter id="glow-sp" x="-20%" y="-20%" width="140%" height="140%">
         <feGaussianBlur in="SourceGraphic" stdDeviation="3" result="blur" />
-        <feFlood floodColor="#818CF8" floodOpacity="0.35" result="color" />
+        <feFlood floodColor={t.indigoSoft} floodOpacity="0.35" result="color" />
         <feComposite in="color" in2="blur" operator="in" result="shadow" />
         <feMerge>
           <feMergeNode in="shadow" />
@@ -45,7 +47,7 @@ function ChartDefs() {
       </filter>
       <filter id="glow-nq" x="-20%" y="-20%" width="140%" height="140%">
         <feGaussianBlur in="SourceGraphic" stdDeviation="3" result="blur" />
-        <feFlood floodColor="#22D3EE" floodOpacity="0.35" result="color" />
+        <feFlood floodColor={t.cyanBright} floodOpacity="0.35" result="color" />
         <feComposite in="color" in2="blur" operator="in" result="shadow" />
         <feMerge>
           <feMergeNode in="shadow" />
@@ -58,9 +60,10 @@ function ChartDefs() {
 
 /* ── Custom pill legend ── */
 function PillLegend() {
+  const t = useTheme().tokens;
   const items = [
-    { label: "S&P 500", gradient: "linear-gradient(90deg, #6366F1, #A78BFA)", shadow: "#818CF8" },
-    { label: "NASDAQ", gradient: "linear-gradient(90deg, #14B8A6, #22D3EE)", shadow: "#22D3EE" },
+    { label: "S&P 500", gradient: "linear-gradient(90deg, #6366F1, #A78BFA)", shadow: t.indigoSoft },
+    { label: "NASDAQ", gradient: "linear-gradient(90deg, #14B8A6, #22D3EE)", shadow: t.cyanBright },
   ];
   return (
     <div style={{ display: "flex", justifyContent: "center", gap: 12, paddingTop: 12 }}>
@@ -77,7 +80,7 @@ function PillLegend() {
             padding: "5px 14px",
             fontSize: 12,
             fontWeight: 500,
-            color: "#E2E8F0",
+            color: t.textHighAlt,
           }}
         >
           <span
@@ -98,19 +101,20 @@ function PillLegend() {
 }
 
 function CustomTooltip({ active, payload, label, filteredPreWar }) {
+  const t = useTheme().tokens;
   if (!active || !payload?.length) return null;
   const row = filteredPreWar.find(d => d.label === label);
   return (
-    <div style={{ background: "#334155", border: "1px solid #475569", borderRadius: 8, padding: "12px 16px", fontSize: 13, color: "#F8FAFC", boxShadow: "0 8px 24px rgba(0,0,0,0.4)", maxWidth: 300 }}>
+    <div style={{ background: t.border, border: "1px solid #475569", borderRadius: 8, padding: "12px 16px", fontSize: 13, color: t.textHigh, boxShadow: "0 8px 24px rgba(0,0,0,0.4)", maxWidth: 300 }}>
       <p style={{ fontWeight: 600, marginBottom: 4 }}>{label}</p>
-      <p style={{ fontSize: 11, color: "#94A3B8", marginBottom: 6 }}>{row?.period}</p>
+      <p style={{ fontSize: 11, color: t.textMute, marginBottom: 6 }}>{row?.period}</p>
       {payload.map((p) => p.value != null && (
         <p key={p.dataKey} style={{ color: p.color, margin: "2px 0" }}>
           {p.name}: <strong>{p.value > 0 ? "+" : ""}{p.value}%</strong>
         </p>
       ))}
       {row?.surprise && (
-        <p style={{ fontSize: 11, color: "#FBBF24", marginTop: 4, fontStyle: "italic" }}>
+        <p style={{ fontSize: 11, color: t.amberStrong, marginTop: 4, fontStyle: "italic" }}>
           Surprise event — showing prior context, not anticipatory decline
         </p>
       )}
@@ -120,47 +124,48 @@ function CustomTooltip({ active, payload, label, filteredPreWar }) {
 }
 
 function ConflictCard({ d }) {
+  const t = useTheme().tokens;
   const isDecline = d.spChange < 0;
-  const changeColor = isDecline ? "#EF4444" : "#10B981";
+  const changeColor = isDecline ? t.red : t.green;
   return (
-    <div style={{ background: "#0F172A", border: "1px solid #334155", borderRadius: 10, padding: 20 }}>
+    <div style={{ background: t.bg, border: "1px solid #334155", borderRadius: 10, padding: 20 }}>
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 12 }}>
-        <h3 style={{ fontWeight: 600, color: "#E2E8F0", fontSize: 14 }}>{stripYear(d.label)}</h3>
+        <h3 style={{ fontWeight: 600, color: t.textHighAlt, fontSize: 14 }}>{stripYear(d.label)}</h3>
         {d.surprise && (
-          <span style={{ fontSize: 10, fontWeight: 600, color: "#FBBF24", background: "rgba(251,191,36,0.12)", padding: "2px 8px", borderRadius: 4, textTransform: "uppercase", letterSpacing: "0.05em" }}>
+          <span style={{ fontSize: 10, fontWeight: 600, color: t.amberStrong, background: "rgba(251,191,36,0.12)", padding: "2px 8px", borderRadius: 4, textTransform: "uppercase", letterSpacing: "0.05em" }}>
             Surprise
           </span>
         )}
       </div>
 
-      <p style={{ fontSize: 11, color: "#64748B", textTransform: "uppercase", letterSpacing: "0.05em", marginBottom: 4 }}>
+      <p style={{ fontSize: 11, color: t.textLow, textTransform: "uppercase", letterSpacing: "0.05em", marginBottom: 4 }}>
         {d.surprise ? "Context Period" : "Buildup Period"}
       </p>
-      <p style={{ fontSize: 13, color: "#CBD5E1", marginBottom: 12 }}>{d.period}{d.days ? ` (${d.days} trading days)` : ""}</p>
+      <p style={{ fontSize: 13, color: t.textMid, marginBottom: 12 }}>{d.period}{d.days ? ` (${d.days} trading days)` : ""}</p>
 
-      <p style={{ fontSize: 11, color: "#64748B", textTransform: "uppercase", letterSpacing: "0.05em", marginBottom: 4 }}>Catalyst</p>
-      <p style={{ fontSize: 12, color: "#94A3B8", marginBottom: 12 }}>{d.catalyst}</p>
+      <p style={{ fontSize: 11, color: t.textLow, textTransform: "uppercase", letterSpacing: "0.05em", marginBottom: 4 }}>Catalyst</p>
+      <p style={{ fontSize: 12, color: t.textMute, marginBottom: 12 }}>{d.catalyst}</p>
 
       <div style={{ display: "flex", gap: 16, marginBottom: 12 }}>
         <div>
-          <p style={{ fontSize: 11, color: "#64748B", marginBottom: 2 }}>S&P 500</p>
+          <p style={{ fontSize: 11, color: t.textLow, marginBottom: 2 }}>S&P 500</p>
           <p style={{ fontSize: 18, fontWeight: 700, color: changeColor }}>
             {d.spChange > 0 ? "+" : ""}{d.spChange}%
           </p>
-          <p style={{ fontSize: 11, color: "#475569" }}>{d.spStart} → {d.spEnd}</p>
+          <p style={{ fontSize: 11, color: t.axis }}>{d.spStart} → {d.spEnd}</p>
         </div>
         {d.nqChange != null && (
           <div>
-            <p style={{ fontSize: 11, color: "#64748B", marginBottom: 2 }}>NASDAQ</p>
-            <p style={{ fontSize: 18, fontWeight: 700, color: d.nqChange < 0 ? "#EF4444" : "#10B981" }}>
+            <p style={{ fontSize: 11, color: t.textLow, marginBottom: 2 }}>NASDAQ</p>
+            <p style={{ fontSize: 18, fontWeight: 700, color: d.nqChange < 0 ? t.red : t.green }}>
               {d.nqChange > 0 ? "+" : ""}{d.nqChange}%
             </p>
-            <p style={{ fontSize: 11, color: "#475569" }}>{d.nqStart} → {d.nqEnd}</p>
+            <p style={{ fontSize: 11, color: t.axis }}>{d.nqStart} → {d.nqEnd}</p>
           </div>
         )}
       </div>
 
-      <p style={{ fontSize: 12, color: "#94A3B8", lineHeight: 1.5, borderTop: "1px solid #334155", paddingTop: 10 }}>
+      <p style={{ fontSize: 12, color: t.textMute, lineHeight: 1.5, borderTop: "1px solid #334155", paddingTop: 10 }}>
         {d.narrative}
       </p>
       <div style={{ display: "flex", gap: 12, marginTop: 8 }}>
@@ -172,6 +177,7 @@ function ConflictCard({ d }) {
 }
 
 export default function BuildupPanel() {
+  const t = useTheme().tokens;
   const { filterData } = useEventToggle();
 
   const filteredPreWar = useMemo(() => filterData(preWarData), [filterData]);
@@ -185,8 +191,8 @@ export default function BuildupPanel() {
 
   return (
     <section style={card}>
-      <h2 style={{ fontSize: 20, fontWeight: 600, color: "#F8FAFC", marginBottom: 4 }}>Pre-War Market Buildup</h2>
-      <p style={{ fontSize: 13, color: "#94A3B8", marginBottom: 20 }}>
+      <h2 style={{ fontSize: 20, fontWeight: 600, color: t.textHigh, marginBottom: 4 }}>Pre-War Market Buildup</h2>
+      <p style={{ fontSize: 13, color: t.textMute, marginBottom: 20 }}>
         How markets performed in the lead-up to each conflict — anticipatory selloffs vs. surprise shocks
       </p>
 
@@ -194,31 +200,31 @@ export default function BuildupPanel() {
       <ResponsiveContainer width="100%" height={Math.max(chartData.length * 55, 280)}>
         <BarChart data={chartData} layout="vertical" margin={{ top: 5, right: 50, left: 10, bottom: 5 }}>
           <ChartDefs />
-          <CartesianGrid strokeDasharray="3 3" stroke="#475569" opacity={0.25} horizontal={false} />
-          <XAxis type="number" tickFormatter={(v) => `${v > 0 ? "+" : ""}${v}%`} stroke="#475569"
-            tick={{ fill: "#94A3B8", fontSize: 12 }} axisLine={false} tickLine={false} />
-          <YAxis type="category" dataKey="label" width={185} stroke="#475569"
-            tick={{ fill: "#CBD5E1", fontSize: 12 }} axisLine={false} tickLine={false} />
+          <CartesianGrid strokeDasharray="3 3" stroke={t.axis} opacity={0.25} horizontal={false} />
+          <XAxis type="number" tickFormatter={(v) => `${v > 0 ? "+" : ""}${v}%`} stroke={t.axis}
+            tick={{ fill: t.textMute, fontSize: 12 }} axisLine={false} tickLine={false} />
+          <YAxis type="category" dataKey="label" width={185} stroke={t.axis}
+            tick={{ fill: t.textMid, fontSize: 12 }} axisLine={false} tickLine={false} />
           <Tooltip content={<CustomTooltip filteredPreWar={filteredPreWar} />} cursor={{ fill: "rgba(99,102,241,0.06)" }} wrapperStyle={{ pointerEvents: "auto" }} />
-          <ReferenceLine x={0} stroke="#64748B" strokeWidth={1.5} />
+          <ReferenceLine x={0} stroke={t.textLow} strokeWidth={1.5} />
           <Bar dataKey="spChange" name="S&P 500" radius={4} barSize={14} filter="url(#glow-sp)">
             {chartData.map((d, i) => (
               <Cell key={i} fill={d.spChange < 0 ? "url(#grad-sp-neg)" : "url(#grad-sp-pos)"} fillOpacity={d.surprise ? 0.45 : 1}
-                stroke={d.spChange < 0 ? "#EF4444" : "#10B981"} strokeWidth={2} strokeOpacity={d.surprise ? 0.5 : 0.85} />
+                stroke={d.spChange < 0 ? t.red : t.green} strokeWidth={2} strokeOpacity={d.surprise ? 0.5 : 0.85} />
             ))}
           </Bar>
           <Bar dataKey="nqChange" name="NASDAQ" radius={4} barSize={14} filter="url(#glow-nq)">
             {chartData.map((d, i) => (
               <Cell key={i} fill={d.nqChange != null ? (d.nqChange < 0 ? "url(#grad-nq-neg)" : "url(#grad-nq-pos)") : "transparent"} fillOpacity={d.surprise ? 0.45 : 1}
-                stroke={d.nqChange != null ? (d.nqChange < 0 ? "#EF4444" : "#10B981") : "transparent"} strokeWidth={2} strokeOpacity={d.surprise ? 0.5 : 0.85} />
+                stroke={d.nqChange != null ? (d.nqChange < 0 ? t.red : t.green) : "transparent"} strokeWidth={2} strokeOpacity={d.surprise ? 0.5 : 0.85} />
             ))}
           </Bar>
         </BarChart>
       </ResponsiveContainer>
       <PillLegend />
 
-      <p style={{ fontSize: 11, color: "#64748B", textAlign: "center", marginTop: 8, marginBottom: 24, fontStyle: "italic" }}>
-        Faded bars = surprise events (context only, not anticipatory). <span style={{ color: "#EF4444" }}>Red border</span> = market declined. <span style={{ color: "#10B981" }}>Green border</span> = market rose.
+      <p style={{ fontSize: 11, color: t.textLow, textAlign: "center", marginTop: 8, marginBottom: 24, fontStyle: "italic" }}>
+        Faded bars = surprise events (context only, not anticipatory). <span style={{ color: t.red }}>Red border</span> = market declined. <span style={{ color: t.green }}>Green border</span> = market rose.
       </p>
 
       {/* Detail cards */}

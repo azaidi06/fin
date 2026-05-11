@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useTheme } from '../theme/ThemeContext';
 import {
   AreaChart, Area, LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend,
   ResponsiveContainer, ReferenceLine, ReferenceArea,
@@ -9,15 +10,16 @@ import {
   wealthSourceUrls, wealthSourceLabels,
 } from "../data/wealthData";
 
-const ACCENT = "#F472B6";
+const ACCENT = 'var(--c-pink-soft)';
 
 // Custom x-axis tick: shows year + colored war label below if the tick falls within a war period
 function WarAxisTick({ x, y, payload }) {
+  const t = useTheme().tokens;
   const year = payload.value;
   const war = warPeriodBands.find(w => year >= w.startYear && year <= w.endYear);
   return (
     <g transform={`translate(${x},${y})`}>
-      <text x={0} y={0} dy={16} textAnchor="middle" fill={war ? war.color : "#94A3B8"} fontSize={12} fontWeight={war ? 600 : 400}>
+      <text x={0} y={0} dy={16} textAnchor="middle" fill={war ? war.color : t.textMute} fontSize={12} fontWeight={war ? 600 : 400}>
         {year}
       </text>
       {war && (
@@ -29,24 +31,24 @@ function WarAxisTick({ x, y, payload }) {
   );
 }
 
-const card = { background: "#1E293B", border: "1px solid #334155", borderRadius: 12, padding: 24, marginBottom: 32 };
-const innerCard = { background: "#0F172A", border: "1px solid #334155", borderRadius: 10, padding: 20, marginBottom: 24 };
+const card = { background: 'var(--c-panel)', border: "1px solid #334155", borderRadius: 12, padding: 24, marginBottom: 32 };
+const innerCard = { background: 'var(--c-bg)', border: "1px solid #334155", borderRadius: 10, padding: 20, marginBottom: 24 };
 
 const stackColors = {
-  "Top 0.1%": "#F472B6",
-  "Next 0.9%": "#A78BFA",
-  "Next 9%": "#60A5FA",
-  "Bottom 90%": "#475569",
+  "Top 0.1%": 'var(--c-pink-soft)',
+  "Next 0.9%": 'var(--c-violet-soft)',
+  "Next 9%": 'var(--c-blue-soft)',
+  "Bottom 90%": 'var(--c-axis)',
 };
 
 const divergenceColors = {
-  "Top 1%": "#F472B6",
-  "Bottom 50%": "#34D399",
+  "Top 1%": 'var(--c-pink-soft)',
+  "Bottom 50%": 'var(--c-green-soft)',
 };
 
 const linkStyle = {
   fontSize: 10,
-  color: "#64748B",
+  color: 'var(--c-text-low)',
   textDecoration: "none",
   display: "inline-flex",
   alignItems: "center",
@@ -55,6 +57,7 @@ const linkStyle = {
 };
 
 function WealthSourceLink({ sourceKey, style }) {
+  const t = useTheme().tokens;
   const url = wealthSourceUrls[sourceKey];
   const label = wealthSourceLabels[sourceKey];
   if (!url) return null;
@@ -64,8 +67,8 @@ function WealthSourceLink({ sourceKey, style }) {
       target="_blank"
       rel="noopener noreferrer"
       style={{ ...linkStyle, ...style }}
-      onMouseEnter={e => e.currentTarget.style.color = "#94A3B8"}
-      onMouseLeave={e => e.currentTarget.style.color = "#64748B"}
+      onMouseEnter={e => e.currentTarget.style.color = t.textMute}
+      onMouseLeave={e => e.currentTarget.style.color = t.textLow}
     >
       Source: {label} ↗
     </a>
@@ -73,9 +76,10 @@ function WealthSourceLink({ sourceKey, style }) {
 }
 
 function StackedTooltip({ active, payload, label }) {
+  const t = useTheme().tokens;
   if (!active || !payload?.length) return null;
   return (
-    <div style={{ background: "#334155", border: "1px solid #475569", borderRadius: 8, padding: "12px 16px", fontSize: 13, color: "#F8FAFC", boxShadow: "0 8px 24px rgba(0,0,0,0.4)", maxWidth: 220 }}>
+    <div style={{ background: t.border, border: "1px solid #475569", borderRadius: 8, padding: "12px 16px", fontSize: 13, color: t.textHigh, boxShadow: "0 8px 24px rgba(0,0,0,0.4)", maxWidth: 220 }}>
       <p style={{ fontWeight: 600, marginBottom: 6 }}>{label}</p>
       {payload.filter(p => p.dataKey !== "Bottom 90%").reverse().map(p => (
         <p key={p.dataKey} style={{ color: p.color || p.fill, margin: "2px 0" }}>
@@ -84,9 +88,9 @@ function StackedTooltip({ active, payload, label }) {
       ))}
       <div style={{ marginTop: 6, paddingTop: 6, borderTop: "1px solid #475569" }}>
         <a href={wealthSourceUrls.wid} target="_blank" rel="noopener noreferrer"
-          style={{ fontSize: 10, color: "#64748B", textDecoration: "none" }}
-          onMouseEnter={e => e.currentTarget.style.color = "#94A3B8"}
-          onMouseLeave={e => e.currentTarget.style.color = "#64748B"}
+          style={{ fontSize: 10, color: t.textLow, textDecoration: "none" }}
+          onMouseEnter={e => e.currentTarget.style.color = t.textMute}
+          onMouseLeave={e => e.currentTarget.style.color = t.textLow}
         >
           World Inequality Database ↗
         </a>
@@ -96,23 +100,24 @@ function StackedTooltip({ active, payload, label }) {
 }
 
 function DivergenceTooltip({ active, payload, label }) {
+  const t = useTheme().tokens;
   if (!active || !payload?.length) return null;
   return (
-    <div style={{ background: "#334155", border: "1px solid #475569", borderRadius: 8, padding: "12px 16px", fontSize: 13, color: "#F8FAFC", boxShadow: "0 8px 24px rgba(0,0,0,0.4)", maxWidth: 220 }}>
+    <div style={{ background: t.border, border: "1px solid #475569", borderRadius: 8, padding: "12px 16px", fontSize: 13, color: t.textHigh, boxShadow: "0 8px 24px rgba(0,0,0,0.4)", maxWidth: 220 }}>
       <p style={{ fontWeight: 600, marginBottom: 6 }}>{label}</p>
       {payload.map(p => (
         <p key={p.dataKey} style={{ color: p.color, margin: "2px 0" }}>
           {p.dataKey}: <strong>{p.value}%</strong>
         </p>
       ))}
-      <p style={{ fontSize: 11, color: "#94A3B8", marginTop: 4, borderTop: "1px solid #475569", paddingTop: 4 }}>
+      <p style={{ fontSize: 11, color: t.textMute, marginTop: 4, borderTop: "1px solid #475569", paddingTop: 4 }}>
         Gap: {(payload[0]?.value - (payload[1]?.value || 0)).toFixed(1)} pp
       </p>
       <div style={{ marginTop: 4 }}>
         <a href={wealthSourceUrls.saezZucman} target="_blank" rel="noopener noreferrer"
-          style={{ fontSize: 10, color: "#64748B", textDecoration: "none" }}
-          onMouseEnter={e => e.currentTarget.style.color = "#94A3B8"}
-          onMouseLeave={e => e.currentTarget.style.color = "#64748B"}
+          style={{ fontSize: 10, color: t.textLow, textDecoration: "none" }}
+          onMouseEnter={e => e.currentTarget.style.color = t.textMute}
+          onMouseLeave={e => e.currentTarget.style.color = t.textLow}
         >
           Saez-Zucman (2016, updated) ↗
         </a>
@@ -122,6 +127,7 @@ function DivergenceTooltip({ active, payload, label }) {
 }
 
 function StackedAreaSection() {
+  const t = useTheme().tokens;
   const [hoveredSeries, setHoveredSeries] = useState(null);
   const [hiddenSeries, setHiddenSeries] = useState([]);
 
@@ -155,7 +161,7 @@ function StackedAreaSection() {
             >
               <div style={{ width: 10, height: 10, borderRadius: 2, background: entry.color }} />
               <span style={{
-                fontSize: 12, color: isHovered ? "#F8FAFC" : "#CBD5E1",
+                fontSize: 12, color: isHovered ? t.textHigh : t.textMid,
                 fontWeight: isHovered ? 600 : 400,
                 textDecoration: isHidden ? "line-through" : "none",
               }}>
@@ -170,10 +176,10 @@ function StackedAreaSection() {
 
   return (
     <div style={innerCard}>
-      <h3 style={{ fontSize: 15, fontWeight: 600, color: "#E2E8F0", marginBottom: 4 }}>
+      <h3 style={{ fontSize: 15, fontWeight: 600, color: t.textHighAlt, marginBottom: 4 }}>
         Wealth Concentration in the Top 10% (1913–2024)
       </h3>
-      <p style={{ fontSize: 11, color: "#64748B", marginBottom: 16 }}>
+      <p style={{ fontSize: 11, color: t.textLow, marginBottom: 16 }}>
         Stacked area showing how wealth is distributed within the top 10% — shaded bands mark war periods
       </p>
       <ResponsiveContainer width="100%" height={400}>
@@ -186,17 +192,17 @@ function StackedAreaSection() {
               </linearGradient>
             ))}
           </defs>
-          <CartesianGrid strokeDasharray="3 3" stroke="#475569" opacity={0.25} />
+          <CartesianGrid strokeDasharray="3 3" stroke={t.axis} opacity={0.25} />
           <XAxis
-            dataKey="year" stroke="#475569"
+            dataKey="year" stroke={t.axis}
             tick={<WarAxisTick />} axisLine={false} tickLine={false}
             type="number" domain={[1913, 2024]}
             ticks={[1913, 1920, 1930, 1940, 1950, 1960, 1970, 1980, 1990, 2000, 2010, 2020]}
           />
           <YAxis
-            stroke="#475569" tickFormatter={v => `${v}%`}
-            tick={{ fill: "#94A3B8", fontSize: 12 }} axisLine={false} tickLine={false}
-            label={{ value: "Wealth Share", angle: -90, position: "insideLeft", offset: -2, style: { fill: "#64748B", fontSize: 11 } }}
+            stroke={t.axis} tickFormatter={v => `${v}%`}
+            tick={{ fill: t.textMute, fontSize: 12 }} axisLine={false} tickLine={false}
+            label={{ value: "Wealth Share", angle: -90, position: "insideLeft", offset: -2, style: { fill: t.textLow, fontSize: 11 } }}
           />
           <Tooltip content={<StackedTooltip />} />
           <Legend content={renderLegend} />
@@ -213,10 +219,10 @@ function StackedAreaSection() {
             <ReferenceLine
               key={m.year}
               x={m.year}
-              stroke="#F8FAFC"
+              stroke={t.textHigh}
               strokeDasharray="6 4"
               strokeOpacity={0.4}
-              label={{ value: m.label, position: "top", fill: "#94A3B8", fontSize: 9 }}
+              label={{ value: m.label, position: "top", fill: t.textMute, fontSize: 9 }}
             />
           ))}
           {seriesKeys.map(key => {
@@ -262,30 +268,31 @@ function StackedAreaSection() {
 }
 
 function DivergenceSection() {
+  const t = useTheme().tokens;
   const [hoveredLine, setHoveredLine] = useState(null);
 
   return (
     <div style={innerCard}>
-      <h3 style={{ fontSize: 15, fontWeight: 600, color: "#E2E8F0", marginBottom: 4 }}>
+      <h3 style={{ fontSize: 15, fontWeight: 600, color: t.textHighAlt, marginBottom: 4 }}>
         Top 1% vs Bottom 50% Wealth Share (1913–2024)
       </h3>
-      <p style={{ fontSize: 11, color: "#64748B", marginBottom: 16 }}>
+      <p style={{ fontSize: 11, color: t.textLow, marginBottom: 16 }}>
         The great divergence — how the gap between richest and poorest widened, narrowed, then widened again
       </p>
       <ResponsiveContainer width="100%" height={400}>
         <LineChart data={wealthDivergenceData} margin={{ top: 20, right: 30, left: 10, bottom: 30 }}>
-          <CartesianGrid strokeDasharray="3 3" stroke="#475569" opacity={0.25} />
+          <CartesianGrid strokeDasharray="3 3" stroke={t.axis} opacity={0.25} />
           <XAxis
-            dataKey="year" stroke="#475569"
+            dataKey="year" stroke={t.axis}
             tick={<WarAxisTick />} axisLine={false} tickLine={false}
             type="number" domain={[1913, 2024]}
             ticks={[1913, 1920, 1930, 1940, 1950, 1960, 1970, 1980, 1990, 2000, 2010, 2020]}
           />
           <YAxis
-            stroke="#475569" tickFormatter={v => `${v}%`}
-            tick={{ fill: "#94A3B8", fontSize: 12 }} axisLine={false} tickLine={false}
+            stroke={t.axis} tickFormatter={v => `${v}%`}
+            tick={{ fill: t.textMute, fontSize: 12 }} axisLine={false} tickLine={false}
             domain={[0, 50]}
-            label={{ value: "Wealth Share %", angle: -90, position: "insideLeft", offset: -2, style: { fill: "#64748B", fontSize: 11 } }}
+            label={{ value: "Wealth Share %", angle: -90, position: "insideLeft", offset: -2, style: { fill: t.textLow, fontSize: 11 } }}
           />
           <Tooltip content={<DivergenceTooltip />} />
           {warPeriodBands.map(w => (
@@ -333,7 +340,7 @@ function DivergenceSection() {
             onMouseLeave={() => setHoveredLine(null)}
           >
             <div style={{ width: 10, height: 10, borderRadius: 2, background: color }} />
-            <span style={{ fontSize: 12, color: hoveredLine === key ? "#F8FAFC" : "#CBD5E1", fontWeight: hoveredLine === key ? 600 : 400 }}>
+            <span style={{ fontSize: 12, color: hoveredLine === key ? t.textHigh : t.textMid, fontWeight: hoveredLine === key ? 600 : 400 }}>
               {key}
             </span>
           </div>
@@ -347,30 +354,31 @@ function DivergenceSection() {
 }
 
 function NarrativeCard({ d }) {
+  const t = useTheme().tokens;
   const isUp = d.direction === "up";
-  const arrowColor = isUp ? "#EF4444" : "#10B981";
+  const arrowColor = isUp ? t.red : t.green;
   return (
-    <div style={{ background: "#0F172A", border: "1px solid #334155", borderRadius: 10, padding: 20 }}>
+    <div style={{ background: t.bg, border: "1px solid #334155", borderRadius: 10, padding: 20 }}>
       <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 12 }}>
         <span style={{ width: 10, height: 10, borderRadius: 3, background: ACCENT, flexShrink: 0 }} />
-        <h3 style={{ fontWeight: 600, color: "#E2E8F0", fontSize: 14 }}>{d.era}</h3>
+        <h3 style={{ fontWeight: 600, color: t.textHighAlt, fontSize: 14 }}>{d.era}</h3>
       </div>
 
       <div style={{ display: "flex", gap: 16, marginBottom: 12 }}>
         <div style={{ flex: 1 }}>
-          <p style={{ fontSize: 10, color: "#64748B", textTransform: "uppercase", letterSpacing: "0.05em", marginBottom: 2 }}>
+          <p style={{ fontSize: 10, color: t.textLow, textTransform: "uppercase", letterSpacing: "0.05em", marginBottom: 2 }}>
             Top 0.1% Before
           </p>
-          <p style={{ fontSize: 20, fontWeight: 700, color: "#CBD5E1" }}>{d.topShareBefore}</p>
+          <p style={{ fontSize: 20, fontWeight: 700, color: t.textMid }}>{d.topShareBefore}</p>
         </div>
         <div style={{ flex: 1 }}>
-          <p style={{ fontSize: 10, color: "#64748B", textTransform: "uppercase", letterSpacing: "0.05em", marginBottom: 2 }}>
+          <p style={{ fontSize: 10, color: t.textLow, textTransform: "uppercase", letterSpacing: "0.05em", marginBottom: 2 }}>
             Top 0.1% After
           </p>
-          <p style={{ fontSize: 20, fontWeight: 700, color: "#CBD5E1" }}>{d.topShareAfter}</p>
+          <p style={{ fontSize: 20, fontWeight: 700, color: t.textMid }}>{d.topShareAfter}</p>
         </div>
         <div style={{ flex: 1 }}>
-          <p style={{ fontSize: 10, color: "#64748B", textTransform: "uppercase", letterSpacing: "0.05em", marginBottom: 2 }}>
+          <p style={{ fontSize: 10, color: t.textLow, textTransform: "uppercase", letterSpacing: "0.05em", marginBottom: 2 }}>
             Change
           </p>
           <p style={{ fontSize: 20, fontWeight: 700, color: arrowColor }}>
@@ -379,7 +387,7 @@ function NarrativeCard({ d }) {
         </div>
       </div>
 
-      <p style={{ fontSize: 11, color: "#94A3B8", lineHeight: 1.5, borderTop: "1px solid #334155", paddingTop: 10 }}>
+      <p style={{ fontSize: 11, color: t.textMute, lineHeight: 1.5, borderTop: "1px solid #334155", paddingTop: 10 }}>
         {d.narrative}
       </p>
       <div style={{ display: "flex", gap: 12, marginTop: 8 }}>
@@ -391,6 +399,7 @@ function NarrativeCard({ d }) {
 }
 
 function InsightCallout() {
+  const t = useTheme().tokens;
   return (
     <div style={{
       background: "linear-gradient(135deg, rgba(244,114,182,0.08), rgba(167,139,250,0.05))",
@@ -400,12 +409,12 @@ function InsightCallout() {
       <h3 style={{ fontSize: 16, fontWeight: 700, color: ACCENT, marginBottom: 8 }}>
         {uCurveInsight.title}
       </h3>
-      <p style={{ fontSize: 13, color: "#CBD5E1", lineHeight: 1.6, marginBottom: 16 }}>
+      <p style={{ fontSize: 13, color: t.textMid, lineHeight: 1.6, marginBottom: 16 }}>
         {uCurveInsight.description}
       </p>
       <ul style={{ margin: 0, paddingLeft: 18 }}>
         {uCurveInsight.keyPoints.map((point, i) => (
-          <li key={i} style={{ fontSize: 12, color: "#94A3B8", lineHeight: 1.7 }}>
+          <li key={i} style={{ fontSize: 12, color: t.textMute, lineHeight: 1.7 }}>
             {point}
           </li>
         ))}
@@ -415,12 +424,13 @@ function InsightCallout() {
 }
 
 export default function WealthDistributionPanel() {
+  const t = useTheme().tokens;
   return (
     <section style={card}>
-      <h2 style={{ fontSize: 20, fontWeight: 600, color: "#F8FAFC", marginBottom: 4 }}>
+      <h2 style={{ fontSize: 20, fontWeight: 600, color: t.textHigh, marginBottom: 4 }}>
         Wealth Distribution
       </h2>
-      <p style={{ fontSize: 13, color: "#94A3B8", marginBottom: 24 }}>
+      <p style={{ fontSize: 13, color: t.textMute, marginBottom: 24 }}>
         How wealth inequality shifted across a century of American wars — from the Great Compression to the New Gilded Age
       </p>
 
@@ -434,7 +444,7 @@ export default function WealthDistributionPanel() {
         ))}
       </div>
 
-      <p style={{ fontSize: 11, color: "#64748B", textAlign: "center", marginTop: 16, fontStyle: "italic" }}>
+      <p style={{ fontSize: 11, color: t.textLow, textAlign: "center", marginTop: 16, fontStyle: "italic" }}>
         Wealth share data: Saez-Zucman (2016, updated) via World Inequality Database (WID). Top 0.1% / 1% / 10% net personal wealth shares, United States, 1913–2024.
       </p>
     </section>

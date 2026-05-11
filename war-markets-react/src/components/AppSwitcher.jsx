@@ -10,7 +10,12 @@ export default function AppSwitcher() {
   return (
     <nav
       aria-label="Sibling apps"
-      className="flex items-center gap-1 rounded-full border border-slate-700/60 bg-slate-900/60 backdrop-blur px-1 py-1"
+      style={{
+        background: 'var(--c-glass-bg)',
+        border: '1px solid var(--c-border)',
+        backdropFilter: 'blur(8px)',
+      }}
+      className="flex items-center gap-1 rounded-full px-1 py-1"
     >
       {APPS.map((app) => {
         const active = app.id === CURRENT;
@@ -19,11 +24,15 @@ export default function AppSwitcher() {
             key={app.id}
             href={app.href}
             aria-current={active ? "page" : undefined}
-            className={
-              "px-3 py-1 text-xs font-medium rounded-full transition-colors " +
-              (active
-                ? "bg-indigo-500/20 text-indigo-300 ring-1 ring-indigo-500/40"
-                : "text-slate-400 hover:text-slate-200 hover:bg-slate-800/40")
+            className="px-3 py-1 text-xs font-medium rounded-full transition-colors"
+            style={
+              active
+                ? {
+                    background: 'rgba(99, 102, 241, 0.20)',
+                    color: 'var(--c-indigo-faint)',
+                    boxShadow: '0 0 0 1px rgba(99, 102, 241, 0.40)',
+                  }
+                : { color: 'var(--c-text-mute)' }
             }
           >
             {app.label}

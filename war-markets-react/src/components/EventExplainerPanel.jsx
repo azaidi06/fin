@@ -2,7 +2,8 @@ import { useState } from "react";
 import { sp500Data, preWarData, globalMarketsData, fiscalSummary } from "../data/warData";
 import { useEventToggle } from "../context/EventToggleContext";
 
-const card = { background: "#1E293B", border: "1px solid #334155", borderRadius: 12, padding: 24, marginBottom: 32 };
+import { useTheme } from '../theme/ThemeContext';
+const card = { background: 'var(--c-panel)', border: "1px solid #334155", borderRadius: 12, padding: 24, marginBottom: 32 };
 
 /* ── Why each event matters for market analysis ── */
 const eventContext = {
@@ -167,19 +168,19 @@ const eventContext = {
 
 /* ── Color mapping from existing data ── */
 const eventColors = {
-  WWII: "#EF4444",
-  Korea: "#F59E0B",
-  "Cuban Missile": "#84CC16",
-  Vietnam: "#10B981",
-  "Oil Embargo": "#F97316",
-  "Black Monday": "#A855F7",
-  "Gulf War": "#6366F1",
-  "9/11": "#EC4899",
-  Iraq: "#3B82F6",
-  "2008 Crisis": "#14B8A6",
-  COVID: "#06B6D4",
-  "Russia-Ukraine": "#E11D48",
-  Iran: "#FBBF24",
+  WWII: 'var(--c-red)',
+  Korea: 'var(--c-amber)',
+  "Cuban Missile": 'var(--c-lime)',
+  Vietnam: 'var(--c-green)',
+  "Oil Embargo": 'var(--c-orange)',
+  "Black Monday": 'var(--c-purple)',
+  "Gulf War": 'var(--c-indigo)',
+  "9/11": 'var(--c-pink)',
+  Iraq: 'var(--c-blue)',
+  "2008 Crisis": 'var(--c-teal)',
+  COVID: 'var(--c-cyan)',
+  "Russia-Ukraine": 'var(--c-crimson)',
+  Iran: 'var(--c-amber-strong)',
 };
 
 const typeIcons = {
@@ -197,13 +198,14 @@ const typeIcons = {
 };
 
 function EventCard({ conflict, sp, preWar, global, fiscal, context, isExpanded, onToggle }) {
-  const color = eventColors[conflict] || "#94A3B8";
+  const t = useTheme().tokens;
+  const color = eventColors[conflict] || t.textMute;
 
   return (
     <div
       style={{
-        background: "#0F172A",
-        border: `1px solid ${isExpanded ? color + "66" : "#334155"}`,
+        background: t.bg,
+        border: `1px solid ${isExpanded ? color + "66" : t.border}`,
         borderRadius: 12,
         overflow: "hidden",
         transition: "border-color 0.2s ease",
@@ -219,7 +221,7 @@ function EventCard({ conflict, sp, preWar, global, fiscal, context, isExpanded, 
           padding: "20px 24px",
           cursor: "pointer",
           textAlign: "left",
-          color: "#F8FAFC",
+          color: t.textHigh,
           display: "flex",
           alignItems: "flex-start",
           gap: 16,
@@ -238,7 +240,7 @@ function EventCard({ conflict, sp, preWar, global, fiscal, context, isExpanded, 
         <div style={{ flex: 1, minWidth: 0 }}>
           {/* Top row: name + type badge + date */}
           <div style={{ display: "flex", alignItems: "center", gap: 10, flexWrap: "wrap", marginBottom: 6 }}>
-            <h3 style={{ fontSize: 16, fontWeight: 600, color: "#F8FAFC", margin: 0 }}>
+            <h3 style={{ fontSize: 16, fontWeight: 600, color: t.textHigh, margin: 0 }}>
               {sp?.label || conflict}
             </h3>
             <span style={{
@@ -256,7 +258,7 @@ function EventCard({ conflict, sp, preWar, global, fiscal, context, isExpanded, 
           </div>
 
           {/* Summary */}
-          <p style={{ fontSize: 13, color: "#94A3B8", lineHeight: 1.5, margin: 0 }}>
+          <p style={{ fontSize: 13, color: t.textMute, lineHeight: 1.5, margin: 0 }}>
             {context.summary}
           </p>
 
@@ -264,39 +266,39 @@ function EventCard({ conflict, sp, preWar, global, fiscal, context, isExpanded, 
           <div style={{ display: "flex", gap: 20, marginTop: 12, flexWrap: "wrap" }}>
             {sp && (
               <div>
-                <span style={{ fontSize: 10, color: "#64748B", textTransform: "uppercase", letterSpacing: "0.05em" }}>
+                <span style={{ fontSize: 10, color: t.textLow, textTransform: "uppercase", letterSpacing: "0.05em" }}>
                   S&P 500
                 </span>
-                <p style={{ fontSize: 16, fontWeight: 700, color: "#EF4444", margin: "2px 0 0" }}>
+                <p style={{ fontSize: 16, fontWeight: 700, color: t.red, margin: "2px 0 0" }}>
                   -{sp.decline}%
                 </p>
               </div>
             )}
             {sp && (
               <div>
-                <span style={{ fontSize: 10, color: "#64748B", textTransform: "uppercase", letterSpacing: "0.05em" }}>
+                <span style={{ fontSize: 10, color: t.textLow, textTransform: "uppercase", letterSpacing: "0.05em" }}>
                   Recovery
                 </span>
-                <p style={{ fontSize: 16, fontWeight: 700, color: "#34D399", margin: "2px 0 0" }}>
+                <p style={{ fontSize: 16, fontWeight: 700, color: t.greenSoft, margin: "2px 0 0" }}>
                   {sp.daysToRecover ? `${sp.daysToRecover}d` : "N/A"}
                 </p>
               </div>
             )}
             {preWar && (
               <div>
-                <span style={{ fontSize: 10, color: "#64748B", textTransform: "uppercase", letterSpacing: "0.05em" }}>
+                <span style={{ fontSize: 10, color: t.textLow, textTransform: "uppercase", letterSpacing: "0.05em" }}>
                   {preWar.surprise ? "Surprise" : "Buildup"}
                 </span>
-                <p style={{ fontSize: 16, fontWeight: 700, color: preWar.surprise ? "#FBBF24" : "#94A3B8", margin: "2px 0 0" }}>
+                <p style={{ fontSize: 16, fontWeight: 700, color: preWar.surprise ? t.amberStrong : t.textMute, margin: "2px 0 0" }}>
                   {preWar.surprise ? "Yes" : `${preWar.days}d`}
                 </p>
               </div>
             )}
             <div>
-              <span style={{ fontSize: 10, color: "#64748B", textTransform: "uppercase", letterSpacing: "0.05em" }}>
+              <span style={{ fontSize: 10, color: t.textLow, textTransform: "uppercase", letterSpacing: "0.05em" }}>
                 Date
               </span>
-              <p style={{ fontSize: 14, fontWeight: 600, color: "#CBD5E1", margin: "2px 0 0" }}>
+              <p style={{ fontSize: 14, fontWeight: 600, color: t.textMid, margin: "2px 0 0" }}>
                 {sp?.date || context.era}
               </p>
             </div>
@@ -306,7 +308,7 @@ function EventCard({ conflict, sp, preWar, global, fiscal, context, isExpanded, 
         {/* Expand arrow */}
         <span style={{
           fontSize: 18,
-          color: "#64748B",
+          color: t.textLow,
           transition: "transform 0.2s ease",
           transform: isExpanded ? "rotate(180deg)" : "rotate(0deg)",
           flexShrink: 0,
@@ -337,7 +339,7 @@ function EventCard({ conflict, sp, preWar, global, fiscal, context, isExpanded, 
               {context.whyItMatters.map((point, i) => (
                 <li key={i} style={{
                   fontSize: 13,
-                  color: "#CBD5E1",
+                  color: t.textMid,
                   lineHeight: 1.6,
                   marginBottom: 8,
                   position: "relative",
@@ -370,7 +372,7 @@ function EventCard({ conflict, sp, preWar, global, fiscal, context, isExpanded, 
             <p style={{ fontSize: 11, fontWeight: 600, color, textTransform: "uppercase", letterSpacing: "0.05em", marginBottom: 6 }}>
               Key Takeaway
             </p>
-            <p style={{ fontSize: 13, color: "#E2E8F0", lineHeight: 1.6, margin: 0, fontStyle: "italic" }}>
+            <p style={{ fontSize: 13, color: t.textHighAlt, lineHeight: 1.6, margin: 0, fontStyle: "italic" }}>
               {context.keyTakeaway}
             </p>
           </div>
@@ -379,11 +381,11 @@ function EventCard({ conflict, sp, preWar, global, fiscal, context, isExpanded, 
           <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))", gap: 12 }}>
             {/* Pre-war / catalyst */}
             {preWar && (
-              <div style={{ background: "#1E293B", borderRadius: 8, padding: 14 }}>
-                <p style={{ fontSize: 11, fontWeight: 600, color: "#64748B", textTransform: "uppercase", letterSpacing: "0.05em", marginBottom: 6 }}>
+              <div style={{ background: t.panel, borderRadius: 8, padding: 14 }}>
+                <p style={{ fontSize: 11, fontWeight: 600, color: t.textLow, textTransform: "uppercase", letterSpacing: "0.05em", marginBottom: 6 }}>
                   Catalyst
                 </p>
-                <p style={{ fontSize: 12, color: "#94A3B8", lineHeight: 1.5, margin: 0 }}>
+                <p style={{ fontSize: 12, color: t.textMute, lineHeight: 1.5, margin: 0 }}>
                   {preWar.catalyst}
                 </p>
               </div>
@@ -391,11 +393,11 @@ function EventCard({ conflict, sp, preWar, global, fiscal, context, isExpanded, 
 
             {/* Global impact */}
             {global && (
-              <div style={{ background: "#1E293B", borderRadius: 8, padding: 14 }}>
-                <p style={{ fontSize: 11, fontWeight: 600, color: "#64748B", textTransform: "uppercase", letterSpacing: "0.05em", marginBottom: 6 }}>
+              <div style={{ background: t.panel, borderRadius: 8, padding: 14 }}>
+                <p style={{ fontSize: 11, fontWeight: 600, color: t.textLow, textTransform: "uppercase", letterSpacing: "0.05em", marginBottom: 6 }}>
                   Global Impact
                 </p>
-                <p style={{ fontSize: 12, color: "#94A3B8", lineHeight: 1.5, margin: 0 }}>
+                <p style={{ fontSize: 12, color: t.textMute, lineHeight: 1.5, margin: 0 }}>
                   {global.narrative}
                 </p>
               </div>
@@ -403,11 +405,11 @@ function EventCard({ conflict, sp, preWar, global, fiscal, context, isExpanded, 
 
             {/* Fiscal impact */}
             {fiscal && (
-              <div style={{ background: "#1E293B", borderRadius: 8, padding: 14 }}>
-                <p style={{ fontSize: 11, fontWeight: 600, color: "#64748B", textTransform: "uppercase", letterSpacing: "0.05em", marginBottom: 6 }}>
+              <div style={{ background: t.panel, borderRadius: 8, padding: 14 }}>
+                <p style={{ fontSize: 11, fontWeight: 600, color: t.textLow, textTransform: "uppercase", letterSpacing: "0.05em", marginBottom: 6 }}>
                   Fiscal Impact
                 </p>
-                <p style={{ fontSize: 12, color: "#94A3B8", lineHeight: 1.5, margin: 0 }}>
+                <p style={{ fontSize: 12, color: t.textMute, lineHeight: 1.5, margin: 0 }}>
                   {fiscal.narrative}
                 </p>
               </div>
@@ -420,6 +422,7 @@ function EventCard({ conflict, sp, preWar, global, fiscal, context, isExpanded, 
 }
 
 export default function EventExplainerPanel() {
+  const t = useTheme().tokens;
   const { activeConflicts } = useEventToggle();
   const [expanded, setExpanded] = useState(null);
 
@@ -441,13 +444,13 @@ export default function EventExplainerPanel() {
 
   return (
     <section style={card}>
-      <h2 style={{ fontSize: 20, fontWeight: 600, color: "#F8FAFC", marginBottom: 4 }}>
+      <h2 style={{ fontSize: 20, fontWeight: 600, color: t.textHigh, marginBottom: 4 }}>
         Event Explainer
       </h2>
-      <p style={{ fontSize: 13, color: "#94A3B8", marginBottom: 8 }}>
+      <p style={{ fontSize: 13, color: t.textMute, marginBottom: 8 }}>
         Why each event is included and what it reveals about markets, geopolitics, and economic policy
       </p>
-      <p style={{ fontSize: 12, color: "#64748B", marginBottom: 20 }}>
+      <p style={{ fontSize: 12, color: t.textLow, marginBottom: 20 }}>
         {events.length} events tracked — click any event to expand
       </p>
 

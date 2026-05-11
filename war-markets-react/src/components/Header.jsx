@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
-
+import ThemeToggle from "./ThemeToggle";
+import { useTheme } from '../theme/ThemeContext';
 const stats = [
   "33.8% — Worst S&P drawdown (WWII)",
   "118% — Peak debt-to-GDP ratio (WWII)",
@@ -11,6 +12,7 @@ const stats = [
 ];
 
 export default function Header({ compact, onGoHome }) {
+  const t = useTheme().tokens;
   const [statIndex, setStatIndex] = useState(0);
   const [visible, setVisible] = useState(true);
 
@@ -27,7 +29,10 @@ export default function Header({ compact, onGoHome }) {
   }, [compact]);
 
   return (
-    <header className="text-center mb-10 page-header">
+    <header className="text-center mb-10 page-header" style={{ position: 'relative' }}>
+      <div style={{ position: 'absolute', top: 0, right: 0 }}>
+        <ThemeToggle />
+      </div>
       <h1
         className="animated-gradient-text text-4xl sm:text-5xl font-bold mb-3"
         onClick={onGoHome}
@@ -36,19 +41,19 @@ export default function Header({ compact, onGoHome }) {
         Money + War
       </h1>
       {compact ? (
-        <p className="text-lg sm:text-xl" style={{ color: "#CBD5E1" }}>
+        <p className="text-lg sm:text-xl" style={{ color: t.textMid }}>
           Chaos and Its Toll on Wealth, Money, and Markets
         </p>
       ) : (
         <>
-          <p className="text-lg sm:text-xl mb-3" style={{ color: "#CBD5E1" }}>
+          <p className="text-lg sm:text-xl mb-3" style={{ color: t.textMid }}>
             Chaos and Its Toll on Wealth, Money, and Markets
           </p>
           {/* Rotating stat ticker */}
           <p
             className="mt-4 text-sm font-semibold"
             style={{
-              color: "#818CF8",
+              color: t.indigoSoft,
               opacity: visible ? 1 : 0,
               transition: "opacity 0.4s ease",
               minHeight: "1.5em",

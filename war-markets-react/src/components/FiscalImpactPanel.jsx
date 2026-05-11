@@ -14,10 +14,12 @@ import { TooltipSourceLink } from "./SourceLink";
 import SourceLink from "./SourceLink";
 import { useEventToggle } from "../context/EventToggleContext";
 
-const card = { background: "#1E293B", border: "1px solid #334155", borderRadius: 12, padding: 24, marginBottom: 32 };
-const innerCard = { background: "#0F172A", border: "1px solid #334155", borderRadius: 10, padding: 20, marginBottom: 24 };
+import { useTheme } from '../theme/ThemeContext';
+const card = { background: 'var(--c-panel)', border: "1px solid #334155", borderRadius: 12, padding: 24, marginBottom: 32 };
+const innerCard = { background: 'var(--c-bg)', border: "1px solid #334155", borderRadius: 10, padding: 20, marginBottom: 24 };
 
 function DebtTimelineTooltip({ active, payload, label }) {
+  const t = useTheme().tokens;
   if (!active || !payload?.length) return null;
   const debt = payload[0].value;
   const formatted = debt >= 1000
@@ -26,16 +28,16 @@ function DebtTimelineTooltip({ active, payload, label }) {
   const term = presidentialTerms.find(t => label >= t.start && label < t.end);
   const marker = conflictMarkers.find(m => m.year === label);
   return (
-    <div style={{ background: "#334155", border: "1px solid #475569", borderRadius: 8, padding: "10px 14px", fontSize: 13, color: "#F8FAFC", boxShadow: "0 8px 24px rgba(0,0,0,0.4)" }}>
+    <div style={{ background: t.border, border: "1px solid #475569", borderRadius: 8, padding: "10px 14px", fontSize: 13, color: t.textHigh, boxShadow: "0 8px 24px rgba(0,0,0,0.4)" }}>
       <p style={{ fontWeight: 600, marginBottom: 4 }}>{label}</p>
-      <p style={{ color: "#06B6D4", fontWeight: 700 }}>{formatted}</p>
+      <p style={{ color: t.cyan, fontWeight: 700 }}>{formatted}</p>
       {term && (
-        <p style={{ color: term.party === "D" ? "#60A5FA" : "#F87171", fontSize: 11, marginTop: 4 }}>
+        <p style={{ color: term.party === "D" ? t.blueSoft : t.redSoft, fontSize: 11, marginTop: 4 }}>
           President: {term.president} ({term.party === "D" ? "Dem" : "Rep"})
         </p>
       )}
       {marker && (
-        <p style={{ color: "#FBBF24", fontSize: 11, marginTop: 2 }}>
+        <p style={{ color: t.amberStrong, fontSize: 11, marginTop: 2 }}>
           Event: {marker.label}
         </p>
       )}
@@ -45,6 +47,7 @@ function DebtTimelineTooltip({ active, payload, label }) {
 }
 
 function DebtTimelineChart({ filteredMarkers }) {
+  const t = useTheme().tokens;
   const debtByYear = useMemo(() => {
     const map = {};
     totalDebtData.forEach(d => { map[d.year] = d.debt; });
@@ -64,28 +67,28 @@ function DebtTimelineChart({ filteredMarkers }) {
 
   return (
     <div style={innerCard}>
-      <h3 style={{ fontSize: 15, fontWeight: 600, color: "#E2E8F0", marginBottom: 4 }}>US Total Federal Debt (1940–2025)</h3>
-      <p style={{ fontSize: 11, color: "#64748B", marginBottom: 16 }}>Nominal USD — background shading by president</p>
+      <h3 style={{ fontSize: 15, fontWeight: 600, color: t.textHighAlt, marginBottom: 4 }}>US Total Federal Debt (1940–2025)</h3>
+      <p style={{ fontSize: 11, color: t.textLow, marginBottom: 16 }}>Nominal USD — background shading by president</p>
       <ResponsiveContainer width="100%" height={440}>
         <AreaChart data={totalDebtData} margin={{ top: 40, right: 30, left: 10, bottom: 5 }}>
           <defs>
             <linearGradient id="debtGradient" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="5%" stopColor="#06B6D4" stopOpacity={0.15} />
-              <stop offset="95%" stopColor="#06B6D4" stopOpacity={0} />
+              <stop offset="5%" stopColor={t.cyan} stopOpacity={0.15} />
+              <stop offset="95%" stopColor={t.cyan} stopOpacity={0} />
             </linearGradient>
           </defs>
-          <CartesianGrid strokeDasharray="3 3" stroke="#475569" opacity={0.25} />
+          <CartesianGrid strokeDasharray="3 3" stroke={t.axis} opacity={0.25} />
           <XAxis
-            dataKey="year" stroke="#475569"
-            tick={{ fill: "#94A3B8", fontSize: 12 }} axisLine={false} tickLine={false}
+            dataKey="year" stroke={t.axis}
+            tick={{ fill: t.textMute, fontSize: 12 }} axisLine={false} tickLine={false}
             type="number" domain={[1940, 2026]}
             ticks={[1940, 1950, 1960, 1970, 1980, 1990, 2000, 2010, 2020]}
           />
           <YAxis
-            stroke="#475569"
+            stroke={t.axis}
             tickFormatter={(v) => v >= 1000 ? `$${(v / 1000).toFixed(0)}T` : `$${v}B`}
-            tick={{ fill: "#94A3B8", fontSize: 12 }} axisLine={false} tickLine={false}
-            label={{ value: "Total Debt", angle: -90, position: "insideLeft", offset: -2, style: { fill: "#64748B", fontSize: 11 } }}
+            tick={{ fill: t.textMute, fontSize: 12 }} axisLine={false} tickLine={false}
+            label={{ value: "Total Debt", angle: -90, position: "insideLeft", offset: -2, style: { fill: t.textLow, fontSize: 11 } }}
           />
           <Tooltip content={<DebtTimelineTooltip />} />
 
@@ -116,7 +119,7 @@ function DebtTimelineChart({ filteredMarkers }) {
             <ReferenceLine
               key={m.year}
               x={m.year}
-              stroke="#F8FAFC"
+              stroke={t.textHigh}
               strokeDasharray="4 4"
               strokeOpacity={0.2}
             />
@@ -125,11 +128,11 @@ function DebtTimelineChart({ filteredMarkers }) {
           <Area
             type="monotone"
             dataKey="debt"
-            stroke="#06B6D4"
+            stroke={t.cyan}
             strokeWidth={2}
             fill="url(#debtGradient)"
             dot={false}
-            activeDot={{ r: 6, strokeWidth: 0, fill: "#06B6D4" }}
+            activeDot={{ r: 6, strokeWidth: 0, fill: t.cyan }}
           />
 
           {/* Event marker dots on the debt line */}
@@ -142,14 +145,14 @@ function DebtTimelineChart({ filteredMarkers }) {
                 x={m.year}
                 y={debt}
                 r={4}
-                fill="#FBBF24"
-                stroke="#0F172A"
+                fill={t.amberStrong}
+                stroke={t.bg}
                 strokeWidth={2}
                 label={{
                   value: m.label,
                   position: "top",
                   offset: labelOffsets[m.year] || 10,
-                  fill: "#F8FAFC",
+                  fill: t.textHigh,
                   fontSize: 10,
                   fontWeight: 600,
                 }}
@@ -164,12 +167,12 @@ function DebtTimelineChart({ filteredMarkers }) {
         {presidentialTerms.map((term) => (
           <div key={`${term.president}-${term.start}`} style={{ display: "flex", alignItems: "center", gap: 5 }}>
             <div style={{ width: 12, height: 8, borderRadius: 2, background: presColor(term.president), opacity: 0.5 }} />
-            <span style={{ fontSize: 10, color: "#94A3B8" }}>{term.president}</span>
+            <span style={{ fontSize: 10, color: t.textMute }}>{term.president}</span>
           </div>
         ))}
         <div style={{ display: "flex", alignItems: "center", gap: 5 }}>
-          <div style={{ width: 8, height: 8, borderRadius: "50%", background: "#FBBF24", border: "2px solid #0F172A" }} />
-          <span style={{ fontSize: 10, color: "#94A3B8" }}>Event</span>
+          <div style={{ width: 8, height: 8, borderRadius: "50%", background: t.amberStrong, border: "2px solid #0F172A" }} />
+          <span style={{ fontSize: 10, color: t.textMute }}>Event</span>
         </div>
       </div>
       <div style={{ marginTop: 4 }}>
@@ -180,9 +183,10 @@ function DebtTimelineChart({ filteredMarkers }) {
 }
 
 function CustomTooltip({ active, payload, label, hoveredConflict, sourceKey }) {
+  const t = useTheme().tokens;
   if (!active || !payload?.length) return null;
   return (
-    <div style={{ background: "#334155", border: "1px solid #475569", borderRadius: 8, padding: "12px 16px", fontSize: 13, color: "#F8FAFC", boxShadow: "0 8px 24px rgba(0,0,0,0.4)", maxWidth: 260 }}>
+    <div style={{ background: t.border, border: "1px solid #475569", borderRadius: 8, padding: "12px 16px", fontSize: 13, color: t.textHigh, boxShadow: "0 8px 24px rgba(0,0,0,0.4)", maxWidth: 260 }}>
       <p style={{ fontWeight: 600, marginBottom: 6 }}>{label}</p>
       {payload.map(p => {
         const isHovered = hoveredConflict === p.dataKey;
@@ -208,6 +212,7 @@ function CustomTooltip({ active, payload, label, hoveredConflict, sourceKey }) {
 // lines from each other. Uses the shared `fiscalConflictColors`
 // so each war keeps the same hue across the app.
 function SmallMultiplesLineChart({ title, subtitle, data, conflicts, yTickFormatter, sourceKey }) {
+  const t = useTheme().tokens;
   // Compute a shared y-domain so panels are visually comparable.
   const yDomain = useMemo(() => {
     let min = Infinity, max = -Infinity;
@@ -226,8 +231,8 @@ function SmallMultiplesLineChart({ title, subtitle, data, conflicts, yTickFormat
 
   return (
     <div style={innerCard}>
-      <h3 style={{ fontSize: 15, fontWeight: 600, color: "#E2E8F0", marginBottom: 4 }}>{title}</h3>
-      <p style={{ fontSize: 11, color: "#64748B", marginBottom: 16 }}>{subtitle}</p>
+      <h3 style={{ fontSize: 15, fontWeight: 600, color: t.textHighAlt, marginBottom: 4 }}>{title}</h3>
+      <p style={{ fontSize: 11, color: t.textLow, marginBottom: 16 }}>{subtitle}</p>
       <div
         style={{
           display: "grid",
@@ -236,7 +241,7 @@ function SmallMultiplesLineChart({ title, subtitle, data, conflicts, yTickFormat
         }}
       >
         {conflicts.map((c) => {
-          const color = fiscalConflictColors[c] || "#94A3B8";
+          const color = fiscalConflictColors[c] || t.textMute;
           return (
             <div
               key={c}
@@ -249,41 +254,41 @@ function SmallMultiplesLineChart({ title, subtitle, data, conflicts, yTickFormat
             >
               <div style={{ display: "flex", alignItems: "center", gap: 6, marginBottom: 4 }}>
                 <span style={{ width: 8, height: 8, borderRadius: 2, background: color, flexShrink: 0 }} />
-                <span style={{ fontSize: 11, fontWeight: 600, color: "#E2E8F0" }}>{c}</span>
+                <span style={{ fontSize: 11, fontWeight: 600, color: t.textHighAlt }}>{c}</span>
               </div>
               <ResponsiveContainer width="100%" height={110}>
                 <LineChart data={data} margin={{ top: 4, right: 6, left: 0, bottom: 0 }}>
-                  <CartesianGrid strokeDasharray="3 3" stroke="#334155" opacity={0.25} vertical={false} />
+                  <CartesianGrid strokeDasharray="3 3" stroke={t.border} opacity={0.25} vertical={false} />
                   <XAxis
                     dataKey="tLabel"
-                    stroke="#334155"
-                    tick={{ fill: "#64748B", fontSize: 9 }}
+                    stroke={t.border}
+                    tick={{ fill: t.textLow, fontSize: 9 }}
                     axisLine={false}
                     tickLine={false}
                     interval="preserveStartEnd"
                   />
                   <YAxis
-                    stroke="#334155"
+                    stroke={t.border}
                     tickFormatter={yTickFormatter || (v => `${v}%`)}
-                    tick={{ fill: "#64748B", fontSize: 9 }}
+                    tick={{ fill: t.textLow, fontSize: 9 }}
                     axisLine={false}
                     tickLine={false}
                     domain={yDomain}
                     width={28}
                   />
                   <Tooltip
-                    cursor={{ stroke: "#475569", strokeDasharray: "3 3" }}
+                    cursor={{ stroke: t.axis, strokeDasharray: "3 3" }}
                     content={({ active, payload, label }) => {
                       if (!active || !payload?.length) return null;
                       const v = payload[0].value;
                       return (
-                        <div style={{ background: "#1E293B", border: "1px solid #334155", borderRadius: 6, padding: "6px 10px", fontSize: 11, color: "#F8FAFC" }}>
+                        <div style={{ background: t.panel, border: "1px solid #334155", borderRadius: 6, padding: "6px 10px", fontSize: 11, color: t.textHigh }}>
                           <strong>{label}</strong>: {v != null ? `${v}%` : "—"}
                         </div>
                       );
                     }}
                   />
-                  <ReferenceLine x="T=0" stroke="#F8FAFC" strokeDasharray="4 4" strokeOpacity={0.35} />
+                  <ReferenceLine x="T=0" stroke={t.textHigh} strokeDasharray="4 4" strokeOpacity={0.35} />
                   <Line
                     type="monotone"
                     dataKey={c}
@@ -300,14 +305,15 @@ function SmallMultiplesLineChart({ title, subtitle, data, conflicts, yTickFormat
           );
         })}
       </div>
-      <p style={{ fontSize: 10, color: "#475569", marginTop: 8, marginBottom: 0, textAlign: "right" }}>
-        Source: see <strong style={{ color: "#64748B" }}>{sourceKey}</strong>
+      <p style={{ fontSize: 10, color: t.axis, marginTop: 8, marginBottom: 0, textAlign: "right" }}>
+        Source: see <strong style={{ color: t.textLow }}>{sourceKey}</strong>
       </p>
     </div>
   );
 }
 
 function FiscalChart({ title, subtitle, data, conflicts, yLabel, yDomain, yTickFormatter, sourceKey }) {
+  const t = useTheme().tokens;
   const [hoveredConflict, setHoveredConflict] = useState(null);
   const [hiddenConflicts, setHiddenConflicts] = useState([]);
 
@@ -347,7 +353,7 @@ function FiscalChart({ title, subtitle, data, conflicts, yLabel, yDomain, yTickF
               <div style={{ width: 10, height: 10, borderRadius: 2, background: entry.color }} />
               <span style={{
                 fontSize: 12,
-                color: isHovered ? "#F8FAFC" : "#CBD5E1",
+                color: isHovered ? t.textHigh : t.textMid,
                 fontWeight: isHovered ? 600 : 400,
                 textDecoration: isHidden ? "line-through" : "none"
               }}>
@@ -362,26 +368,26 @@ function FiscalChart({ title, subtitle, data, conflicts, yLabel, yDomain, yTickF
 
   return (
     <div style={innerCard}>
-      <h3 style={{ fontSize: 15, fontWeight: 600, color: "#E2E8F0", marginBottom: 4 }}>{title}</h3>
-      <p style={{ fontSize: 11, color: "#64748B", marginBottom: 16 }}>{subtitle}</p>
+      <h3 style={{ fontSize: 15, fontWeight: 600, color: t.textHighAlt, marginBottom: 4 }}>{title}</h3>
+      <p style={{ fontSize: 11, color: t.textLow, marginBottom: 16 }}>{subtitle}</p>
       <ResponsiveContainer width="100%" height={360}>
         <LineChart data={data} margin={{ top: 5, right: 30, left: 10, bottom: 5 }}>
-          <CartesianGrid strokeDasharray="3 3" stroke="#475569" opacity={0.25} />
+          <CartesianGrid strokeDasharray="3 3" stroke={t.axis} opacity={0.25} />
           <XAxis
-            dataKey="tLabel" stroke="#475569"
-            tick={{ fill: "#94A3B8", fontSize: 12 }} axisLine={false} tickLine={false}
+            dataKey="tLabel" stroke={t.axis}
+            tick={{ fill: t.textMute, fontSize: 12 }} axisLine={false} tickLine={false}
           />
           <YAxis
-            stroke="#475569" tickFormatter={yTickFormatter || (v => `${v}%`)}
-            tick={{ fill: "#94A3B8", fontSize: 12 }} axisLine={false} tickLine={false}
+            stroke={t.axis} tickFormatter={yTickFormatter || (v => `${v}%`)}
+            tick={{ fill: t.textMute, fontSize: 12 }} axisLine={false} tickLine={false}
             domain={yDomain}
-            label={{ value: yLabel, angle: -90, position: "insideLeft", offset: -2, style: { fill: "#64748B", fontSize: 11 } }}
+            label={{ value: yLabel, angle: -90, position: "insideLeft", offset: -2, style: { fill: t.textLow, fontSize: 11 } }}
           />
           <Tooltip content={<CustomTooltip hoveredConflict={hoveredConflict} sourceKey={sourceKey} />} wrapperStyle={{ pointerEvents: "auto" }} />
           <Legend content={renderLegend} />
           <ReferenceLine
-            x="T=0" stroke="#F8FAFC" strokeDasharray="6 4" strokeOpacity={0.5}
-            label={{ value: "War Start", position: "top", fill: "#94A3B8", fontSize: 10 }}
+            x="T=0" stroke={t.textHigh} strokeDasharray="6 4" strokeOpacity={0.5}
+            label={{ value: "War Start", position: "top", fill: t.textMute, fontSize: 10 }}
           />
           {conflicts.map(c => {
             const isHovered = hoveredConflict === c;
@@ -419,11 +425,12 @@ function FiscalChart({ title, subtitle, data, conflicts, yLabel, yDomain, yTickF
 }
 
 function FiscalCard({ d }) {
+  const t = useTheme().tokens;
   const color = fiscalConflictColors[d.conflict];
   const debtPositive = d.debtGdpDelta > 0;
   return (
     <div style={{
-      background: "#0F172A",
+      background: t.bg,
       border: "1px solid #334155",
       borderRadius: 10,
       padding: 20,
@@ -431,12 +438,12 @@ function FiscalCard({ d }) {
     }}>
       <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 12 }}>
         <span style={{ width: 10, height: 10, borderRadius: 3, background: color, flexShrink: 0 }} />
-        <h3 style={{ fontWeight: 600, color: "#E2E8F0", fontSize: 14 }}>{d.conflict}</h3>
+        <h3 style={{ fontWeight: 600, color: t.textHighAlt, fontSize: 14 }}>{d.conflict}</h3>
         {d.preliminary && (
           <span style={{
             fontSize: 9,
             fontWeight: 700,
-            color: "#FBBF24",
+            color: t.amberStrong,
             background: "rgba(251,191,36,0.14)",
             padding: "2px 6px",
             borderRadius: 4,
@@ -451,18 +458,18 @@ function FiscalCard({ d }) {
 
       <div style={{ display: "flex", gap: 16, marginBottom: 12 }}>
         <div style={{ flex: 1 }}>
-          <p style={{ fontSize: 10, color: "#64748B", textTransform: "uppercase", letterSpacing: "0.05em", marginBottom: 2 }}>Peak CPI</p>
-          <p style={{ fontSize: 20, fontWeight: 700, color: "#FBBF24" }}>{d.peakCpi}%</p>
+          <p style={{ fontSize: 10, color: t.textLow, textTransform: "uppercase", letterSpacing: "0.05em", marginBottom: 2 }}>Peak CPI</p>
+          <p style={{ fontSize: 20, fontWeight: 700, color: t.amberStrong }}>{d.peakCpi}%</p>
         </div>
         <div style={{ flex: 1 }}>
-          <p style={{ fontSize: 10, color: "#64748B", textTransform: "uppercase", letterSpacing: "0.05em", marginBottom: 2 }}>Debt/GDP {"\u0394"}</p>
-          <p style={{ fontSize: 20, fontWeight: 700, color: debtPositive ? "#EF4444" : "#10B981" }}>
+          <p style={{ fontSize: 10, color: t.textLow, textTransform: "uppercase", letterSpacing: "0.05em", marginBottom: 2 }}>Debt/GDP {"\u0394"}</p>
+          <p style={{ fontSize: 20, fontWeight: 700, color: debtPositive ? t.red : t.green }}>
             {debtPositive ? "+" : ""}{d.debtGdpDelta} pp
           </p>
         </div>
       </div>
 
-      <p style={{ fontSize: 11, color: "#94A3B8", lineHeight: 1.5, borderTop: "1px solid #334155", paddingTop: 10 }}>
+      <p style={{ fontSize: 11, color: t.textMute, lineHeight: 1.5, borderTop: "1px solid #334155", paddingTop: 10 }}>
         {d.narrative}
       </p>
       <div style={{ display: "flex", gap: 12, marginTop: 8 }}>
@@ -474,24 +481,24 @@ function FiscalCard({ d }) {
 }
 
 const presidentColors = {
-  "FDR":        "#F59E0B",
-  "Truman":     "#3B82F6",
-  "Eisenhower": "#EF4444",
-  "JFK":        "#06B6D4",
-  "LBJ":        "#8B5CF6",
-  "Nixon":      "#F97316",
-  "Ford":       "#EC4899",
-  "Carter":     "#10B981",
-  "Reagan":     "#E11D48",
-  "H.W. Bush":  "#A855F7",
-  "Clinton":    "#14B8A6",
-  "W. Bush":    "#6366F1",
+  "FDR":        'var(--c-amber)',
+  "Truman":     'var(--c-blue)',
+  "Eisenhower": 'var(--c-red)',
+  "JFK":        'var(--c-cyan)',
+  "LBJ":        'var(--c-violet)',
+  "Nixon":      'var(--c-orange)',
+  "Ford":       'var(--c-pink)',
+  "Carter":     'var(--c-green)',
+  "Reagan":     'var(--c-crimson)',
+  "H.W. Bush":  'var(--c-purple)',
+  "Clinton":    'var(--c-teal)',
+  "W. Bush":    'var(--c-indigo)',
   "Obama":      "#0EA5E9",
   "Trump":      "#F43F5E",
-  "Biden":      "#22D3EE",
+  "Biden":      'var(--c-cyan-bright)',
 };
 
-const presColor = (name) => presidentColors[name] || "#94A3B8";
+const presColor = (name) => presidentColors[name] || 'var(--c-text-mute)';
 
 const presidentialNarratives = {
   "FDR": "Massive wartime spending for WWII drove debt from $43B to $259B. The New Deal and war mobilization transformed the federal government's fiscal role permanently.",
@@ -514,52 +521,53 @@ const presidentialNarratives = {
 const fmtDebt = (v) => v >= 1000 ? `$${(v / 1000).toFixed(1)}T` : `$${v.toFixed(0)}B`;
 
 function PresidentSummaryCard({ d }) {
+  const t = useTheme().tokens;
   const color = presColor(d.president);
   const partyLabel = d.party === "D" ? "Dem" : "Rep";
-  const partyColor = d.party === "D" ? "#60A5FA" : "#F87171";
+  const partyColor = d.party === "D" ? t.blueSoft : t.redSoft;
   const accel = d.acceleration;
 
   return (
-    <div style={{ background: "#0F172A", border: "1px solid #334155", borderRadius: 10, padding: 20 }}>
+    <div style={{ background: t.bg, border: "1px solid #334155", borderRadius: 10, padding: 20 }}>
       {/* Header */}
       <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 14 }}>
         <span style={{ width: 12, height: 12, borderRadius: 3, background: color, flexShrink: 0 }} />
-        <h3 style={{ fontWeight: 600, color: "#E2E8F0", fontSize: 14, margin: 0 }}>{d.president}</h3>
+        <h3 style={{ fontWeight: 600, color: t.textHighAlt, fontSize: 14, margin: 0 }}>{d.president}</h3>
         <span style={{
           fontSize: 10, fontWeight: 600, color: partyColor,
           background: `${partyColor}18`, padding: "2px 7px", borderRadius: 4,
         }}>{partyLabel}</span>
-        <span style={{ fontSize: 11, color: "#64748B", marginLeft: "auto" }}>{d.start}–{d.end}</span>
+        <span style={{ fontSize: 11, color: t.textLow, marginLeft: "auto" }}>{d.start}–{d.end}</span>
       </div>
 
       {/* Primary stats row */}
       <div style={{ display: "flex", gap: 12, marginBottom: 12 }}>
         <div style={{ flex: 1 }}>
-          <p style={{ fontSize: 10, color: "#64748B", textTransform: "uppercase", letterSpacing: "0.05em", marginBottom: 2 }}>Debt Added</p>
-          <p style={{ fontSize: 18, fontWeight: 700, color: "#FBBF24" }}>{fmtDebt(d.debtAdded)}</p>
+          <p style={{ fontSize: 10, color: t.textLow, textTransform: "uppercase", letterSpacing: "0.05em", marginBottom: 2 }}>Debt Added</p>
+          <p style={{ fontSize: 18, fontWeight: 700, color: t.amberStrong }}>{fmtDebt(d.debtAdded)}</p>
         </div>
         <div style={{ flex: 1 }}>
-          <p style={{ fontSize: 10, color: "#64748B", textTransform: "uppercase", letterSpacing: "0.05em", marginBottom: 2 }}>Avg Velocity</p>
-          <p style={{ fontSize: 18, fontWeight: 700, color: "#06B6D4" }}>{fmtDebt(d.velocity)}/yr</p>
+          <p style={{ fontSize: 10, color: t.textLow, textTransform: "uppercase", letterSpacing: "0.05em", marginBottom: 2 }}>Avg Velocity</p>
+          <p style={{ fontSize: 18, fontWeight: 700, color: t.cyan }}>{fmtDebt(d.velocity)}/yr</p>
         </div>
         <div style={{ flex: 1 }}>
-          <p style={{ fontSize: 10, color: "#64748B", textTransform: "uppercase", letterSpacing: "0.05em", marginBottom: 2 }}>CAGR</p>
-          <p style={{ fontSize: 18, fontWeight: 700, color: "#F8FAFC" }}>{d.cagr.toFixed(1)}%</p>
+          <p style={{ fontSize: 10, color: t.textLow, textTransform: "uppercase", letterSpacing: "0.05em", marginBottom: 2 }}>CAGR</p>
+          <p style={{ fontSize: 18, fontWeight: 700, color: t.textHigh }}>{d.cagr.toFixed(1)}%</p>
         </div>
       </div>
 
       {/* Secondary stats row */}
       <div style={{ display: "flex", gap: 12, marginBottom: 14 }}>
         <div style={{ flex: 1 }}>
-          <p style={{ fontSize: 10, color: "#64748B", textTransform: "uppercase", letterSpacing: "0.05em", marginBottom: 2 }}>Start → End Debt</p>
-          <p style={{ fontSize: 13, fontWeight: 600, color: "#CBD5E1" }}>{fmtDebt(d.startDebt)} → {fmtDebt(d.endDebt)}</p>
+          <p style={{ fontSize: 10, color: t.textLow, textTransform: "uppercase", letterSpacing: "0.05em", marginBottom: 2 }}>Start → End Debt</p>
+          <p style={{ fontSize: 13, fontWeight: 600, color: t.textMid }}>{fmtDebt(d.startDebt)} → {fmtDebt(d.endDebt)}</p>
         </div>
         {accel != null && (
           <div style={{ flex: 1 }}>
-            <p style={{ fontSize: 10, color: "#64748B", textTransform: "uppercase", letterSpacing: "0.05em", marginBottom: 2 }}>Acceleration</p>
-            <p style={{ fontSize: 13, fontWeight: 600, color: accel > 0 ? "#EF4444" : "#10B981" }}>
+            <p style={{ fontSize: 10, color: t.textLow, textTransform: "uppercase", letterSpacing: "0.05em", marginBottom: 2 }}>Acceleration</p>
+            <p style={{ fontSize: 13, fontWeight: 600, color: accel > 0 ? t.red : t.green }}>
               {accel > 0 ? "+" : ""}{fmtDebt(Math.abs(accel))}/yr
-              <span style={{ fontSize: 10, color: "#64748B", marginLeft: 4 }}>
+              <span style={{ fontSize: 10, color: t.textLow, marginLeft: 4 }}>
                 {accel > 0 ? "▲ faster" : "▼ slower"}
               </span>
             </p>
@@ -568,7 +576,7 @@ function PresidentSummaryCard({ d }) {
       </div>
 
       {/* Narrative */}
-      <p style={{ fontSize: 11, color: "#94A3B8", lineHeight: 1.6, borderTop: "1px solid #334155", paddingTop: 12, margin: 0 }}>
+      <p style={{ fontSize: 11, color: t.textMute, lineHeight: 1.6, borderTop: "1px solid #334155", paddingTop: 12, margin: 0 }}>
         {presidentialNarratives[d.president] || ""}
       </p>
       <div style={{ marginTop: 8 }}>
@@ -579,38 +587,40 @@ function PresidentSummaryCard({ d }) {
 }
 
 function VelocityTooltip({ active, payload }) {
+  const t = useTheme().tokens;
   if (!active || !payload?.length) return null;
   const d = payload[0].payload;
   return (
-    <div style={{ background: "#334155", border: "1px solid #475569", borderRadius: 8, padding: "10px 14px", fontSize: 12, color: "#F8FAFC", boxShadow: "0 8px 24px rgba(0,0,0,0.4)", maxWidth: 280 }}>
-      <p style={{ fontWeight: 600, marginBottom: 6, color: d.party === "D" ? "#60A5FA" : "#F87171" }}>
+    <div style={{ background: t.border, border: "1px solid #475569", borderRadius: 8, padding: "10px 14px", fontSize: 12, color: t.textHigh, boxShadow: "0 8px 24px rgba(0,0,0,0.4)", maxWidth: 280 }}>
+      <p style={{ fontWeight: 600, marginBottom: 6, color: d.party === "D" ? t.blueSoft : t.redSoft }}>
         {d.president} ({d.party === "D" ? "Dem" : "Rep"})
       </p>
-      <p style={{ color: "#94A3B8", margin: "2px 0" }}>Term: {d.start}–{d.end} ({d.years} yr{d.years > 1 ? "s" : ""})</p>
-      <p style={{ color: "#94A3B8", margin: "2px 0" }}>Start debt: <strong style={{ color: "#CBD5E1" }}>{fmtDebt(d.startDebt)}</strong></p>
-      <p style={{ color: "#94A3B8", margin: "2px 0" }}>End debt: <strong style={{ color: "#CBD5E1" }}>{fmtDebt(d.endDebt)}</strong></p>
-      <p style={{ color: "#94A3B8", margin: "2px 0" }}>Debt added: <strong style={{ color: "#FBBF24" }}>{fmtDebt(d.debtAdded)}</strong></p>
-      <p style={{ color: "#94A3B8", margin: "2px 0" }}>Avg velocity: <strong style={{ color: "#06B6D4" }}>{fmtDebt(d.velocity)}/yr</strong></p>
-      <p style={{ color: "#94A3B8", margin: "2px 0" }}>CAGR: <strong style={{ color: "#CBD5E1" }}>{d.cagr.toFixed(1)}%</strong></p>
+      <p style={{ color: t.textMute, margin: "2px 0" }}>Term: {d.start}–{d.end} ({d.years} yr{d.years > 1 ? "s" : ""})</p>
+      <p style={{ color: t.textMute, margin: "2px 0" }}>Start debt: <strong style={{ color: t.textMid }}>{fmtDebt(d.startDebt)}</strong></p>
+      <p style={{ color: t.textMute, margin: "2px 0" }}>End debt: <strong style={{ color: t.textMid }}>{fmtDebt(d.endDebt)}</strong></p>
+      <p style={{ color: t.textMute, margin: "2px 0" }}>Debt added: <strong style={{ color: t.amberStrong }}>{fmtDebt(d.debtAdded)}</strong></p>
+      <p style={{ color: t.textMute, margin: "2px 0" }}>Avg velocity: <strong style={{ color: t.cyan }}>{fmtDebt(d.velocity)}/yr</strong></p>
+      <p style={{ color: t.textMute, margin: "2px 0" }}>CAGR: <strong style={{ color: t.textMid }}>{d.cagr.toFixed(1)}%</strong></p>
     </div>
   );
 }
 
 function AccelerationTooltip({ active, payload }) {
+  const t = useTheme().tokens;
   if (!active || !payload?.length) return null;
   const d = payload[0].payload;
   const val = d.acceleration;
   const sign = val > 0 ? "+" : "";
   return (
-    <div style={{ background: "#334155", border: "1px solid #475569", borderRadius: 8, padding: "10px 14px", fontSize: 12, color: "#F8FAFC", boxShadow: "0 8px 24px rgba(0,0,0,0.4)", maxWidth: 260 }}>
+    <div style={{ background: t.border, border: "1px solid #475569", borderRadius: 8, padding: "10px 14px", fontSize: 12, color: t.textHigh, boxShadow: "0 8px 24px rgba(0,0,0,0.4)", maxWidth: 260 }}>
       <p style={{ fontWeight: 600, marginBottom: 6, color: presColor(d.president) }}>
         {d.president} ({d.party === "D" ? "Dem" : "Rep"})
       </p>
-      <p style={{ color: "#94A3B8", margin: "2px 0" }}>Term: {d.start}–{d.end}</p>
-      <p style={{ color: "#94A3B8", margin: "2px 0" }}>
-        Change vs predecessor: <strong style={{ color: val > 0 ? "#EF4444" : "#10B981" }}>{sign}{fmtDebt(Math.abs(val))}/yr</strong>
+      <p style={{ color: t.textMute, margin: "2px 0" }}>Term: {d.start}–{d.end}</p>
+      <p style={{ color: t.textMute, margin: "2px 0" }}>
+        Change vs predecessor: <strong style={{ color: val > 0 ? t.red : t.green }}>{sign}{fmtDebt(Math.abs(val))}/yr</strong>
       </p>
-      <p style={{ color: "#64748B", fontSize: 11, marginTop: 4 }}>
+      <p style={{ color: t.textLow, fontSize: 11, marginTop: 4 }}>
         {val > 0 ? "Accelerated borrowing" : "Decelerated borrowing"}
       </p>
     </div>
@@ -618,79 +628,80 @@ function AccelerationTooltip({ active, payload }) {
 }
 
 function DebtVelocitySection() {
+  const t = useTheme().tokens;
   const stats = useMemo(() => computePresidentialDebtStats(), []);
   const accelData = useMemo(() => stats.filter(d => d.acceleration != null), [stats]);
 
   return (
     <div style={innerCard}>
-      <h3 style={{ fontSize: 15, fontWeight: 600, color: "#E2E8F0", marginBottom: 4 }}>
+      <h3 style={{ fontSize: 15, fontWeight: 600, color: t.textHighAlt, marginBottom: 4 }}>
         Debt Velocity & Acceleration by President
       </h3>
-      <p style={{ fontSize: 11, color: "#64748B", marginBottom: 20 }}>
+      <p style={{ fontSize: 11, color: t.textLow, marginBottom: 20 }}>
         Average annual debt added ($B/yr) and change in pace vs predecessor — how fast each administration borrowed, and whether they sped up or slowed down
       </p>
 
       {/* Velocity Bar Chart */}
-      <h4 style={{ fontSize: 13, fontWeight: 600, color: "#CBD5E1", marginBottom: 8 }}>
+      <h4 style={{ fontSize: 13, fontWeight: 600, color: t.textMid, marginBottom: 8 }}>
         Avg Annual Debt Added ($B/yr)
       </h4>
       <ResponsiveContainer width="100%" height={400}>
         <BarChart data={stats} margin={{ top: 5, right: 20, left: 10, bottom: 60 }}>
-          <CartesianGrid strokeDasharray="3 3" stroke="#475569" opacity={0.25} />
+          <CartesianGrid strokeDasharray="3 3" stroke={t.axis} opacity={0.25} />
           <XAxis
-            dataKey="president" stroke="#475569"
-            tick={{ fill: "#94A3B8", fontSize: 11 }}
+            dataKey="president" stroke={t.axis}
+            tick={{ fill: t.textMute, fontSize: 11 }}
             axisLine={false} tickLine={false}
             interval={0} tickMargin={4}
             angle={-35} textAnchor="end"
           />
           <YAxis
-            stroke="#475569"
+            stroke={t.axis}
             tickFormatter={(v) => v >= 1000 ? `$${(v / 1000).toFixed(0)}T` : `$${v.toFixed(0)}B`}
-            tick={{ fill: "#94A3B8", fontSize: 11 }} axisLine={false} tickLine={false}
-            label={{ value: "$B / year", angle: -90, position: "insideLeft", offset: -2, style: { fill: "#64748B", fontSize: 11 } }}
+            tick={{ fill: t.textMute, fontSize: 11 }} axisLine={false} tickLine={false}
+            label={{ value: "$B / year", angle: -90, position: "insideLeft", offset: -2, style: { fill: t.textLow, fontSize: 11 } }}
           />
           <Tooltip content={<VelocityTooltip />} cursor={{ fill: "rgba(255,255,255,0.04)" }} />
           <Bar dataKey="velocity" radius={[4, 4, 0, 0]} maxBarSize={44}>
             {stats.map((d, i) => (
-              <Cell key={i} fill={d.party === "D" ? "#3B82F6" : "#EF4444"} />
+              <Cell key={i} fill={d.party === "D" ? t.blue : t.red} />
             ))}
           </Bar>
         </BarChart>
       </ResponsiveContainer>
 
       {/* Acceleration Bar Chart */}
-      <h4 style={{ fontSize: 13, fontWeight: 600, color: "#CBD5E1", marginTop: 28, marginBottom: 8 }}>
+      <h4 style={{ fontSize: 13, fontWeight: 600, color: t.textMid, marginTop: 28, marginBottom: 8 }}>
         Acceleration vs Predecessor ($B/yr change)
       </h4>
       <ResponsiveContainer width="100%" height={320}>
         <BarChart data={accelData} margin={{ top: 5, right: 20, left: 10, bottom: 60 }}>
-          <CartesianGrid strokeDasharray="3 3" stroke="#475569" opacity={0.25} />
+          <CartesianGrid strokeDasharray="3 3" stroke={t.axis} opacity={0.25} />
           <XAxis
-            dataKey="president" stroke="#475569"
-            tick={{ fill: "#94A3B8", fontSize: 11 }}
+            dataKey="president" stroke={t.axis}
+            tick={{ fill: t.textMute, fontSize: 11 }}
             axisLine={false} tickLine={false}
             interval={0} tickMargin={4}
             angle={-35} textAnchor="end"
           />
           <YAxis
-            stroke="#475569"
+            stroke={t.axis}
             tickFormatter={(v) => {
               const abs = Math.abs(v);
               const s = v < 0 ? "-" : "";
               return abs >= 1000 ? `${s}$${(abs / 1000).toFixed(0)}T` : `${s}$${abs.toFixed(0)}B`;
             }}
-            tick={{ fill: "#94A3B8", fontSize: 11 }} axisLine={false} tickLine={false}
-            label={{ value: "\u0394 $B / year", angle: -90, position: "insideLeft", offset: -2, style: { fill: "#64748B", fontSize: 11 } }}
+            tick={{ fill: t.textMute, fontSize: 11 }} axisLine={false} tickLine={false}
+            label={{ value: "\u0394 $B / year", angle: -90, position: "insideLeft", offset: -2, style: { fill: t.textLow, fontSize: 11 } }}
           />
           <Tooltip content={<AccelerationTooltip />} cursor={{ fill: "rgba(255,255,255,0.04)" }} />
-          <ReferenceLine y={0} stroke="#64748B" strokeDasharray="4 4" />
+          <ReferenceLine y={0} stroke={t.textLow} strokeDasharray="4 4" />
           <Bar dataKey="acceleration" radius={[4, 4, 0, 0]} maxBarSize={44}>
             {accelData.map((d, i) => (
               <Cell key={i} fill={
-                d.president === "Obama" ? "#8B5CF6"
-                : d.acceleration < 0 ? "#10B981"
-                : "#EF4444"
+                d.president === "Obama" ? t.violet
+                : d.acceleration < 0 ? t.green
+                : t.red
               } />
             ))}
           </Bar>
@@ -703,27 +714,27 @@ function DebtVelocitySection() {
         border: "1px solid rgba(245, 158, 11, 0.3)",
         borderRadius: 10, padding: 20, marginTop: 20,
       }}>
-        <h4 style={{ fontSize: 13, fontWeight: 600, color: "#FBBF24", marginBottom: 10 }}>
+        <h4 style={{ fontSize: 13, fontWeight: 600, color: t.amberStrong, marginBottom: 10 }}>
           Key Takeaways
         </h4>
-        <ul style={{ fontSize: 12, color: "#CBD5E1", lineHeight: 1.8, margin: 0, paddingLeft: 18 }}>
-          <li><strong style={{ color: "#F8FAFC" }}>Reagan</strong> tripled the borrowing pace to ~$232B/yr — the first peacetime debt explosion.</li>
-          <li><strong style={{ color: "#F8FAFC" }}>W. Bush</strong> doubled it again to ~$780B/yr with two wars + the 2008 financial crisis.</li>
-          <li><strong style={{ color: "#F8FAFC" }}>Obama{"'"}s</strong> ~$1T/yr looks massive in absolute terms, but was actually a <em>deceleration</em> from the 2008 crisis trajectory he inherited.</li>
-          <li><strong style={{ color: "#F8FAFC" }}>Trump</strong> (1st term) pushed past $2T/yr — COVID relief drove the largest single-term velocity in history.</li>
-          <li><strong style={{ color: "#F8FAFC" }}>Clinton</strong> is the only modern president who meaningfully slowed the velocity, riding the 1990s boom to near-surplus budgets.</li>
+        <ul style={{ fontSize: 12, color: t.textMid, lineHeight: 1.8, margin: 0, paddingLeft: 18 }}>
+          <li><strong style={{ color: t.textHigh }}>Reagan</strong> tripled the borrowing pace to ~$232B/yr — the first peacetime debt explosion.</li>
+          <li><strong style={{ color: t.textHigh }}>W. Bush</strong> doubled it again to ~$780B/yr with two wars + the 2008 financial crisis.</li>
+          <li><strong style={{ color: t.textHigh }}>Obama{"'"}s</strong> ~$1T/yr looks massive in absolute terms, but was actually a <em>deceleration</em> from the 2008 crisis trajectory he inherited.</li>
+          <li><strong style={{ color: t.textHigh }}>Trump</strong> (1st term) pushed past $2T/yr — COVID relief drove the largest single-term velocity in history.</li>
+          <li><strong style={{ color: t.textHigh }}>Clinton</strong> is the only modern president who meaningfully slowed the velocity, riding the 1990s boom to near-surplus budgets.</li>
         </ul>
       </div>
 
       {/* Party Legend */}
       <div style={{ display: "flex", justifyContent: "center", gap: 20, marginTop: 16 }}>
         <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
-          <div style={{ width: 12, height: 12, borderRadius: 3, background: "#3B82F6" }} />
-          <span style={{ fontSize: 11, color: "#94A3B8" }}>Democrat</span>
+          <div style={{ width: 12, height: 12, borderRadius: 3, background: t.blue }} />
+          <span style={{ fontSize: 11, color: t.textMute }}>Democrat</span>
         </div>
         <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
-          <div style={{ width: 12, height: 12, borderRadius: 3, background: "#EF4444" }} />
-          <span style={{ fontSize: 11, color: "#94A3B8" }}>Republican</span>
+          <div style={{ width: 12, height: 12, borderRadius: 3, background: t.red }} />
+          <span style={{ fontSize: 11, color: t.textMute }}>Republican</span>
         </div>
       </div>
 
@@ -735,11 +746,12 @@ function DebtVelocitySection() {
 }
 
 function PresidentSummarySection() {
+  const t = useTheme().tokens;
   const stats = useMemo(() => computePresidentialDebtStats(), []);
   return (
     <div style={{ marginTop: 32 }}>
-      <h3 style={{ fontSize: 17, fontWeight: 600, color: "#E2E8F0", marginBottom: 4 }}>Presidential Fiscal Summary</h3>
-      <p style={{ fontSize: 12, color: "#94A3B8", marginBottom: 16 }}>Key debt metrics and economic context for each administration</p>
+      <h3 style={{ fontSize: 17, fontWeight: 600, color: t.textHighAlt, marginBottom: 4 }}>Presidential Fiscal Summary</h3>
+      <p style={{ fontSize: 12, color: t.textMute, marginBottom: 16 }}>Key debt metrics and economic context for each administration</p>
       <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))", gap: 16 }}>
         {stats.map(d => (
           <PresidentSummaryCard key={`${d.president}-${d.start}`} d={d} />
@@ -750,6 +762,7 @@ function PresidentSummarySection() {
 }
 
 export default function FiscalImpactPanel() {
+  const t = useTheme().tokens;
   const { activeConflicts, filterData } = useEventToggle();
 
   const cpiChart = useMemo(() => buildCpiChartData(activeConflicts), [activeConflicts]);
@@ -761,8 +774,8 @@ export default function FiscalImpactPanel() {
 
   return (
     <section style={card}>
-      <h2 style={{ fontSize: 20, fontWeight: 600, color: "#F8FAFC", marginBottom: 4 }}>Fiscal Impact</h2>
-      <p style={{ fontSize: 13, color: "#94A3B8", marginBottom: 24 }}>
+      <h2 style={{ fontSize: 20, fontWeight: 600, color: t.textHigh, marginBottom: 4 }}>Fiscal Impact</h2>
+      <p style={{ fontSize: 13, color: t.textMute, marginBottom: 24 }}>
         How inflation and federal debt responded in the years surrounding each conflict (T=0 is the war start year)
       </p>
 
@@ -805,15 +818,15 @@ export default function FiscalImpactPanel() {
           background: "rgba(251,191,36,0.12)",
           border: "1px solid rgba(251,191,36,0.32)",
           fontSize: 11,
-          color: "#FBBF24",
+          color: t.amberStrong,
           letterSpacing: "0.02em",
         }}>
-          <span style={{ width: 6, height: 6, borderRadius: 3, background: "#FBBF24" }} />
+          <span style={{ width: 6, height: 6, borderRadius: 3, background: t.amberStrong }} />
           Iran 2026 figures are preliminary (6 weeks of data; through Apr 15, 2026). Long-horizon CPI / debt / GDP effects will not be readable until 2027+.
         </div>
       )}
 
-      <p style={{ fontSize: 11, color: "#64748B", textAlign: "center", marginTop: 16, fontStyle: "italic" }}>
+      <p style={{ fontSize: 11, color: t.textLow, textAlign: "center", marginTop: 16, fontStyle: "italic" }}>
         CPI data: BLS / FRED CPIAUCSL (post-1947), Minneapolis Fed historical tables (pre-1947). Debt/GDP: FRED GFDGDPA188S.
       </p>
 

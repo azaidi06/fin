@@ -1,5 +1,104 @@
 @import "tailwindcss";
 
+/* ── Theme variables ──
+   These drive body chrome and any component using var(--c-*) inline.
+   Components doing chart work should still pull from useTheme().tokens
+   since CSS variables don't resolve inside SVG attribute values. */
+:root, [data-theme="dark"] {
+  --c-bg: #0F172A;
+  --c-panel: #1E293B;
+  --c-panel-inset: #0F172A;
+  --c-border: #334155;
+  --c-border-soft: #1E293B;
+  --c-text-high: #F8FAFC;
+  --c-text-mid: #CBD5E1;
+  --c-text-mute: #94A3B8;
+  --c-text-low: #64748B;
+  --c-axis: #475569;
+  --c-grid: #334155;
+  --c-tooltip-bg: rgba(30, 41, 59, 0.95);
+  --c-tooltip-border: #475569;
+  --c-tooltip-text: #F8FAFC;
+  --c-glass-bg: rgba(30, 41, 59, 0.5);
+  --c-glass-border: rgba(255, 255, 255, 0.06);
+  --c-glass-bg-hover: rgba(36, 48, 68, 0.6);
+  --c-body-gradient: linear-gradient(135deg, #0F172A, #1a1040, #0F172A, #0d1f2d);
+  --c-tabbar-gradient: linear-gradient(180deg, rgba(15, 23, 42, 0.92), rgba(15, 23, 42, 0.7));
+  --c-skeleton-grad: linear-gradient(90deg, rgba(255,255,255,0.04) 25%, rgba(255,255,255,0.08) 50%, rgba(255,255,255,0.04) 75%);
+  --c-noise-opacity: 0.03;
+  /* accents — used by module-level style consts via `var(--c-*)` */
+  --c-indigo: #6366F1;
+  --c-indigo-soft: #818CF8;
+  --c-indigo-faint: #A5B4FC;
+  --c-violet: #8B5CF6;
+  --c-violet-soft: #A78BFA;
+  --c-green: #10B981;
+  --c-green-soft: #34D399;
+  --c-red: #EF4444;
+  --c-red-soft: #F87171;
+  --c-amber: #F59E0B;
+  --c-amber-strong: #FBBF24;
+  --c-orange: #F97316;
+  --c-orange-soft: #FB923C;
+  --c-blue: #3B82F6;
+  --c-blue-soft: #60A5FA;
+  --c-cyan: #06B6D4;
+  --c-cyan-bright: #22D3EE;
+  --c-pink: #EC4899;
+  --c-pink-soft: #F472B6;
+  --c-purple: #A855F7;
+  --c-teal: #14B8A6;
+  --c-lime: #84CC16;
+  --c-crimson: #E11D48;
+}
+[data-theme="light"] {
+  --c-bg: #F5F5F4;
+  --c-panel: #FAFAF9;
+  --c-panel-inset: #FFFFFF;
+  --c-border: #D6D3D1;
+  --c-border-soft: #E7E5E4;
+  --c-text-high: #1C1917;
+  --c-text-mid: #44403C;
+  --c-text-mute: #57534E;
+  --c-text-low: #78716C;
+  --c-axis: #A8A29E;
+  --c-grid: #E7E5E4;
+  --c-tooltip-bg: #FFFFFF;
+  --c-tooltip-border: #D6D3D1;
+  --c-tooltip-text: #1C1917;
+  --c-glass-bg: rgba(255, 255, 255, 0.85);
+  --c-glass-border: rgba(28, 25, 23, 0.10);
+  --c-glass-bg-hover: rgba(255, 255, 255, 0.95);
+  --c-body-gradient: linear-gradient(135deg, #F5F5F4, #EAE6DD, #F5F5F4, #ECEAE6);
+  --c-tabbar-gradient: linear-gradient(180deg, rgba(245, 245, 244, 0.92), rgba(245, 245, 244, 0.7));
+  --c-skeleton-grad: linear-gradient(90deg, rgba(0,0,0,0.04) 25%, rgba(0,0,0,0.08) 50%, rgba(0,0,0,0.04) 75%);
+  --c-noise-opacity: 0.02;
+  /* accents — darkened for AA contrast on light bg */
+  --c-indigo: #4F46E5;
+  --c-indigo-soft: #4338CA;
+  --c-indigo-faint: #4F46E5;
+  --c-violet: #6D28D9;
+  --c-violet-soft: #6D28D9;
+  --c-green: #059669;
+  --c-green-soft: #047857;
+  --c-red: #DC2626;
+  --c-red-soft: #DC2626;
+  --c-amber: #B45309;
+  --c-amber-strong: #D97706;
+  --c-orange: #C2410C;
+  --c-orange-soft: #C2410C;
+  --c-blue: #2563EB;
+  --c-blue-soft: #1D4ED8;
+  --c-cyan: #0891B2;
+  --c-cyan-bright: #0E7490;
+  --c-pink: #BE185D;
+  --c-pink-soft: #BE185D;
+  --c-purple: #7E22CE;
+  --c-teal: #0F766E;
+  --c-lime: #4D7C0F;
+  --c-crimson: #BE123C;
+}
+
 /* ── Tabular-nums utility for numeric tables ── */
 .num,
 .num td,
@@ -14,7 +113,7 @@
   top: 0;
   z-index: 30;
   padding: 8px 0;
-  background: linear-gradient(180deg, rgba(15, 23, 42, 0.92), rgba(15, 23, 42, 0.7));
+  background: var(--c-tabbar-gradient);
   -webkit-backdrop-filter: blur(10px);
   backdrop-filter: blur(10px);
   margin-left: -8px;
@@ -23,7 +122,6 @@
   padding-right: 8px;
 }
 
-/* ── Animated background gradient ── */
 @keyframes gradientShift {
   0%   { background-position: 0% 50%; }
   25%  { background-position: 50% 100%; }
@@ -34,36 +132,28 @@
 
 body {
   font-family: 'Inter', system-ui, -apple-system, sans-serif;
-  background: linear-gradient(135deg, #0F172A, #1a1040, #0F172A, #0d1f2d);
+  background: var(--c-body-gradient);
   background-size: 400% 400%;
   animation: gradientShift 15s ease infinite;
-  color: #F8FAFC;
+  color: var(--c-text-high);
   margin: 0;
   padding: 0;
 }
 
-/* ── Noise texture overlay ── */
 body::after {
   content: "";
   position: fixed;
   inset: 0;
   z-index: 9999;
   pointer-events: none;
-  opacity: 0.03;
+  opacity: var(--c-noise-opacity);
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
   background-repeat: repeat;
 }
 
-/* ── Card entrance animations ── */
 @keyframes fadeSlideUp {
-  from {
-    opacity: 0;
-    transform: translateY(20px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
 .card-enter {
@@ -79,7 +169,6 @@ body::after {
 .card-enter-6 { animation-delay: 480ms; }
 .card-enter-7 { animation-delay: 560ms; }
 
-/* ── Live pulse dot ── */
 @keyframes livePulse {
   0%, 100% { opacity: 1; transform: scale(1); }
   50% { opacity: 0.5; transform: scale(0.8); }
@@ -94,25 +183,23 @@ body::after {
   flex-shrink: 0;
 }
 
-/* ── Skeleton shimmer ── */
 @keyframes shimmer {
   0% { background-position: -200% 0; }
   100% { background-position: 200% 0; }
 }
 .skeleton {
-  background: linear-gradient(90deg, rgba(255,255,255,0.04) 25%, rgba(255,255,255,0.08) 50%, rgba(255,255,255,0.04) 75%);
+  background: var(--c-skeleton-grad);
   background-size: 200% 100%;
   animation: shimmer 1.5s infinite;
   border-radius: 6px;
 }
 
-/* ── Glassmorphism card ── */
 .glass-card {
   position: relative;
-  background: rgba(30, 41, 59, 0.5);
+  background: var(--c-glass-bg);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
-  border: 1px solid rgba(255, 255, 255, 0.06);
+  border: 1px solid var(--c-glass-border);
   border-radius: 16px;
   padding: 24px;
   cursor: pointer;
@@ -123,7 +210,6 @@ body::after {
   gap: 12px;
 }
 
-/* Gradient border glow pseudo-element */
 .glass-card::before {
   content: "";
   position: absolute;
@@ -140,36 +226,22 @@ body::after {
   z-index: 1;
 }
 
-.glass-card:hover::before {
-  opacity: 1;
-}
+.glass-card:hover::before { opacity: 1; }
 
 .glass-card:hover {
   transform: scale(1.03);
-  background: rgba(36, 48, 68, 0.6);
+  background: var(--c-glass-bg-hover);
 }
 
-/* ── Ambient glow orb float ── */
 @keyframes float {
-  0%, 100% {
-    transform: translate(0, 0);
-  }
-  33% {
-    transform: translate(30px, -20px);
-  }
-  66% {
-    transform: translate(-20px, 15px);
-  }
+  0%, 100% { transform: translate(0, 0); }
+  33% { transform: translate(30px, -20px); }
+  66% { transform: translate(-20px, 15px); }
 }
 
-/* ── Sparkline self-drawing animation (line) ── */
 @keyframes sparklineDraw {
-  from {
-    stroke-dashoffset: var(--line-length);
-  }
-  to {
-    stroke-dashoffset: 0;
-  }
+  from { stroke-dashoffset: var(--line-length); }
+  to { stroke-dashoffset: 0; }
 }
 
 .sparkline-draw {
@@ -178,14 +250,9 @@ body::after {
   animation: sparklineDraw 1s ease-out forwards;
 }
 
-/* ── Sparkline bar grow animation ── */
 @keyframes barGrow {
-  from {
-    transform: scaleY(0);
-  }
-  to {
-    transform: scaleY(1);
-  }
+  from { transform: scaleY(0); }
+  to { transform: scaleY(1); }
 }
 
 .sparkline-bar {
@@ -194,7 +261,6 @@ body::after {
   animation: barGrow 0.6s ease-out forwards;
 }
 
-/* ── Text gradient shift (header title) ── */
 @keyframes textGradientShift {
   0%   { background-position: 0% 50%; }
   50%  { background-position: 100% 50%; }
@@ -209,8 +275,14 @@ body::after {
   -webkit-text-fill-color: transparent;
   background-clip: text;
 }
+[data-theme="light"] .animated-gradient-text {
+  background: linear-gradient(135deg, #047857, #1C1917, #B91C1C, #1C1917);
+  background-size: 300% 300%;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
 
-/* ── Glowing divider ── */
 .glow-divider {
   width: 50%;
   height: 1px;
@@ -219,15 +291,16 @@ body::after {
   opacity: 0.4;
   border: none;
 }
+[data-theme="light"] .glow-divider {
+  background: linear-gradient(90deg, transparent, #4338CA, #047857, transparent);
+}
 
-/* ── Bento grid layout ── */
 .bento-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 14px;
 }
 
-/* Wider grid above 1100px gets 4 columns so cards breathe */
 @media (min-width: 1100px) {
   .bento-grid {
     grid-template-columns: repeat(4, 1fr);
@@ -235,7 +308,6 @@ body::after {
   }
 }
 
-/* ── Ticker strip ── */
 .ticker-strip {
   display: flex;
   align-items: center;
@@ -243,8 +315,8 @@ body::after {
   padding: 10px 20px;
   margin-bottom: 16px;
   margin-right: 90px;
-  background: rgba(30, 41, 59, 0.4);
-  border: 1px solid rgba(255, 255, 255, 0.06);
+  background: var(--c-glass-bg);
+  border: 1px solid var(--c-glass-border);
   border-radius: 12px;
   overflow-x: auto;
   scrollbar-width: none;
@@ -262,18 +334,15 @@ body::after {
 .ticker-sep {
   width: 1px;
   height: 16px;
-  background: #334155;
+  background: var(--c-border);
   flex-shrink: 0;
   margin: 0 4px;
 }
 
 @media (max-width: 600px) {
-  .bento-grid {
-    grid-template-columns: 1fr;
-  }
+  .bento-grid { grid-template-columns: 1fr; }
 }
 
-/* ── Tablet portrait: vertical compression (601px–1024px) ── */
 @media (min-width: 601px) and (max-width: 1024px) {
   .page-root         { padding-top: 24px !important; padding-bottom: 24px !important; }
   .page-header       { margin-bottom: 20px !important; }
