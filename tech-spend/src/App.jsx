@@ -7,6 +7,7 @@ import GrowthChart from "./components/GrowthChart";
 import CompanyDetail from "./components/CompanyDetail";
 import UnderTheHood from "./components/UnderTheHood";
 import { formatDate } from "./utils/formatters";
+import { useTheme } from "./theme/ThemeContext";
 
 const TABS = [
   { id: "overview", label: "Overview" },
@@ -19,6 +20,7 @@ const TABS = [
 export default function App() {
   const [tab, setTab] = useState("overview");
   const [data, setData] = useState(null);
+  const t = useTheme().tokens;
 
   useEffect(() => {
     fetch("./tech-spend-data.json")
@@ -30,7 +32,7 @@ export default function App() {
   if (!data) {
     return (
       <div style={{ minHeight: "100vh", display: "flex", alignItems: "center", justifyContent: "center" }}>
-        <p style={{ color: "#64748B", fontSize: 14 }}>Loading tech-spend data...</p>
+        <p style={{ color: t.textFaint, fontSize: 14 }}>Loading tech-spend data...</p>
       </div>
     );
   }
@@ -52,18 +54,18 @@ export default function App() {
             gap: 4,
             marginBottom: 32,
             padding: 4,
-            background: "rgba(30, 41, 59, 0.4)",
+            background: t.panelGlass,
             borderRadius: 12,
-            border: "1px solid rgba(255,255,255,0.06)",
+            border: `1px solid ${t.borderSoft}`,
             overflowX: "auto",
           }}
         >
-          {TABS.map((t) => (
+          {TABS.map((tb) => (
             <button
-              key={t.id}
+              key={tb.id}
               role="tab"
-              aria-selected={tab === t.id}
-              onClick={() => setTab(t.id)}
+              aria-selected={tab === tb.id}
+              onClick={() => setTab(tb.id)}
               style={{
                 flex: 1,
                 padding: "10px 16px",
@@ -75,12 +77,12 @@ export default function App() {
                 fontFamily: "inherit",
                 whiteSpace: "nowrap",
                 transition: "all 0.2s ease",
-                background: tab === t.id ? "rgba(99,102,241,0.2)" : "transparent",
-                color: tab === t.id ? "#A5B4FC" : "#64748B",
-                boxShadow: tab === t.id ? "0 0 12px rgba(99,102,241,0.15)" : "none",
+                background: tab === tb.id ? "var(--c-pill-active-bg)" : "transparent",
+                color: tab === tb.id ? "var(--c-pill-active-text)" : t.textFaint,
+                boxShadow: tab === tb.id ? "0 0 12px var(--c-pill-active-glow)" : "none",
               }}
             >
-              {t.label}
+              {tb.label}
             </button>
           ))}
         </nav>
@@ -95,7 +97,7 @@ export default function App() {
         {/* Footer */}
         <footer style={{ textAlign: "center", marginTop: 48, paddingTop: 24 }}>
           <div className="glow-divider" style={{ marginBottom: 16 }} />
-          <p className="num" style={{ fontSize: 11, color: "#475569" }}>
+          <p className="num" style={{ fontSize: 11, color: t.textGhost }}>
             Data from SEC EDGAR XBRL filings &middot; Updated {formatDate(data.updatedAt)}
           </p>
         </footer>

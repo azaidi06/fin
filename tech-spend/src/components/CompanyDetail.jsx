@@ -9,7 +9,8 @@ import {
   Legend,
   ResponsiveContainer,
 } from "recharts";
-import { colors, companyColor } from "../theme/tokens";
+import { companyColor } from "../theme/tokens";
+import { useTheme } from "../theme/ThemeContext";
 import { formatCurrency, formatPercent } from "../utils/formatters";
 import {
   getCapex,
@@ -21,12 +22,13 @@ import {
 } from "../utils/dataShape";
 
 function CustomTooltip({ active, payload, label }) {
+  const colors = useTheme().tokens;
   if (!active || !payload?.length) return null;
   return (
     <div
       style={{
-        background: "rgba(15, 23, 42, 0.95)",
-        border: "1px solid rgba(255,255,255,0.1)",
+        background: colors.tooltipBg,
+        border: `1px solid ${colors.tooltipBorder}`,
         borderRadius: 10,
         padding: "12px 16px",
         backdropFilter: "blur(12px)",
@@ -76,22 +78,24 @@ function buildQuarterlySeries(company) {
   });
 }
 
-function lighten(hex, amount = 0.4) {
-  // Mix the hex color toward white by `amount`. Returns rgb() string.
+function shift(hex, amount = 0.4, towardLight = true) {
+  // Mix the hex color toward white (or black) by `amount`. Returns rgb() string.
   const m = /^#?([0-9a-f]{6})$/i.exec(hex);
   if (!m) return hex;
   const v = parseInt(m[1], 16);
   let r = (v >> 16) & 0xff;
   let g = (v >> 8) & 0xff;
   let b = v & 0xff;
-  r = Math.round(r + (255 - r) * amount);
-  g = Math.round(g + (255 - g) * amount);
-  b = Math.round(b + (255 - b) * amount);
+  const target = towardLight ? 255 : 0;
+  r = Math.round(r + (target - r) * amount);
+  g = Math.round(g + (target - g) * amount);
+  b = Math.round(b + (target - b) * amount);
   return `rgb(${r}, ${g}, ${b})`;
 }
 
 export default function CompanyDetail({ data }) {
   const [selected, setSelected] = useState(data.companies[0]?.ticker || "MSFT");
+  const { theme, tokens: colors } = useTheme();
 
   const company = useMemo(
     () => data.companies.find((c) => c.ticker === selected),
@@ -110,8 +114,9 @@ export default function CompanyDetail({ data }) {
   }, [company]);
 
   const color = companyColor(selected);
-  const rdColor = lighten(color, 0.45);
-  const sgaColor = lighten(color, 0.7);
+  const towardLight = theme === "dark";
+  const rdColor = shift(color, 0.45, towardLight);
+  const sgaColor = shift(color, 0.7, towardLight);
 
   if (!company) return null;
 
@@ -174,11 +179,11 @@ export default function CompanyDetail({ data }) {
         </h3>
         <ResponsiveContainer width="100%" height={340}>
           <LineChart data={quarterlyData} margin={{ top: 10, right: 10, left: 0, bottom: 0 }}>
-            <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.06)" />
+            <CartesianGrid strokeDasharray="3 3" stroke={colors.grid} />
             <XAxis
               dataKey="label"
               tick={{ fill: colors.textMuted, fontSize: 10 }}
-              axisLine={{ stroke: "rgba(255,255,255,0.1)" }}
+              axisLine={{ stroke: colors.axis }}
               tickLine={false}
               interval="preserveStartEnd"
               angle={-45}
@@ -187,7 +192,7 @@ export default function CompanyDetail({ data }) {
             />
             <YAxis
               tick={{ fill: colors.textMuted, fontSize: 12 }}
-              axisLine={{ stroke: "rgba(255,255,255,0.1)" }}
+              axisLine={{ stroke: colors.axis }}
               tickLine={false}
               tickFormatter={(v) => `$${v}B`}
             />
@@ -200,7 +205,7 @@ export default function CompanyDetail({ data }) {
               stroke={color}
               strokeWidth={2.25}
               dot={false}
-              activeDot={{ r: 4, fill: color, stroke: "#0F172A", strokeWidth: 2 }}
+              activeDot={{ r: 4, fill: color, stroke: colors.dotStroke, strokeWidth: 2 }}
               connectNulls
             />
             <Line
@@ -210,7 +215,7 @@ export default function CompanyDetail({ data }) {
               stroke={rdColor}
               strokeWidth={2}
               dot={false}
-              activeDot={{ r: 4, fill: rdColor, stroke: "#0F172A", strokeWidth: 2 }}
+              activeDot={{ r: 4, fill: rdColor, stroke: colors.dotStroke, strokeWidth: 2 }}
               connectNulls
             />
             <Line
@@ -221,7 +226,7 @@ export default function CompanyDetail({ data }) {
               strokeWidth={2}
               strokeDasharray="4 3"
               dot={false}
-              activeDot={{ r: 4, fill: sgaColor, stroke: "#0F172A", strokeWidth: 2 }}
+              activeDot={{ r: 4, fill: sgaColor, stroke: colors.dotStroke, strokeWidth: 2 }}
               connectNulls
             />
           </LineChart>
@@ -244,7 +249,7 @@ export default function CompanyDetail({ data }) {
         <div style={{ overflowX: "auto" }}>
           <table className="num" style={{ width: "100%", borderCollapse: "collapse", fontSize: 12 }}>
             <thead>
-              <tr style={{ borderBottom: "1px solid rgba(255,255,255,0.06)" }}>
+              <tr style={{ borderBottom: `1px solid ${colors.borderSoft}` }}>
                 <th style={{ padding: "10px 16px", textAlign: "left", color: colors.textFaint, fontWeight: 600 }}>Year</th>
                 <th style={{ padding: "10px 16px", textAlign: "right", color: colors.textFaint, fontWeight: 600 }}>CapEx ($B)</th>
                 <th style={{ padding: "10px 16px", textAlign: "right", color: colors.textFaint, fontWeight: 600 }}>R&amp;D ($B)</th>
@@ -261,7 +266,7 @@ export default function CompanyDetail({ data }) {
                 const total = getTotalTechSpendAnnual(company, year);
                 const g = cx?.yoyGrowthPct;
                 return (
-                  <tr key={year} style={{ borderBottom: "1px solid rgba(255,255,255,0.04)" }}>
+                  <tr key={year} style={{ borderBottom: `1px solid ${colors.borderSoft}` }}>
                     <td style={{ padding: "10px 16px", fontWeight: 600, color: colors.text }}>{year}</td>
                     <td style={{ padding: "10px 16px", textAlign: "right", color, fontWeight: 600 }}>
                       {cx ? formatCurrency(cx.valueBillions, { unit: "B", digits: 2 }) : "—"}

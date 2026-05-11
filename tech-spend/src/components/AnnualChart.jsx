@@ -10,7 +10,8 @@ import {
   Legend,
   ResponsiveContainer,
 } from "recharts";
-import { colors, companyColor } from "../theme/tokens";
+import { companyColor } from "../theme/tokens";
+import { useTheme } from "../theme/ThemeContext";
 import { formatCurrency } from "../utils/formatters";
 import { getCapex, annualEntry, getOpexAnnual } from "../utils/dataShape";
 
@@ -21,6 +22,7 @@ const MODES = [
 ];
 
 function CustomTooltip({ active, payload, label, mode }) {
+  const colors = useTheme().tokens;
   if (!active || !payload?.length) return null;
   const totalEntry = payload.find((p) => p.dataKey === "__total");
   // For stacked total mode each ticker has two entries (capex/opex). For single
@@ -50,8 +52,8 @@ function CustomTooltip({ active, payload, label, mode }) {
   return (
     <div
       style={{
-        background: "rgba(15, 23, 42, 0.95)",
-        border: "1px solid rgba(255,255,255,0.1)",
+        background: colors.tooltipBg,
+        border: `1px solid ${colors.tooltipBorder}`,
         borderRadius: 10,
         padding: "12px 16px",
         backdropFilter: "blur(12px)",
@@ -67,7 +69,7 @@ function CustomTooltip({ active, payload, label, mode }) {
             gap: 8,
             marginBottom: 8,
             paddingBottom: 8,
-            borderBottom: "1px solid rgba(255,255,255,0.08)",
+            borderBottom: `1px solid ${colors.borderSoft}`,
           }}
         >
           <div style={{ width: 12, height: 2, background: colors.indigo, flexShrink: 0 }} />
@@ -97,6 +99,7 @@ function CustomTooltip({ active, payload, label, mode }) {
 
 export default function AnnualChart({ data }) {
   const [mode, setMode] = useState("total");
+  const colors = useTheme().tokens;
 
   const { chartData, tickers } = useMemo(() => {
     const yearMap = {};
@@ -167,9 +170,9 @@ export default function AnnualChart({ data }) {
           gap: 4,
           marginBottom: 16,
           padding: 4,
-          background: "rgba(30, 41, 59, 0.4)",
+          background: colors.panelGlass,
           borderRadius: 10,
-          border: "1px solid rgba(255,255,255,0.06)",
+          border: `1px solid ${colors.borderSoft}`,
         }}
       >
         {MODES.map((m) => (
@@ -187,9 +190,9 @@ export default function AnnualChart({ data }) {
               fontWeight: 600,
               fontFamily: "inherit",
               transition: "all 0.2s ease",
-              background: mode === m.id ? "rgba(99,102,241,0.2)" : "transparent",
-              color: mode === m.id ? "#A5B4FC" : "#64748B",
-              boxShadow: mode === m.id ? "0 0 12px rgba(99,102,241,0.15)" : "none",
+              background: mode === m.id ? "var(--c-pill-active-bg)" : "transparent",
+              color: mode === m.id ? "var(--c-pill-active-text)" : colors.textFaint,
+              boxShadow: mode === m.id ? "0 0 12px var(--c-pill-active-glow)" : "none",
             }}
           >
             {m.label}
@@ -203,20 +206,20 @@ export default function AnnualChart({ data }) {
       >
         <ResponsiveContainer width="100%" height={440}>
           <ComposedChart data={chartData} margin={{ top: 10, right: 10, left: 0, bottom: 0 }}>
-            <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.06)" />
+            <CartesianGrid strokeDasharray="3 3" stroke={colors.grid} />
             <XAxis
               dataKey="year"
               tick={{ fill: colors.textMuted, fontSize: 12 }}
-              axisLine={{ stroke: "rgba(255,255,255,0.1)" }}
+              axisLine={{ stroke: colors.axis }}
               tickLine={false}
             />
             <YAxis
               tick={{ fill: colors.textMuted, fontSize: 12 }}
-              axisLine={{ stroke: "rgba(255,255,255,0.1)" }}
+              axisLine={{ stroke: colors.axis }}
               tickLine={false}
               tickFormatter={(v) => `$${v}B`}
             />
-            <Tooltip content={<CustomTooltip mode={mode} />} cursor={{ fill: "rgba(255,255,255,0.03)" }} />
+            <Tooltip content={<CustomTooltip mode={mode} />} cursor={{ fill: colors.grid }} />
             <Legend
               wrapperStyle={{ fontSize: 11, color: colors.textMuted }}
               iconType="square"
@@ -276,8 +279,8 @@ export default function AnnualChart({ data }) {
               name="__total"
               stroke={colors.indigo}
               strokeWidth={3}
-              dot={{ r: 4, fill: colors.indigo, stroke: "#0F172A", strokeWidth: 2 }}
-              activeDot={{ r: 6, fill: colors.indigoSoft, stroke: "#0F172A", strokeWidth: 2 }}
+              dot={{ r: 4, fill: colors.indigo, stroke: colors.dotStroke, strokeWidth: 2 }}
+              activeDot={{ r: 6, fill: colors.indigoSoft, stroke: colors.dotStroke, strokeWidth: 2 }}
               isAnimationActive={true}
             />
           </ComposedChart>

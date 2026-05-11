@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from "react";
-import { colors, companyColor, gradients } from "../theme/tokens";
+import { companyColor, gradients } from "../theme/tokens";
+import { useTheme } from "../theme/ThemeContext";
 import { formatCurrency, formatPercent } from "../utils/formatters";
 import {
   getCapex,
@@ -138,6 +139,7 @@ function IconTrendUp({ color }) {
 }
 
 export default function OverviewCards({ data }) {
+  const colors = useTheme().tokens;
   const { companies, summary } = data;
 
   // Stacked-sparkline values per company (last 5 years).
@@ -177,7 +179,7 @@ export default function OverviewCards({ data }) {
         {/* Total Tech Spend */}
         <div
           className="headline-card card-enter card-enter-0"
-          style={{ background: `${gradients.headlineTotal}, rgba(15, 23, 42, 0.6)` }}
+          style={{ background: `${gradients.headlineTotal}, var(--c-headline-bg)` }}
         >
           <div className="headline-eyebrow">
             <span className="headline-icon"><IconSigma color={colors.indigoSoft} /></span>
@@ -199,7 +201,7 @@ export default function OverviewCards({ data }) {
         {/* Top Spender */}
         <div
           className="headline-card card-enter card-enter-1"
-          style={{ background: `${gradients.headlineTop}, rgba(15, 23, 42, 0.6)` }}
+          style={{ background: `${gradients.headlineTop}, var(--c-headline-bg)` }}
         >
           <div className="headline-eyebrow">
             <span className="headline-icon"><IconCrown color="#FBBF24" /></span>
@@ -226,7 +228,7 @@ export default function OverviewCards({ data }) {
         {/* Highest Growth (CapEx YoY) */}
         <div
           className="headline-card card-enter card-enter-2"
-          style={{ background: `${gradients.headlineGrowth}, rgba(15, 23, 42, 0.6)` }}
+          style={{ background: `${gradients.headlineGrowth}, var(--c-headline-bg)` }}
         >
           <div className="headline-eyebrow">
             <span className="headline-icon"><IconTrendUp color={colors.success} /></span>

@@ -23,6 +23,7 @@ import {
   revenueGap,
   commentaryThemes,
 } from "../data/accountingData";
+import { useTheme } from "../theme/ThemeContext";
 
 const COMPANY_COLORS = {
   MSFT: "#00A4EF",
@@ -32,21 +33,24 @@ const COMPANY_COLORS = {
   ORCL: "#F80000",
 };
 
-/* ── Shared tooltip style ── */
-const tooltipStyle = {
-  background: "rgba(15, 23, 42, 0.95)",
-  border: "1px solid rgba(255,255,255,0.1)",
-  borderRadius: 10,
-  padding: "12px 16px",
-  backdropFilter: "blur(12px)",
-};
+function useTooltipStyle() {
+  const t = useTheme().tokens;
+  return {
+    background: t.tooltipBg,
+    border: `1px solid ${t.tooltipBorder}`,
+    borderRadius: 10,
+    padding: "12px 16px",
+    backdropFilter: "blur(12px)",
+  };
+}
 
 /* ── Section wrapper ── */
 function Section({ title, subtitle, children, delay = 0, glow = "#6366F14D" }) {
+  const t = useTheme().tokens;
   return (
     <div className={`card-enter card-enter-${delay}`} style={{ marginBottom: 32 }}>
-      <h3 style={{ fontSize: 17, fontWeight: 700, color: "#F8FAFC", marginBottom: 4 }}>{title}</h3>
-      {subtitle && <p style={{ fontSize: 13, color: "#94A3B8", marginBottom: 16 }}>{subtitle}</p>}
+      <h3 style={{ fontSize: 17, fontWeight: 700, color: t.text, marginBottom: 4 }}>{title}</h3>
+      {subtitle && <p style={{ fontSize: 13, color: t.textMuted, marginBottom: 16 }}>{subtitle}</p>}
       <div className="glass-card" style={{ padding: 20, "--card-glow": `linear-gradient(135deg, ${glow}, transparent 60%)` }}>
         {children}
       </div>
@@ -56,6 +60,8 @@ function Section({ title, subtitle, children, delay = 0, glow = "#6366F14D" }) {
 
 /* ── 1. Depreciation useful-life step chart ── */
 function DepreciationChart() {
+  const t = useTheme().tokens;
+  const tooltipStyle = useTooltipStyle();
   const chartData = useMemo(() => {
     const years = [2020, 2021, 2022, 2023, 2024, 2025];
     return years.map((year) => {
@@ -71,24 +77,24 @@ function DepreciationChart() {
   return (
     <ResponsiveContainer width="100%" height={320}>
       <LineChart data={chartData} margin={{ top: 10, right: 10, left: 0, bottom: 0 }}>
-        <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.06)" />
+        <CartesianGrid strokeDasharray="3 3" stroke={t.grid} />
         <XAxis
           dataKey="year"
-          tick={{ fill: "#94A3B8", fontSize: 12 }}
-          axisLine={{ stroke: "rgba(255,255,255,0.1)" }}
+          tick={{ fill: t.textMuted, fontSize: 12 }}
+          axisLine={{ stroke: t.axis }}
           tickLine={false}
         />
         <YAxis
-          tick={{ fill: "#94A3B8", fontSize: 12 }}
-          axisLine={{ stroke: "rgba(255,255,255,0.1)" }}
+          tick={{ fill: t.textMuted, fontSize: 12 }}
+          axisLine={{ stroke: t.axis }}
           tickLine={false}
           domain={[2, 7]}
           tickFormatter={(v) => `${v}yr`}
-          label={{ value: "Useful Life", angle: -90, position: "insideLeft", fill: "#64748B", fontSize: 11, dx: -5 }}
+          label={{ value: "Useful Life", angle: -90, position: "insideLeft", fill: t.textFaint, fontSize: 11, dx: -5 }}
         />
         <Tooltip
           contentStyle={tooltipStyle}
-          labelStyle={{ color: "#F8FAFC", fontWeight: 600, marginBottom: 4 }}
+          labelStyle={{ color: t.text, fontWeight: 600, marginBottom: 4 }}
           itemStyle={{ fontSize: 12, padding: 0 }}
           formatter={(v, name) => [`${v} years`, name]}
         />
@@ -100,7 +106,7 @@ function DepreciationChart() {
             dataKey={ticker}
             stroke={COMPANY_COLORS[ticker]}
             strokeWidth={2.5}
-            dot={{ r: 4, fill: COMPANY_COLORS[ticker], stroke: "#0F172A", strokeWidth: 2 }}
+            dot={{ r: 4, fill: COMPANY_COLORS[ticker], stroke: t.dotStroke, strokeWidth: 2 }}
             activeDot={{ r: 6 }}
           />
         ))}
@@ -111,6 +117,8 @@ function DepreciationChart() {
 
 /* ── 2. Earnings boost bar chart ── */
 function EarningsBoostChart() {
+  const t = useTheme().tokens;
+  const tooltipStyle = useTooltipStyle();
   const chartData = useMemo(() => {
     return depreciationSavings.map((d) => ({
       label: `${d.ticker} '${String(d.year).slice(2)}`,
@@ -123,30 +131,30 @@ function EarningsBoostChart() {
   return (
     <ResponsiveContainer width="100%" height={280}>
       <BarChart data={chartData} layout="vertical" margin={{ top: 0, right: 30, left: 20, bottom: 0 }}>
-        <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.06)" horizontal={false} />
+        <CartesianGrid strokeDasharray="3 3" stroke={t.grid} horizontal={false} />
         <XAxis
           type="number"
-          tick={{ fill: "#94A3B8", fontSize: 12 }}
-          axisLine={{ stroke: "rgba(255,255,255,0.1)" }}
+          tick={{ fill: t.textMuted, fontSize: 12 }}
+          axisLine={{ stroke: t.axis }}
           tickLine={false}
           tickFormatter={(v) => `$${v}B`}
         />
         <YAxis
           type="category"
           dataKey="label"
-          tick={{ fill: "#F8FAFC", fontSize: 12, fontWeight: 600 }}
-          axisLine={{ stroke: "rgba(255,255,255,0.1)" }}
+          tick={{ fill: t.text, fontSize: 12, fontWeight: 600 }}
+          axisLine={{ stroke: t.axis }}
           tickLine={false}
           width={80}
         />
         <Tooltip
           contentStyle={tooltipStyle}
-          labelStyle={{ color: "#F8FAFC", fontWeight: 600 }}
+          labelStyle={{ color: t.text, fontWeight: 600 }}
           formatter={(v, _, props) => [`$${v}B saved — ${props.payload.note}`, "Depreciation reduction"]}
         />
         <Bar dataKey="savings" radius={[0, 6, 6, 0]} maxBarSize={28}>
           {chartData.map((entry) => (
-            <Cell key={entry.label} fill={COMPANY_COLORS[entry.ticker] || "#818CF8"} fillOpacity={0.85} />
+            <Cell key={entry.label} fill={COMPANY_COLORS[entry.ticker] || t.indigoLight} fillOpacity={0.85} />
           ))}
         </Bar>
       </BarChart>
@@ -156,33 +164,35 @@ function EarningsBoostChart() {
 
 /* ── 3. Capex as % of operating cash flow ── */
 function CapexCashFlowChart() {
+  const t = useTheme().tokens;
+  const tooltipStyle = useTooltipStyle();
   return (
     <ResponsiveContainer width="100%" height={280}>
       <AreaChart data={capexVsCashFlow} margin={{ top: 10, right: 10, left: 0, bottom: 0 }}>
         <defs>
           <linearGradient id="capexGrad" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="5%" stopColor="#EF4444" stopOpacity={0.3} />
-            <stop offset="95%" stopColor="#EF4444" stopOpacity={0.02} />
+            <stop offset="5%" stopColor={t.danger} stopOpacity={0.3} />
+            <stop offset="95%" stopColor={t.danger} stopOpacity={0.02} />
           </linearGradient>
         </defs>
-        <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.06)" />
+        <CartesianGrid strokeDasharray="3 3" stroke={t.grid} />
         <XAxis
           dataKey="year"
-          tick={{ fill: "#94A3B8", fontSize: 12 }}
-          axisLine={{ stroke: "rgba(255,255,255,0.1)" }}
+          tick={{ fill: t.textMuted, fontSize: 12 }}
+          axisLine={{ stroke: t.axis }}
           tickLine={false}
         />
         <YAxis
-          tick={{ fill: "#94A3B8", fontSize: 12 }}
-          axisLine={{ stroke: "rgba(255,255,255,0.1)" }}
+          tick={{ fill: t.textMuted, fontSize: 12 }}
+          axisLine={{ stroke: t.axis }}
           tickLine={false}
           tickFormatter={(v) => `${v}%`}
           domain={[0, 120]}
         />
-        <ReferenceLine y={100} stroke="#EF4444" strokeDasharray="6 3" strokeOpacity={0.6} label={{ value: "100% — all cash consumed", fill: "#EF4444", fontSize: 11, position: "insideTopRight" }} />
+        <ReferenceLine y={100} stroke={t.danger} strokeDasharray="6 3" strokeOpacity={0.6} label={{ value: "100% — all cash consumed", fill: t.danger, fontSize: 11, position: "insideTopRight" }} />
         <Tooltip
           contentStyle={tooltipStyle}
-          labelStyle={{ color: "#F8FAFC", fontWeight: 600 }}
+          labelStyle={{ color: t.text, fontWeight: 600 }}
           formatter={(v, _, props) => {
             const extra = props.payload.note ? ` (${props.payload.note})` : "";
             return [`${v}%${extra}`, "Capex / Operating Cash Flow"];
@@ -191,10 +201,10 @@ function CapexCashFlowChart() {
         <Area
           type="monotone"
           dataKey="capexPctOCF"
-          stroke="#EF4444"
+          stroke={t.danger}
           strokeWidth={2.5}
           fill="url(#capexGrad)"
-          dot={{ r: 4, fill: "#EF4444", stroke: "#0F172A", strokeWidth: 2 }}
+          dot={{ r: 4, fill: t.danger, stroke: t.dotStroke, strokeWidth: 2 }}
           activeDot={{ r: 6 }}
         />
       </AreaChart>
@@ -206,6 +216,8 @@ function CapexCashFlowChart() {
    Split into two stacked panels: Actuals (2024-2025) on top, Projected (2026E) below.
    Avoids the prior issue of mixing actual/projected on one axis with three categorical colors. */
 function FCFChart() {
+  const t = useTheme().tokens;
+  const tooltipStyle = useTooltipStyle();
   const sorted = useMemo(
     () => [...freeCashFlow].sort((a, b) => b.fcf2025 - a.fcf2025),
     []
@@ -234,68 +246,68 @@ function FCFChart() {
     <div style={{ display: "grid", gridTemplateColumns: "1fr", gap: 16 }}>
       {/* Actuals */}
       <div>
-        <div style={{ fontSize: 12, fontWeight: 600, color: "#CBD5E1", marginBottom: 8, paddingLeft: 4 }}>
+        <div style={{ fontSize: 12, fontWeight: 600, color: t.textSubtle, marginBottom: 8, paddingLeft: 4 }}>
           Actuals — 2024 vs 2025 ($B FCF)
         </div>
         <ResponsiveContainer width="100%" height={240}>
           <BarChart data={actualsData} margin={{ top: 10, right: 10, left: 0, bottom: 0 }}>
-            <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.06)" />
+            <CartesianGrid strokeDasharray="3 3" stroke={t.grid} />
             <XAxis
               dataKey="ticker"
-              tick={{ fill: "#F8FAFC", fontSize: 13, fontWeight: 600 }}
-              axisLine={{ stroke: "rgba(255,255,255,0.1)" }}
+              tick={{ fill: t.text, fontSize: 13, fontWeight: 600 }}
+              axisLine={{ stroke: t.axis }}
               tickLine={false}
             />
             <YAxis
-              tick={{ fill: "#94A3B8", fontSize: 12 }}
-              axisLine={{ stroke: "rgba(255,255,255,0.1)" }}
+              tick={{ fill: t.textMuted, fontSize: 12 }}
+              axisLine={{ stroke: t.axis }}
               tickLine={false}
               tickFormatter={(v) => `$${v}B`}
             />
-            <ReferenceLine y={0} stroke="rgba(255,255,255,0.2)" />
+            <ReferenceLine y={0} stroke={t.axis} />
             <Tooltip
               contentStyle={tooltipStyle}
-              labelStyle={{ color: "#F8FAFC", fontWeight: 600 }}
+              labelStyle={{ color: t.text, fontWeight: 600 }}
               formatter={(v, name) => [`$${v}B`, `FCF ${name}`]}
             />
             <Legend wrapperStyle={{ fontSize: 11 }} iconType="square" iconSize={8} />
-            <Bar dataKey="2024" fill="#34D399" fillOpacity={0.75} radius={[2, 2, 0, 0]} maxBarSize={32} />
-            <Bar dataKey="2025" fill="#818CF8" fillOpacity={0.75} radius={[2, 2, 0, 0]} maxBarSize={32} />
+            <Bar dataKey="2024" fill={t.success} fillOpacity={0.75} radius={[2, 2, 0, 0]} maxBarSize={32} />
+            <Bar dataKey="2025" fill={t.indigoLight} fillOpacity={0.75} radius={[2, 2, 0, 0]} maxBarSize={32} />
           </BarChart>
         </ResponsiveContainer>
       </div>
 
       {/* Projected */}
       <div>
-        <div style={{ fontSize: 12, fontWeight: 600, color: "#CBD5E1", marginBottom: 8, paddingLeft: 4 }}>
+        <div style={{ fontSize: 12, fontWeight: 600, color: t.textSubtle, marginBottom: 8, paddingLeft: 4 }}>
           Projected — 2026E ($B FCF, red bars indicate negative FCF)
         </div>
         <ResponsiveContainer width="100%" height={220}>
           <BarChart data={projectedData} margin={{ top: 10, right: 10, left: 0, bottom: 0 }}>
-            <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.06)" />
+            <CartesianGrid strokeDasharray="3 3" stroke={t.grid} />
             <XAxis
               dataKey="ticker"
-              tick={{ fill: "#F8FAFC", fontSize: 13, fontWeight: 600 }}
-              axisLine={{ stroke: "rgba(255,255,255,0.1)" }}
+              tick={{ fill: t.text, fontSize: 13, fontWeight: 600 }}
+              axisLine={{ stroke: t.axis }}
               tickLine={false}
             />
             <YAxis
-              tick={{ fill: "#94A3B8", fontSize: 12 }}
-              axisLine={{ stroke: "rgba(255,255,255,0.1)" }}
+              tick={{ fill: t.textMuted, fontSize: 12 }}
+              axisLine={{ stroke: t.axis }}
               tickLine={false}
               tickFormatter={(v) => `$${v}B`}
             />
-            <ReferenceLine y={0} stroke="rgba(255,255,255,0.3)" />
+            <ReferenceLine y={0} stroke={t.axis} />
             <Tooltip
               contentStyle={tooltipStyle}
-              labelStyle={{ color: "#F8FAFC", fontWeight: 600 }}
+              labelStyle={{ color: t.text, fontWeight: 600 }}
               formatter={(v) => [`$${v}B`, "FCF 2026E"]}
             />
             <Bar dataKey="2026E" radius={[2, 2, 0, 0]} maxBarSize={48}>
               {projectedData.map((entry) => (
                 <Cell
                   key={entry.ticker}
-                  fill={entry["2026E"] < 0 ? "#EF4444" : "#F59E0B"}
+                  fill={entry["2026E"] < 0 ? t.danger : t.warning}
                   fillOpacity={0.85}
                 />
               ))}
@@ -309,31 +321,33 @@ function FCFChart() {
 
 /* ── 5. Revenue gap (Sequoia) ── */
 function RevenueGapChart() {
+  const t = useTheme().tokens;
+  const tooltipStyle = useTooltipStyle();
   return (
     <ResponsiveContainer width="100%" height={300}>
       <BarChart data={revenueGap} margin={{ top: 10, right: 10, left: 0, bottom: 0 }}>
         <defs>
           <linearGradient id="gapGrad" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%" stopColor="#EF4444" stopOpacity={0.6} />
-            <stop offset="100%" stopColor="#EF4444" stopOpacity={0.1} />
+            <stop offset="0%" stopColor={t.danger} stopOpacity={0.6} />
+            <stop offset="100%" stopColor={t.danger} stopOpacity={0.1} />
           </linearGradient>
         </defs>
-        <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.06)" />
+        <CartesianGrid strokeDasharray="3 3" stroke={t.grid} />
         <XAxis
           dataKey="year"
-          tick={{ fill: "#94A3B8", fontSize: 12 }}
-          axisLine={{ stroke: "rgba(255,255,255,0.1)" }}
+          tick={{ fill: t.textMuted, fontSize: 12 }}
+          axisLine={{ stroke: t.axis }}
           tickLine={false}
         />
         <YAxis
-          tick={{ fill: "#94A3B8", fontSize: 12 }}
-          axisLine={{ stroke: "rgba(255,255,255,0.1)" }}
+          tick={{ fill: t.textMuted, fontSize: 12 }}
+          axisLine={{ stroke: t.axis }}
           tickLine={false}
           tickFormatter={(v) => `$${v}B`}
         />
         <Tooltip
           contentStyle={tooltipStyle}
-          labelStyle={{ color: "#F8FAFC", fontWeight: 600 }}
+          labelStyle={{ color: t.text, fontWeight: 600 }}
           formatter={(v, name) => {
             const labels = { aiInfraSpend: "AI Infra Spend", aiRevenue: "AI Revenue", gap: "Revenue Gap" };
             return [`$${v}B`, labels[name] || name];
@@ -348,7 +362,7 @@ function RevenueGapChart() {
             return labels[value] || value;
           }}
         />
-        <Bar dataKey="aiRevenue" stackId="a" fill="#34D399" fillOpacity={0.7} radius={[0, 0, 0, 0]} maxBarSize={48} />
+        <Bar dataKey="aiRevenue" stackId="a" fill={t.success} fillOpacity={0.7} radius={[0, 0, 0, 0]} maxBarSize={48} />
         <Bar dataKey="gap" stackId="a" fill="url(#gapGrad)" radius={[4, 4, 0, 0]} maxBarSize={48} />
       </BarChart>
     </ResponsiveContainer>
@@ -357,6 +371,7 @@ function RevenueGapChart() {
 
 /* ── Quote card ── */
 function QuoteCard({ entry, color, delay }) {
+  const t = useTheme().tokens;
   return (
     <div
       className={`glass-card card-enter card-enter-${delay}`}
@@ -367,10 +382,10 @@ function QuoteCard({ entry, color, delay }) {
     >
       <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 4, flexWrap: "wrap" }}>
         <div style={{ width: 8, height: 8, borderRadius: 2, background: color, flexShrink: 0 }} />
-        <span style={{ fontSize: 13, fontWeight: 700, color: "#F8FAFC" }}>{entry.author}</span>
-        <span style={{ fontSize: 11, color: "#64748B" }}>{entry.role}</span>
+        <span style={{ fontSize: 13, fontWeight: 700, color: t.text }}>{entry.author}</span>
+        <span style={{ fontSize: 11, color: t.textFaint }}>{entry.role}</span>
       </div>
-      <p style={{ fontSize: 13, color: "#CBD5E1", lineHeight: 1.6, margin: 0, fontStyle: "italic" }}>
+      <p style={{ fontSize: 13, color: t.textSubtle, lineHeight: 1.6, margin: 0, fontStyle: "italic" }}>
         &ldquo;{entry.quote}&rdquo;
       </p>
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginTop: 4, flexWrap: "wrap", gap: 8 }}>
@@ -385,7 +400,7 @@ function QuoteCard({ entry, color, delay }) {
           target="_blank"
           rel="noopener noreferrer"
           onClick={(e) => e.stopPropagation()}
-          style={{ fontSize: 10, color: "#64748B", textDecoration: "underline" }}
+          style={{ fontSize: 10, color: t.textFaint, textDecoration: "underline" }}
         >
           Source
         </a>
@@ -396,11 +411,12 @@ function QuoteCard({ entry, color, delay }) {
 
 /* ── Themed commentary section ── */
 function CommentarySection({ theme, color, entries, baseDelay }) {
+  const t = useTheme().tokens;
   return (
     <div style={{ marginBottom: 32 }}>
       <div className={`card-enter card-enter-${baseDelay}`} style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 14 }}>
         <div style={{ width: 12, height: 12, borderRadius: 3, background: color, flexShrink: 0 }} />
-        <h3 style={{ fontSize: 16, fontWeight: 700, color: "#F8FAFC", margin: 0 }}>{theme}</h3>
+        <h3 style={{ fontSize: 16, fontWeight: 700, color: t.text, margin: 0 }}>{theme}</h3>
       </div>
       <div style={{ display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gap: 14 }}>
         {entries.map((entry, i) => (
@@ -418,15 +434,16 @@ function CommentarySection({ theme, color, entries, baseDelay }) {
 
 /* ── Main component ── */
 export default function UnderTheHood() {
+  const t = useTheme().tokens;
   return (
     <div>
       <h2
         className="card-enter card-enter-0"
-        style={{ fontSize: 20, fontWeight: 700, color: "#F8FAFC", marginBottom: 4 }}
+        style={{ fontSize: 20, fontWeight: 700, color: t.text, marginBottom: 4 }}
       >
         Under the Hood
       </h2>
-      <p className="card-enter card-enter-0" style={{ fontSize: 13, color: "#94A3B8", marginBottom: 28, maxWidth: 700 }}>
+      <p className="card-enter card-enter-0" style={{ fontSize: 13, color: t.textMuted, marginBottom: 28, maxWidth: 700 }}>
         How accounting choices, depreciation extensions, and cash flow dynamics
         paint a different picture of the AI capex boom than the headline numbers suggest.
       </p>
@@ -469,7 +486,7 @@ export default function UnderTheHood() {
         glow="#FF99004D"
       >
         <FCFChart />
-        <div style={{ marginTop: 12, fontSize: 11, color: "#64748B" }}>
+        <div style={{ marginTop: 12, fontSize: 11, color: t.textFaint }}>
           2026E estimates from Morgan Stanley (AMZN), Pivotal Research (GOOGL), Barclays (MSFT), analyst consensus (META, ORCL).
         </div>
       </Section>
@@ -490,11 +507,11 @@ export default function UnderTheHood() {
       {/* 6. Themed commentary sections */}
       <h2
         className="card-enter card-enter-6"
-        style={{ fontSize: 20, fontWeight: 700, color: "#F8FAFC", marginBottom: 4 }}
+        style={{ fontSize: 20, fontWeight: 700, color: t.text, marginBottom: 4 }}
       >
         What the Critics Are Saying
       </h2>
-      <p className="card-enter card-enter-6" style={{ fontSize: 13, color: "#94A3B8", marginBottom: 28, maxWidth: 700 }}>
+      <p className="card-enter card-enter-6" style={{ fontSize: 13, color: t.textMuted, marginBottom: 28, maxWidth: 700 }}>
         Hedge fund managers, forensic accountants, independent researchers, and academics
         questioning the numbers behind the AI infrastructure boom — all with sourced links.
       </p>

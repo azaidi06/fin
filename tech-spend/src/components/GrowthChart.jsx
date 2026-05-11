@@ -9,7 +9,8 @@ import {
   Cell,
   ResponsiveContainer,
 } from "recharts";
-import { colors, companyColor } from "../theme/tokens";
+import { companyColor } from "../theme/tokens";
+import { useTheme } from "../theme/ThemeContext";
 import { formatPercent } from "../utils/formatters";
 import { getCapex, getRd, getSga, annualEntry, getOpexAnnual } from "../utils/dataShape";
 
@@ -19,14 +20,15 @@ const MODES = [
 ];
 
 function CustomTooltip({ active, payload, mode }) {
+  const colors = useTheme().tokens;
   if (!active || !payload?.length) return null;
   const d = payload[0].payload;
   const label = mode === "opex" ? "OpEx YoY" : "CapEx YoY";
   return (
     <div
       style={{
-        background: "rgba(15, 23, 42, 0.95)",
-        border: "1px solid rgba(255,255,255,0.1)",
+        background: colors.tooltipBg,
+        border: `1px solid ${colors.tooltipBorder}`,
         borderRadius: 10,
         padding: "12px 16px",
         backdropFilter: "blur(12px)",
@@ -67,6 +69,7 @@ function opexYoY(company, year) {
 
 export default function GrowthChart({ data }) {
   const [mode, setMode] = useState("capex");
+  const colors = useTheme().tokens;
 
   const growthData = useMemo(() => {
     return data.companies
@@ -134,9 +137,9 @@ export default function GrowthChart({ data }) {
           gap: 4,
           marginBottom: 16,
           padding: 4,
-          background: "rgba(30, 41, 59, 0.4)",
+          background: colors.panelGlass,
           borderRadius: 10,
-          border: "1px solid rgba(255,255,255,0.06)",
+          border: `1px solid ${colors.borderSoft}`,
         }}
       >
         {MODES.map((m) => (
@@ -154,9 +157,9 @@ export default function GrowthChart({ data }) {
               fontWeight: 600,
               fontFamily: "inherit",
               transition: "all 0.2s ease",
-              background: mode === m.id ? "rgba(99,102,241,0.2)" : "transparent",
-              color: mode === m.id ? "#A5B4FC" : "#64748B",
-              boxShadow: mode === m.id ? "0 0 12px rgba(99,102,241,0.15)" : "none",
+              background: mode === m.id ? "var(--c-pill-active-bg)" : "transparent",
+              color: mode === m.id ? "var(--c-pill-active-text)" : colors.textFaint,
+              boxShadow: mode === m.id ? "0 0 12px var(--c-pill-active-glow)" : "none",
             }}
           >
             {m.label}
@@ -171,11 +174,11 @@ export default function GrowthChart({ data }) {
       >
         <ResponsiveContainer width="100%" height={340}>
           <BarChart data={growthData} layout="vertical" margin={{ top: 0, right: 30, left: 10, bottom: 0 }}>
-            <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.06)" horizontal={false} />
+            <CartesianGrid strokeDasharray="3 3" stroke={colors.grid} horizontal={false} />
             <XAxis
               type="number"
               tick={{ fill: colors.textMuted, fontSize: 12 }}
-              axisLine={{ stroke: "rgba(255,255,255,0.1)" }}
+              axisLine={{ stroke: colors.axis }}
               tickLine={false}
               tickFormatter={(v) => `${v}%`}
             />
@@ -183,11 +186,11 @@ export default function GrowthChart({ data }) {
               type="category"
               dataKey="ticker"
               tick={{ fill: colors.text, fontSize: 13, fontWeight: 600 }}
-              axisLine={{ stroke: "rgba(255,255,255,0.1)" }}
+              axisLine={{ stroke: colors.axis }}
               tickLine={false}
               width={50}
             />
-            <Tooltip content={<CustomTooltip mode={mode} />} cursor={{ fill: "rgba(255,255,255,0.03)" }} />
+            <Tooltip content={<CustomTooltip mode={mode} />} cursor={{ fill: colors.grid }} />
             <Bar dataKey="growth" radius={[0, 4, 4, 0]} maxBarSize={28}>
               {growthData.map((entry) => (
                 <Cell
@@ -212,7 +215,7 @@ export default function GrowthChart({ data }) {
         <div style={{ overflowX: "auto" }}>
           <table className="num" style={{ width: "100%", borderCollapse: "collapse", fontSize: 12 }}>
             <thead>
-              <tr style={{ borderBottom: "1px solid rgba(255,255,255,0.06)" }}>
+              <tr style={{ borderBottom: `1px solid ${colors.borderSoft}` }}>
                 <th style={{ padding: "10px 16px", textAlign: "left", color: colors.textFaint, fontWeight: 600 }}>Company</th>
                 {historyYears.map((year) => (
                   <th
@@ -226,7 +229,7 @@ export default function GrowthChart({ data }) {
             </thead>
             <tbody>
               {data.companies.map((c) => (
-                <tr key={c.ticker} style={{ borderBottom: "1px solid rgba(255,255,255,0.04)" }}>
+                <tr key={c.ticker} style={{ borderBottom: `1px solid ${colors.borderSoft}` }}>
                   <td
                     style={{ padding: "10px 16px", fontWeight: 600, color: companyColor(c.ticker) }}
                   >

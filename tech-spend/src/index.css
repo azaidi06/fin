@@ -1,5 +1,74 @@
 @import "tailwindcss";
 
+/* ── Theme variables ──
+   Drive body chrome and any component using var(--c-*) inline.
+   Charts (SVG attrs) must still pull from useTheme().tokens. */
+:root, [data-theme="dark"] {
+  --c-bg: #0F172A;
+  --c-panel: #1E293B;
+  --c-panel-inset: #0F172A;
+  --c-border: #334155;
+  --c-border-soft: rgba(255, 255, 255, 0.06);
+  --c-text-high: #F8FAFC;
+  --c-text-mid: #CBD5E1;
+  --c-text-mute: #94A3B8;
+  --c-text-low: #64748B;
+  --c-text-ghost: #475569;
+  --c-glass-bg: rgba(30, 41, 59, 0.5);
+  --c-glass-border: rgba(255, 255, 255, 0.06);
+  --c-glass-bg-hover: rgba(36, 48, 68, 0.6);
+  --c-body-gradient: linear-gradient(135deg, #0F172A, #1a1040, #0F172A, #0d1f2d);
+  --c-noise-opacity: 0.03;
+  --c-headline-bg: rgba(15, 23, 42, 0.6);
+  --c-headline-border: rgba(255, 255, 255, 0.08);
+  --c-headline-border-hover: rgba(255, 255, 255, 0.14);
+  --c-pill-bg: rgba(30, 41, 59, 0.55);
+  --c-pill-bg-hover: rgba(51, 65, 85, 0.7);
+  --c-pill-text: #94A3B8;
+  --c-pill-text-hover: #E2E8F0;
+  --c-pill-active-bg: rgba(99, 102, 241, 0.2);
+  --c-pill-active-text: #A5B4FC;
+  --c-pill-active-border: rgba(99, 102, 241, 0.4);
+  --c-pill-active-glow: rgba(99, 102, 241, 0.15);
+  --c-indigo: #6366F1;
+  --c-indigo-soft: #818CF8;
+  --c-indigo-faint: #A5B4FC;
+  --c-green-soft: #34D399;
+}
+
+[data-theme="light"] {
+  --c-bg: #F5F5F4;
+  --c-panel: #FAFAF9;
+  --c-panel-inset: #FFFFFF;
+  --c-border: #D6D3D1;
+  --c-border-soft: rgba(28, 25, 23, 0.10);
+  --c-text-high: #1C1917;
+  --c-text-mid: #44403C;
+  --c-text-mute: #57534E;
+  --c-text-low: #78716C;
+  --c-text-ghost: #A8A29E;
+  --c-glass-bg: rgba(255, 255, 255, 0.85);
+  --c-glass-border: rgba(28, 25, 23, 0.10);
+  --c-glass-bg-hover: rgba(255, 255, 255, 0.95);
+  --c-body-gradient: linear-gradient(135deg, #F5F5F4, #EAE6DD, #F5F5F4, #ECEAE6);
+  --c-noise-opacity: 0.02;
+  --c-headline-bg: rgba(255, 255, 255, 0.75);
+  --c-headline-border: rgba(28, 25, 23, 0.10);
+  --c-headline-border-hover: rgba(28, 25, 23, 0.18);
+  --c-pill-bg: rgba(255, 255, 255, 0.75);
+  --c-pill-bg-hover: rgba(245, 245, 244, 0.95);
+  --c-pill-text: #57534E;
+  --c-pill-text-hover: #1C1917;
+  --c-pill-active-bg: rgba(79, 70, 229, 0.12);
+  --c-pill-active-text: #4338CA;
+  --c-pill-active-border: rgba(79, 70, 229, 0.35);
+  --c-pill-active-glow: rgba(79, 70, 229, 0.12);
+  --c-indigo: #4F46E5;
+  --c-indigo-soft: #4338CA;
+  --c-indigo-faint: #4F46E5;
+  --c-green-soft: #047857;
+}
+
 /* ── Animated background gradient ── */
 @keyframes gradientShift {
   0%   { background-position: 0% 50%; }
@@ -11,10 +80,10 @@
 
 body {
   font-family: 'Inter', system-ui, -apple-system, sans-serif;
-  background: linear-gradient(135deg, #0F172A, #1a1040, #0F172A, #0d1f2d);
+  background: var(--c-body-gradient);
   background-size: 400% 400%;
   animation: gradientShift 15s ease infinite;
-  color: #F8FAFC;
+  color: var(--c-text-high);
   margin: 0;
   padding: 0;
 }
@@ -26,7 +95,7 @@ body::after {
   inset: 0;
   z-index: 9999;
   pointer-events: none;
-  opacity: 0.03;
+  opacity: var(--c-noise-opacity);
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
   background-repeat: repeat;
 }
@@ -62,10 +131,10 @@ body::after {
 /* ── Glassmorphism card ── */
 .glass-card {
   position: relative;
-  background: rgba(30, 41, 59, 0.5);
+  background: var(--c-glass-bg);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
-  border: 1px solid rgba(255, 255, 255, 0.06);
+  border: 1px solid var(--c-glass-border);
   border-radius: 16px;
   padding: 24px;
   transition: transform 0.3s ease, box-shadow 0.3s ease, background 0.3s ease;
@@ -98,7 +167,7 @@ body::after {
 
 .glass-card:hover {
   transform: scale(1.02);
-  background: rgba(36, 48, 68, 0.6);
+  background: var(--c-glass-bg-hover);
 }
 
 /* ── Sparkline bar grow animation ── */
@@ -128,6 +197,13 @@ body::after {
   -webkit-text-fill-color: transparent;
   background-clip: text;
 }
+[data-theme="light"] .animated-gradient-text {
+  background: linear-gradient(135deg, #4338CA, #1C1917, #047857, #1C1917);
+  background-size: 300% 300%;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
 
 /* ── Glowing divider ── */
 .glow-divider {
@@ -137,6 +213,9 @@ body::after {
   background: linear-gradient(90deg, transparent, #818CF8, #34D399, transparent);
   opacity: 0.4;
   border: none;
+}
+[data-theme="light"] .glow-divider {
+  background: linear-gradient(90deg, transparent, #4338CA, #047857, transparent);
 }
 
 /* ── Bento grid layout ── */
@@ -177,8 +256,8 @@ body::after {
   overflow: hidden;
   border-radius: 18px;
   padding: 24px 26px;
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  background: rgba(15, 23, 42, 0.6);
+  border: 1px solid var(--c-headline-border);
+  background: var(--c-headline-bg);
   display: flex;
   flex-direction: column;
   gap: 6px;
@@ -186,7 +265,7 @@ body::after {
 }
 .headline-card:hover {
   transform: translateY(-2px);
-  border-color: rgba(255, 255, 255, 0.14);
+  border-color: var(--c-headline-border-hover);
 }
 .headline-card .headline-eyebrow {
   display: flex;
@@ -194,7 +273,7 @@ body::after {
   gap: 8px;
   font-size: 11px;
   font-weight: 600;
-  color: #94A3B8;
+  color: var(--c-text-mute);
   text-transform: uppercase;
   letter-spacing: 0.08em;
 }
@@ -214,7 +293,7 @@ body::after {
 }
 .headline-card .headline-sub {
   font-size: 13px;
-  color: #94A3B8;
+  color: var(--c-text-mute);
   margin-top: 4px;
 }
 
@@ -234,23 +313,23 @@ body::after {
   padding: 8px 14px;
   border-radius: 999px;
   transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease;
-  background: rgba(30, 41, 59, 0.55);
-  color: #94A3B8;
+  background: var(--c-pill-bg);
+  color: var(--c-pill-text);
 }
 .ticker-pill:hover {
-  background: rgba(51, 65, 85, 0.7);
-  color: #E2E8F0;
+  background: var(--c-pill-bg-hover);
+  color: var(--c-pill-text-hover);
 }
 .ticker-pill.is-active {
-  background: rgba(99, 102, 241, 0.2);
-  color: #A5B4FC;
-  border-color: rgba(99, 102, 241, 0.4);
-  box-shadow: 0 0 12px rgba(99, 102, 241, 0.15);
+  background: var(--c-pill-active-bg);
+  color: var(--c-pill-active-text);
+  border-color: var(--c-pill-active-border);
+  box-shadow: 0 0 12px var(--c-pill-active-glow);
 }
 
 /* ── Recharts customizations ── */
 .recharts-cartesian-grid line {
-  stroke: rgba(255, 255, 255, 0.06);
+  stroke: var(--c-border-soft);
 }
 
 .recharts-tooltip-wrapper {
