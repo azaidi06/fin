@@ -1,13 +1,13 @@
 {
-  "updatedAt": "2026-05-15T14:48:03.785Z",
+  "updatedAt": "2026-05-15T15:41:19.617Z",
   "source": "AV:11+CoinGecko:3",
   "assets": [
     {
       "symbol": "BTC",
       "name": "Bitcoin",
-      "price": 79062,
-      "change1d": -1.78,
-      "change7d": -1.23
+      "price": 79103,
+      "change1d": -2.33,
+      "change7d": -0.61
     },
     {
       "symbol": "GOLD",
@@ -89,16 +89,16 @@
     {
       "symbol": "ETH",
       "name": "Ethereum",
-      "price": 2211.14,
-      "change1d": -2.87,
-      "change7d": -3.25
+      "price": 2217.99,
+      "change1d": -3.01,
+      "change7d": -2.51
     },
     {
       "symbol": "SOL",
       "name": "Solana",
-      "price": 88.91,
-      "change1d": -2.97,
-      "change7d": 0.72
+      "price": 89,
+      "change1d": -3.51,
+      "change7d": 0.82
     }
   ]
 }
