@@ -1,13 +1,13 @@
 {
-  "updatedAt": "2026-06-02T21:01:54.838Z",
+  "updatedAt": "2026-06-02T22:07:10.899Z",
   "source": "AV:11+CoinGecko:3",
   "assets": [
     {
       "symbol": "BTC",
       "name": "Bitcoin",
-      "price": 67503,
-      "change1d": -5.37,
-      "change7d": -11.1
+      "price": 67311,
+      "change1d": -4.89,
+      "change7d": -11.43
     },
     {
       "symbol": "GOLD",
@@ -54,9 +54,9 @@
     {
       "symbol": "AAOI",
       "name": "Applied Optoelectronics",
-      "price": 202.37,
-      "change1d": 8.99,
-      "change7d": 13.93
+      "price": 185.67,
+      "change1d": 17.21,
+      "change7d": 2.3
     },
     {
       "symbol": "AXTI",
@@ -89,16 +89,16 @@
     {
       "symbol": "ETH",
       "name": "Ethereum",
-      "price": 1904.59,
-      "change1d": -4.91,
-      "change7d": -8.08
+      "price": 1893.44,
+      "change1d": -4.53,
+      "change7d": -8.76
     },
     {
       "symbol": "SOL",
       "name": "Solana",
-      "price": 75.38,
-      "change1d": -6.89,
-      "change7d": -9.95
+      "price": 75.33,
+      "change1d": -6.2,
+      "change7d": -10.13
     }
   ]
 }
