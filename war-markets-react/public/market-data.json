@@ -1,20 +1,20 @@
 {
-  "updatedAt": "2026-06-10T22:17:11.881Z",
+  "updatedAt": "2026-06-11T15:09:25.348Z",
   "source": "AV:11+CoinGecko:3",
   "assets": [
     {
       "symbol": "BTC",
       "name": "Bitcoin",
-      "price": 61122,
-      "change1d": -1.08,
-      "change7d": -5.79
+      "price": 62715,
+      "change1d": 1.23,
+      "change7d": -1.81
     },
     {
       "symbol": "GOLD",
       "name": "Gold (GLD)",
-      "price": 374.66,
-      "change1d": -4.13,
-      "change7d": -8.14
+      "price": 374.58,
+      "change1d": -4.15,
+      "change7d": -8.16
     },
     {
       "symbol": "NVDA",
@@ -26,9 +26,9 @@
     {
       "symbol": "TSLA",
       "name": "Tesla",
-      "price": 396.68,
-      "change1d": -3,
-      "change7d": -6.39
+      "price": 381.59,
+      "change1d": -3.8,
+      "change7d": -9.94
     },
     {
       "symbol": "META",
@@ -54,9 +54,9 @@
     {
       "symbol": "AAOI",
       "name": "Applied Optoelectronics",
-      "price": 162.88,
-      "change1d": -17.17,
-      "change7d": -19.51
+      "price": 175.13,
+      "change1d": 7.52,
+      "change7d": -4.86
     },
     {
       "symbol": "AXTI",
@@ -89,16 +89,16 @@
     {
       "symbol": "ETH",
       "name": "Ethereum",
-      "price": 1607.74,
-      "change1d": -2.53,
-      "change7d": -9.55
+      "price": 1642.79,
+      "change1d": 0.16,
+      "change7d": -7.28
     },
     {
       "symbol": "SOL",
       "name": "Solana",
-      "price": 62.49,
-      "change1d": -3.86,
-      "change7d": -13.98
+      "price": 65.13,
+      "change1d": 0.54,
+      "change7d": -6.47
     }
   ]
 }
