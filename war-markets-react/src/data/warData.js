@@ -385,7 +385,7 @@ export const globalMarketsData = [
     label: "Iran War (2026)",
     dataQuality: "medium",
     marketCapRanking: ["NYSE", "NASDAQ", "TSE", "LSE", "Euronext", "Frankfurt", "HKEX"],
-    narrative: "The conflict that nearly shut down the Strait of Hormuz produced a surprisingly orderly global selloff. Asian markets were hit hardest — the Nikkei plunged more than 7% intraday on the first post-strike session (closing −5.2% at 52,728) on oil-import fears; Korea's KOSPI had the worst regional decline. European indices fell less (FTSE 100 −1.9%, DAX −2.6% on initial reaction) as UK energy majors benefited from the oil spike. By mid-April, Brent had retreated from its Apr 2 peak of $128 toward $94, and US indices had recouped all war losses — the S&P 500 and NASDAQ hit new all-time highs on Apr 15 despite an active US naval blockade of Iranian ports.",
+    narrative: "The conflict that nearly shut down the Strait of Hormuz produced a surprisingly orderly global selloff. Asian markets were hit hardest — the Nikkei plunged more than 7% intraday on the first post-strike session (closing −5.2% at 52,728) on oil-import fears; Korea's KOSPI had the worst regional decline. European indices fell less (FTSE 100 −1.9%, DAX −2.6% on initial reaction) as UK energy majors benefited from the oil spike. US indices recouped all war losses fast — the S&P 500 and NASDAQ hit new all-time highs on Apr 15 — but the conflict itself did not end: a Pakistan-mediated ceasefire (Apr 8) broke down, the Hormuz blockade held, and Brent stayed elevated (~$126). Markets climbed the wall of worry to fresh records in late May (S&P 500 above 7,300), then wobbled as the war reached its ~100th day — the Dow fell ~900 points on Jun 10, 2026 when Washington signaled further strikes after a US helicopter was downed near the strait.",
     indices: [
       { id: "S&P 500", decline: 7.8, daysToBottom: 21, daysToRecover: 32, confidence: "exact", note: "Pre-war 6878.88 → trough close 6343.72 (Mar 30) → ATH 7022.95 (Apr 15)", isPositive: false, caveat: null },
       { id: "DJIA", decline: 8.0, daysToBottom: 21, daysToRecover: 33, confidence: "approx", note: "Dropped 521 pts on Feb 28; full recovery by mid-April", isPositive: false, caveat: null },
@@ -526,7 +526,7 @@ export const cpiData = [
       { t: 0, year: 2020, value: 1.2 },  { t: 1, year: 2021, value: 4.7 },
       { t: 2, year: 2022, value: 8.0 },  { t: 3, year: 2023, value: 4.1 },
       { t: 4, year: 2024, value: 2.9 },  { t: 5, year: 2025, value: 2.8 },
-      { t: 6, year: 2026, value: 2.4 },  { t: 7, year: 2027, value: 2.2 },
+      { t: 6, year: 2026, value: 4.2 },  { t: 7, year: 2027, value: 2.2 },
       { t: 8, year: 2028, value: 2.1 },  { t: 9, year: 2029, value: 2.0 },
       { t: 10, year: 2030, value: 2.0 },
     ] },
@@ -534,19 +534,21 @@ export const cpiData = [
       { t: -2, year: 2020, value: 1.2 }, { t: -1, year: 2021, value: 4.7 },
       { t: 0, year: 2022, value: 8.0 },  { t: 1, year: 2023, value: 4.1 },
       { t: 2, year: 2024, value: 2.9 },  { t: 3, year: 2025, value: 2.8 },
-      { t: 4, year: 2026, value: 2.4 },  { t: 5, year: 2027, value: 2.2 },
+      { t: 4, year: 2026, value: 4.2 },  { t: 5, year: 2027, value: 2.2 },
       { t: 6, year: 2028, value: 2.1 },  { t: 7, year: 2029, value: 2.0 },
       { t: 8, year: 2030, value: 2.0 },  { t: 9, year: 2031, value: 2.0 },
       { t: 10, year: 2032, value: 2.0 },
     ] },
-  // Iran 2026 — preliminary. Only T-2..T+0 populated (data through Apr 15, 2026).
-  // Future years intentionally null — too early to project. Brent crude spike from
-  // $72 → ~$128 → ~$94 (Apr 14) implies a modest CPI tick over the 6-week window;
-  // using 2.8% as a placeholder (slightly above 2025) until 2026 annual CPI prints.
+  // Iran 2026 — preliminary. Only T-2..T+0 populated (data through Jun 11, 2026).
+  // Future years intentionally null — too early to project. The war's oil shock
+  // (Brent ~$65 pre-war → peak ~$128 → ~$126 amid the ongoing Hormuz blockade) is now
+  // passing through to consumer prices: May 2026 CPI hit 4.2% YoY — highest since 2023,
+  // energy +23.5% — so T+0 reflects that 4.2% print (was a 2.8% placeholder), pending
+  // the 2026 annual average that won't print until Jan 2027.
   { conflict: "Iran", label: "Iran War (2026)", startYear: 2026, preliminary: true,
     series: [
       { t: -2, year: 2024, value: 2.9 }, { t: -1, year: 2025, value: 2.8 },
-      { t: 0, year: 2026, value: 2.8 },
+      { t: 0, year: 2026, value: 4.2 },
     ] },
 ];
 
@@ -666,9 +668,10 @@ export const debtGdpData = [
       { t: 8, year: 2030, value: 134.0 },  { t: 9, year: 2031, value: 136.0 },
       { t: 10, year: 2032, value: 138.0 },
     ] },
-  // Iran 2026 — preliminary. Only T-2..T+0 populated.
-  // Defense spending bump modest in scope (US not at full mobilization);
-  // 2026 debt/GDP tracking the existing baseline (~126%).
+  // Iran 2026 — preliminary. Only T-2..T+0 populated (data through Jun 11, 2026).
+  // Total federal debt crossed $39.24T on Jun 9, 2026 (+~$3T YoY), but the war-specific
+  // defense bump is modest (US not at full mobilization); 2026 debt/GDP still tracking
+  // the existing baseline (~126%) pending the 2026 annual GDP denominator.
   { conflict: "Iran", label: "Iran War (2026)", startYear: 2026, preliminary: true,
     series: [
       { t: -2, year: 2024, value: 122.3 }, { t: -1, year: 2025, value: 124.0 },
@@ -751,8 +754,8 @@ export const fiscalSummary = [
     narrative: "COVID triggered the largest single-year debt spike since WWII — debt/GDP jumped 21 points in 2020 alone as the government spent over $5 trillion on pandemic relief (CARES Act, PPP, enhanced unemployment, stimulus checks). Inflation was initially suppressed by demand collapse (1.2% in 2020), but exploded to 8.0% by 2022 — the highest since 1981 — driven by supply chain disruptions, labor shortages, and the lagged effect of massive monetary expansion. The Fed's response (rate hikes from 0% to 5.5%) was the most aggressive tightening cycle since Volcker." },
   { conflict: "Russia-Ukraine", peakCpi: 8.0, debtGdpDelta: 2.6,
     narrative: "The war's fiscal impact was modest compared to prior conflicts. Energy price spikes drove CPI to 8.0% in 2022 — the highest since 1981 — but this was largely a continuation of COVID-era inflation. The Fed's aggressive rate hikes (0% → 5.5% in 16 months) tamed inflation but increased debt service costs. Debt/GDP actually fell initially as nominal GDP surged with inflation, but is projected to resume climbing." },
-  { conflict: "Iran", peakCpi: 2.8, debtGdpDelta: 0, preliminary: true,
-    narrative: "PRELIMINARY (6 weeks of data, through Apr 15, 2026). Annual CPI for 2026 will not print until Jan 2027 — placeholder shown is 2.8% baseline, slightly above 2025's 2.8% pace. Brent crude spiked from $72 to a peak of ~$128/bbl on Apr 2 before retracing toward $94 by mid-April; the channel for inflation is the oil pass-through, not domestic war spending. Defense outlays rose modestly; debt/GDP impact below the threshold of significance over a 6-week conflict. Long-horizon fiscal effects won't be readable until 2027+." },
+  { conflict: "Iran", peakCpi: 4.2, debtGdpDelta: 0, preliminary: true,
+    narrative: "PRELIMINARY (through Jun 11, 2026). The conflict did not end with the mid-April market recovery — a Pakistan-mediated ceasefire (Apr 8) broke down and fighting has continued into its ~100th day, with the Strait of Hormuz blockaded since Feb 28 and renewed US strikes in early June. The inflation channel is the oil pass-through, not domestic war spending: Brent ran from ~$65 pre-war to a peak of ~$128/bbl and remains elevated (~$126), lifting energy CPI +23.5% and pushing headline CPI to 4.2% YoY in May 2026 — the highest since 2023. The 2026 annual average won't print until Jan 2027. Total federal debt crossed $39.24T (Jun 9, 2026), up ~$3T YoY, but the war-specific increment is small and debt/GDP impact stays modest. Long-horizon fiscal effects won't be readable until 2027+." },
 ];
 
 // ── COST OF LIVING DATA ────────────────────────────────────
@@ -927,11 +930,11 @@ export const costOfLivingData = [
       bread:   { nominal: 2.09,   adjusted: 2.09 },
     },
   },
-  // Iran 2026 — preliminary. Single 2026 data point (Apr 15 snapshot).
-  // CPI ×0.95 reflects ~5% cumulative inflation from 2024 → mid-2026.
-  // Nominal prices nudged up via 2024 baseline × 1.05; gas elevated
-  // by Brent's peak-to-current spike ($72 → ~$94, ~30% above pre-war).
-  // Income figure tracks 2024 wage index assuming ~3% YoY through Apr 2026.
+  // Iran 2026 — preliminary (data through Jun 11, 2026). Single 2026 data point.
+  // CPI ×0.95 reflects ~5% cumulative inflation from 2024 → mid-2026; with May 2026
+  // headline CPI now running 4.2% YoY (oil-shock driven), these nominal estimates are
+  // conservative. Gas stays elevated by Brent's spike (~$65 pre-war → ~$126 amid the
+  // ongoing Hormuz blockade). Income tracks the 2024 wage index at ~3% YoY through 2026.
   {
     era: "Iran", year: 2026, cpiMultiplier: 0.95, preliminary: true,
     items: {
@@ -1011,6 +1014,7 @@ export const totalDebtData = [
   { year: 2023, debt: 33167.00 },
   { year: 2024, debt: 35464.00 },
   { year: 2025, debt: 36200.00 },
+  { year: 2026, debt: 39240.00 }, // Treasury "Debt to the Penny": $39.24T as of Jun 9, 2026 (+~$3T YoY)
 ];
 
 // Conflict start-year markers for vertical reference lines on the timeline
