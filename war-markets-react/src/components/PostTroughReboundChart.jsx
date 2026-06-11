@@ -29,6 +29,7 @@ function CustomTooltip({ active, payload, label }) {
 
 export default function PostTroughReboundChart() {
   const { activeConflicts } = useEventToggle();
+  const t = useTheme().tokens;
   const [hovered, setHovered] = useState(null);
 
   const conflictKeys = useMemo(
