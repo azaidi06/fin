@@ -1,13 +1,13 @@
 {
-  "updatedAt": "2026-06-11T21:40:20.733Z",
+  "updatedAt": "2026-06-11T22:22:45.223Z",
   "source": "AV:11+CoinGecko:3",
   "assets": [
     {
       "symbol": "BTC",
       "name": "Bitcoin",
-      "price": 63441,
-      "change1d": 2.98,
-      "change7d": -0.2
+      "price": 63569,
+      "change1d": 3.95,
+      "change7d": 0.51
     },
     {
       "symbol": "GOLD",
@@ -75,9 +75,9 @@
     {
       "symbol": "MSFT",
       "name": "Microsoft",
-      "price": 390.34,
-      "change1d": -1.77,
-      "change7d": -8.81
+      "price": 397.36,
+      "change1d": -1.5,
+      "change7d": -7.02
     },
     {
       "symbol": "AMZN",
@@ -89,16 +89,16 @@
     {
       "symbol": "ETH",
       "name": "Ethereum",
-      "price": 1677.55,
-      "change1d": 3.44,
-      "change7d": -5.5
+      "price": 1678.82,
+      "change1d": 4.42,
+      "change7d": -5.24
     },
     {
       "symbol": "SOL",
       "name": "Solana",
-      "price": 66.94,
-      "change1d": 6.4,
-      "change7d": -3.06
+      "price": 66.96,
+      "change1d": 7.35,
+      "change7d": -2.35
     }
   ]
 }
