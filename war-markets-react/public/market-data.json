@@ -1,13 +1,13 @@
 {
-  "updatedAt": "2026-06-15T20:23:44.601Z",
+  "updatedAt": "2026-06-15T21:30:38.000Z",
   "source": "AV:11+CoinGecko:3",
   "assets": [
     {
       "symbol": "BTC",
       "name": "Bitcoin",
-      "price": 66548,
-      "change1d": 4.2,
-      "change7d": 5.03
+      "price": 66420,
+      "change1d": 2.71,
+      "change7d": 4.71
     },
     {
       "symbol": "GOLD",
@@ -61,9 +61,9 @@
     {
       "symbol": "AXTI",
       "name": "AXT Inc",
-      "price": 110.74,
-      "change1d": 13.95,
-      "change7d": 21.99
+      "price": 97.18,
+      "change1d": 10.01,
+      "change7d": 9.14
     },
     {
       "symbol": "AAPL",
@@ -89,16 +89,16 @@
     {
       "symbol": "ETH",
       "name": "Ethereum",
-      "price": 1821.93,
-      "change1d": 9.4,
-      "change7d": 8.2
+      "price": 1815.03,
+      "change1d": 6.93,
+      "change7d": 7.55
     },
     {
       "symbol": "SOL",
       "name": "Solana",
-      "price": 75.07,
-      "change1d": 11.11,
-      "change7d": 11.32
+      "price": 74.63,
+      "change1d": 8.14,
+      "change7d": 10.9
     }
   ]
 }
