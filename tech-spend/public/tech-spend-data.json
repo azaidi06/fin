@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-07-31T08:37:43.316Z",
+  "updatedAt": "2026-08-01T08:07:07.166Z",
   "source": "SEC-EDGAR",
   "companies": [
     {
@@ -3204,6 +3204,14 @@
               "value": 44203000000,
               "valueBillions": 44.2,
               "endDate": "2026-03-31"
+            },
+            {
+              "period": "CY2026Q2",
+              "calendarYear": 2026,
+              "calendarQuarter": 2,
+              "value": 54208000000,
+              "valueBillions": 54.21,
+              "endDate": "2026-06-30"
             }
           ],
           "annual": [
@@ -3285,23 +3293,31 @@
               "valueBillions": 131.82,
               "endDate": "2025-12-31",
               "yoyGrowthPct": 58.82
+            },
+            {
+              "period": "CY2026",
+              "calendarYear": 2026,
+              "value": 173028000000,
+              "valueBillions": 173.03,
+              "endDate": "2026-06-30",
+              "yoyGrowthPct": 31.26
             }
           ],
           "latestQuarter": {
-            "period": "CY2026Q1",
+            "period": "CY2026Q2",
             "calendarYear": 2026,
-            "calendarQuarter": 1,
-            "value": 44203000000,
-            "valueBillions": 44.2,
-            "endDate": "2026-03-31"
+            "calendarQuarter": 2,
+            "value": 54208000000,
+            "valueBillions": 54.21,
+            "endDate": "2026-06-30"
           },
           "latestAnnual": {
-            "period": "CY2025",
-            "calendarYear": 2025,
-            "value": 131819000000,
-            "valueBillions": 131.82,
-            "endDate": "2025-12-31",
-            "yoyGrowthPct": 58.82
+            "period": "CY2026",
+            "calendarYear": 2026,
+            "value": 173028000000,
+            "valueBillions": 173.03,
+            "endDate": "2026-06-30",
+            "yoyGrowthPct": 31.26
           },
           "trailingTwelveMonths": null
         },
@@ -3739,6 +3755,14 @@
               "value": 12901000000,
               "valueBillions": 12.9,
               "endDate": "2026-03-31"
+            },
+            {
+              "period": "CY2026Q2",
+              "calendarYear": 2026,
+              "calendarQuarter": 2,
+              "value": 14486000000,
+              "valueBillions": 14.49,
+              "endDate": "2026-06-30"
             }
           ],
           "annual": [
@@ -3895,12 +3919,12 @@
             }
           ],
           "latestQuarter": {
-            "period": "CY2026Q1",
+            "period": "CY2026Q2",
             "calendarYear": 2026,
-            "calendarQuarter": 1,
-            "value": 12901000000,
-            "valueBillions": 12.9,
-            "endDate": "2026-03-31"
+            "calendarQuarter": 2,
+            "value": 14486000000,
+            "valueBillions": 14.49,
+            "endDate": "2026-06-30"
           },
           "latestAnnual": {
             "period": "CY2025",
@@ -5886,6 +5910,14 @@
               "value": 11419000000,
               "valueBillions": 11.42,
               "endDate": "2026-03-28"
+            },
+            {
+              "period": "CY2026Q2",
+              "calendarYear": 2026,
+              "calendarQuarter": 2,
+              "value": 11729000000,
+              "valueBillions": 11.73,
+              "endDate": "2026-06-27"
             }
           ],
           "annual": [
@@ -6042,12 +6074,12 @@
             }
           ],
           "latestQuarter": {
-            "period": "CY2026Q1",
+            "period": "CY2026Q2",
             "calendarYear": 2026,
-            "calendarQuarter": 1,
-            "value": 11419000000,
-            "valueBillions": 11.42,
-            "endDate": "2026-03-28"
+            "calendarQuarter": 2,
+            "value": 11729000000,
+            "valueBillions": 11.73,
+            "endDate": "2026-06-27"
           },
           "latestAnnual": {
             "period": "CY2025",
@@ -6493,6 +6525,14 @@
               "value": 7477000000,
               "valueBillions": 7.48,
               "endDate": "2026-03-28"
+            },
+            {
+              "period": "CY2026Q2",
+              "calendarYear": 2026,
+              "calendarQuarter": 2,
+              "value": 7346000000,
+              "valueBillions": 7.35,
+              "endDate": "2026-06-27"
             }
           ],
           "annual": [
@@ -6649,12 +6689,12 @@
             }
           ],
           "latestQuarter": {
-            "period": "CY2026Q1",
+            "period": "CY2026Q2",
             "calendarYear": 2026,
-            "calendarQuarter": 1,
-            "value": 7477000000,
-            "valueBillions": 7.48,
-            "endDate": "2026-03-28"
+            "calendarQuarter": 2,
+            "value": 7346000000,
+            "valueBillions": 7.35,
+            "endDate": "2026-06-27"
           },
           "latestAnnual": {
             "period": "CY2025",
@@ -10853,13 +10893,13 @@
     }
   ],
   "summary": {
-    "totalLatestAnnualCapexBillions": 491.85,
+    "totalLatestAnnualCapexBillions": 533.06,
     "totalLatestAnnualRdBillions": 223.75,
     "totalLatestAnnualSgaBillions": 215.25,
     "totalLatestAnnualOpexBillions": 439,
-    "totalLatestAnnualTechSpendBillions": 930.85,
+    "totalLatestAnnualTechSpendBillions": 972.06,
     "topCapexSpender": "AMZN",
-    "topTechSpender": "GOOGL",
+    "topTechSpender": "AMZN",
     "fastestCapexGrower": "ORCL"
   }
 }
