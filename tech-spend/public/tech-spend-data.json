@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-08-12T07:12:09.790Z",
+  "updatedAt": "2026-08-13T07:15:08.674Z",
   "source": "SEC-EDGAR",
   "companies": [
     {
@@ -4577,6 +4577,14 @@
               "value": 17699000000,
               "valueBillions": 17.7,
               "endDate": "2026-03-31"
+            },
+            {
+              "period": "CY2026Q2",
+              "calendarYear": 2026,
+              "calendarQuarter": 2,
+              "value": 21656000000,
+              "valueBillions": 21.66,
+              "endDate": "2026-06-30"
             }
           ],
           "annual": [
@@ -4709,12 +4717,12 @@
             }
           ],
           "latestQuarter": {
-            "period": "CY2026Q1",
+            "period": "CY2026Q2",
             "calendarYear": 2026,
-            "calendarQuarter": 1,
-            "value": 17699000000,
-            "valueBillions": 17.7,
-            "endDate": "2026-03-31"
+            "calendarQuarter": 2,
+            "value": 21656000000,
+            "valueBillions": 21.66,
+            "endDate": "2026-06-30"
           },
           "latestAnnual": {
             "period": "CY2025",
@@ -5088,6 +5096,14 @@
               "value": 5522000000,
               "valueBillions": 5.52,
               "endDate": "2026-03-31"
+            },
+            {
+              "period": "CY2026Q2",
+              "calendarYear": 2026,
+              "calendarQuarter": 2,
+              "value": 9040000000,
+              "valueBillions": 9.04,
+              "endDate": "2026-06-30"
             }
           ],
           "annual": [
@@ -5220,12 +5236,12 @@
             }
           ],
           "latestQuarter": {
-            "period": "CY2026Q1",
+            "period": "CY2026Q2",
             "calendarYear": 2026,
-            "calendarQuarter": 1,
-            "value": 5522000000,
-            "valueBillions": 5.52,
-            "endDate": "2026-03-31"
+            "calendarQuarter": 2,
+            "value": 9040000000,
+            "valueBillions": 9.04,
+            "endDate": "2026-06-30"
           },
           "latestAnnual": {
             "period": "CY2025",
