@@ -1,104 +1,104 @@
 {
-  "updatedAt": "2026-08-27T23:24:28.161Z",
+  "updatedAt": "2026-08-28T23:20:14.751Z",
   "source": "AV:11+CoinGecko:3",
   "assets": [
     {
       "symbol": "BTC",
       "name": "Bitcoin",
-      "price": 80358,
-      "change1d": 2.08,
-      "change7d": 10.4
+      "price": 77699,
+      "change1d": -3.21,
+      "change7d": -1
     },
     {
       "symbol": "GOLD",
       "name": "Gold (GLD)",
-      "price": 422.6,
-      "change1d": 0.3,
-      "change7d": 1.77
+      "price": 408.89,
+      "change1d": -3.24,
+      "change7d": -3.42
     },
     {
       "symbol": "NVDA",
       "name": "NVIDIA",
-      "price": 227.98,
-      "change1d": 8.74,
-      "change7d": 5.13
+      "price": 217.55,
+      "change1d": -4.57,
+      "change7d": 1.32
     },
     {
       "symbol": "TSLA",
       "name": "Tesla",
-      "price": 354.81,
-      "change1d": 2.6,
-      "change7d": 2.8
+      "price": 348.75,
+      "change1d": -1.71,
+      "change7d": -3.89
     },
     {
       "symbol": "META",
       "name": "Meta",
-      "price": 571.1,
-      "change1d": -0.87,
-      "change7d": 4.63
+      "price": 578.02,
+      "change1d": 1.21,
+      "change7d": 5.11
     },
     {
       "symbol": "GOOGL",
       "name": "Alphabet",
-      "price": 340.65,
-      "change1d": -0.39,
-      "change7d": -0.01
+      "price": 346.59,
+      "change1d": 1.74,
+      "change7d": 0.51
     },
     {
       "symbol": "AMD",
       "name": "AMD",
-      "price": 476.67,
-      "change1d": -0.89,
-      "change7d": 1.54
+      "price": 465.58,
+      "change1d": -2.33,
+      "change7d": -1.62
     },
     {
       "symbol": "AAOI",
       "name": "Applied Optoelectronics",
-      "price": 113.28,
-      "change1d": -0.42,
-      "change7d": -12.25
+      "price": 106.23,
+      "change1d": -6.22,
+      "change7d": -14.89
     },
     {
       "symbol": "AXTI",
       "name": "AXT Inc",
-      "price": 66.92,
-      "change1d": 2.67,
-      "change7d": -8.48
+      "price": 58.63,
+      "change1d": -12.39,
+      "change7d": -17.12
     },
     {
       "symbol": "AAPL",
       "name": "Apple",
-      "price": 314.58,
-      "change1d": 0.36,
-      "change7d": 1.05
+      "price": 319.7,
+      "change1d": 1.63,
+      "change7d": 3.35
     },
     {
       "symbol": "MSFT",
       "name": "Microsoft",
-      "price": 505.06,
-      "change1d": 1.75,
-      "change7d": 4.97
+      "price": 513.53,
+      "change1d": 1.68,
+      "change7d": 6.27
     },
     {
       "symbol": "AMZN",
       "name": "Amazon",
-      "price": 256.26,
-      "change1d": -1.54,
-      "change7d": -1.48
+      "price": 266.43,
+      "change1d": 3.97,
+      "change7d": 3.02
     },
     {
       "symbol": "ETH",
       "name": "Ethereum",
-      "price": 2514.6,
-      "change1d": 0.76,
-      "change7d": 8.5
+      "price": 2438.88,
+      "change1d": -2.98,
+      "change7d": -2.8
     },
     {
       "symbol": "SOL",
       "name": "Solana",
-      "price": 109.53,
-      "change1d": 8.81,
-      "change7d": 24.8
+      "price": 104.21,
+      "change1d": -4.65,
+      "change7d": 11.1
     }
   ]
 }
