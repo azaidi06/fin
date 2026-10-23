@@ -1,20 +1,20 @@
 {
-  "updatedAt": "2026-10-22T21:35:13.471Z",
-  "source": "AV:10+CoinGecko:3",
+  "updatedAt": "2026-10-23T00:09:54.453Z",
+  "source": "AV:11+CoinGecko:3",
   "assets": [
     {
       "symbol": "BTC",
       "name": "Bitcoin",
-      "price": 81404,
-      "change1d": -3.98,
-      "change7d": -1.37
+      "price": 81233,
+      "change1d": -3.59,
+      "change7d": -1.28
     },
     {
       "symbol": "GOLD",
       "name": "Gold (GLD)",
-      "price": 369.04,
-      "change1d": -2.62,
-      "change7d": -3.57
+      "price": 369,
+      "change1d": -2.63,
+      "change7d": -3.58
     },
     {
       "symbol": "NVDA",
@@ -26,9 +26,9 @@
     {
       "symbol": "TSLA",
       "name": "Tesla",
-      "price": 386.47,
-      "change1d": 3.41,
-      "change7d": 5.26
+      "price": 374.58,
+      "change1d": -3.08,
+      "change7d": 3.35
     },
     {
       "symbol": "META",
@@ -66,6 +66,13 @@
       "change7d": -10.97
     },
     {
+      "symbol": "AAPL",
+      "name": "Apple",
+      "price": 348.22,
+      "change1d": 1.23,
+      "change7d": 1.82
+    },
+    {
       "symbol": "MSFT",
       "name": "Microsoft",
       "price": 521.08,
@@ -82,16 +89,16 @@
     {
       "symbol": "ETH",
       "name": "Ethereum",
-      "price": 2391.39,
-      "change1d": -4.32,
-      "change7d": -2.92
+      "price": 2384.07,
+      "change1d": -3.87,
+      "change7d": -2.74
     },
     {
       "symbol": "SOL",
       "name": "Solana",
-      "price": 103.65,
-      "change1d": -4.3,
-      "change7d": -2.51
+      "price": 103.48,
+      "change1d": -3.48,
+      "change7d": -2.05
     }
   ]
 }
