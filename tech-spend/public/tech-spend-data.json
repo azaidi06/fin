@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-10-29T12:01:35.467Z",
+  "updatedAt": "2026-10-30T11:55:26.968Z",
   "source": "SEC-EDGAR",
   "companies": [
     {
@@ -3252,6 +3252,14 @@
               "value": 54208000000,
               "valueBillions": 54.21,
               "endDate": "2026-06-30"
+            },
+            {
+              "period": "CY2026Q3",
+              "calendarYear": 2026,
+              "calendarQuarter": 3,
+              "value": 77259000000,
+              "valueBillions": 77.26,
+              "endDate": "2026-09-30"
             }
           ],
           "annual": [
@@ -3337,27 +3345,27 @@
             {
               "period": "CY2026",
               "calendarYear": 2026,
-              "value": 173028000000,
-              "valueBillions": 173.03,
-              "endDate": "2026-06-30",
-              "yoyGrowthPct": 31.26
+              "value": 215192000000,
+              "valueBillions": 215.19,
+              "endDate": "2026-09-30",
+              "yoyGrowthPct": 63.25
             }
           ],
           "latestQuarter": {
-            "period": "CY2026Q2",
+            "period": "CY2026Q3",
             "calendarYear": 2026,
-            "calendarQuarter": 2,
-            "value": 54208000000,
-            "valueBillions": 54.21,
-            "endDate": "2026-06-30"
+            "calendarQuarter": 3,
+            "value": 77259000000,
+            "valueBillions": 77.26,
+            "endDate": "2026-09-30"
           },
           "latestAnnual": {
             "period": "CY2026",
             "calendarYear": 2026,
-            "value": 173028000000,
-            "valueBillions": 173.03,
-            "endDate": "2026-06-30",
-            "yoyGrowthPct": 31.26
+            "value": 215192000000,
+            "valueBillions": 215.19,
+            "endDate": "2026-09-30",
+            "yoyGrowthPct": 63.25
           },
           "trailingTwelveMonths": null
         },
@@ -3803,6 +3811,14 @@
               "value": 14486000000,
               "valueBillions": 14.49,
               "endDate": "2026-06-30"
+            },
+            {
+              "period": "CY2026Q3",
+              "calendarYear": 2026,
+              "calendarQuarter": 3,
+              "value": 14350000000,
+              "valueBillions": 14.35,
+              "endDate": "2026-09-30"
             }
           ],
           "annual": [
@@ -3959,12 +3975,12 @@
             }
           ],
           "latestQuarter": {
-            "period": "CY2026Q2",
+            "period": "CY2026Q3",
             "calendarYear": 2026,
-            "calendarQuarter": 2,
-            "value": 14486000000,
-            "valueBillions": 14.49,
-            "endDate": "2026-06-30"
+            "calendarQuarter": 3,
+            "value": 14350000000,
+            "valueBillions": 14.35,
+            "endDate": "2026-09-30"
           },
           "latestAnnual": {
             "period": "CY2025",
@@ -11021,11 +11037,11 @@
     }
   ],
   "summary": {
-    "totalLatestAnnualCapexBillions": 533.06,
+    "totalLatestAnnualCapexBillions": 575.23,
     "totalLatestAnnualRdBillions": 223.75,
     "totalLatestAnnualSgaBillions": 215.25,
     "totalLatestAnnualOpexBillions": 439,
-    "totalLatestAnnualTechSpendBillions": 972.06,
+    "totalLatestAnnualTechSpendBillions": 1014.22,
     "topCapexSpender": "AMZN",
     "topTechSpender": "AMZN",
     "fastestCapexGrower": "ORCL"
